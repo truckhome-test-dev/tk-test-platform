@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '资源管理' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+
+
+		<table class="layui-table" lay-size="sm">
+		  <colgroup>
+		    <col width="200">
+		    <col width="150">
+		    <col width="200">		    
+		    <col>
+		  </colgroup>
+		  <thead>
+		    <tr>
+		      <th>资源名称</th>
+		      <th>资源状态</th>
+		      <th>姓名</th>
+		      <th>说明</th>
+		    </tr> 
+		  </thead>
+		  <tbody>
+		    {% for i in data %}
+		    <tr>
+		      <td>{{i[0]}}</td>
+		      <td>{{i[1]}}</td>
+		      <td>{{i[2]}}</td>
+		      <td>{{i[3]}}</td>
+		    </tr>
+		  </tbody>
+		</table>
+
+
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
