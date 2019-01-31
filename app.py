@@ -18,11 +18,6 @@ def index():
 	return render_template('index.html')
 
 
-# @app.route('/wxtools')
-# def wxtools():
-# 	# lc()
-# 	return render_template('wxtools.html')
-
 @app.route('/login',methods=['post'])
 def login():
 	lc()
@@ -41,6 +36,14 @@ def friends_sex():
 		return render_template('wxtools.html',sexlist=sexlist)
 	else:
 		return render_template('wxtools.html')
+
+
+@app.route('/devices',methods=['get','post'])
+def devices():
+	alldata = re.selData('devices',['devname','devstatus','name','notes'])
+	devname = re.selData('devices',['devname'],1)
+	return render_template('devices.html',alldata=alldata,devname=devname)
+
 
 
 if __name__ == '__main__':
