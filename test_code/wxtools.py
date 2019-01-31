@@ -21,7 +21,8 @@ class MyThread(threading.Thread):
 def lc():
     itchat.auto_login()
     print("Finash Login!")
-a=1
+
+#判断目录下是否存在登录二维码
 def isQR():
     status=0
     pwd=os.getcwd()
@@ -29,13 +30,11 @@ def isQR():
     pwd=pwd.replace('\\','/')+"/static/pic/QR.png"
     if os.path.exists(pwd):
         status=1
-        # a=2
-        print(a)
         return status
     else:
         return status
 
-def lcshow():
+def lcisQR():
     threads = []
     t1 = threading.Thread(target=isQR,args=())
     threads.append(t1)
@@ -100,29 +99,3 @@ def statistic_friends_city():
         result[i] = arr.count(i)
     return result
 
-#判断目录下是否存在登录二维码
-def isQR():
-    status=0
-    pwd=os.getcwd()
-    pwd = os.path.abspath(os.path.dirname(pwd)+os.path.sep+".")
-    pwd=pwd.replace('\\','/')+"/static/pic/QR.png"
-    if os.path.exists(pwd):
-        status=1
-        return status
-    else:
-        return status
-
-# print(isQR())
-# lc()
-# ec()
-# lc()
-# print(statistic_friends_sex(myfriends()))
-#
-# print(statistic_friends_city(myfriends()))
-# ec()
-# newInstance = itchat.new_instance()
-# newInstance.auto_login(hotReload=True, statusStorageDir='newInstance.pkl')
-# # print(newInstance)
-# # print(statistic_friends_sex(newInstance))
-#
-# # print(statistic_friends_city(newInstance))
