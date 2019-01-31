@@ -21,14 +21,14 @@
             <div class="layui-header">
                 <div class="layui-logo" style="font-weight:bold;color:#FFFFFF">卡家测试管理平台</div>
             </div>
-        
+
             <!-- 左侧 -->
             <div class="layui-side layui-bg-black">
                 <div class="layui-side-scroll">
                     <ul class="layui-nav layui-nav-tree"  lay-filter="test">
 
                         <!-- 左侧栏目配置 -->
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/index','排期': 'http://127.0.0.1:5000/addapi'}, '趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/index'}} %}
+                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/index','排期': 'http://127.0.0.1:5000/addapi'}, '趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
 
                         {% for name,n_list in left_list.items() %}
                         <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>
@@ -53,7 +53,7 @@
 
     {% block right %}
             <!-- 页面右侧部分 -->
-        <div style="padding: 20px;" class="layui-body">
+        <div style="padding: 20px;" class="layui-body"/>
     {% endblock right %}
     
     </body>

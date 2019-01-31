@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+    <script type="text/javascript" src="static/js/echarts.js"></script>
+    <script type="text/javascript" src="static/js/echarts.min.js"></script>
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '微信好友分析' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+        <button class="layui-btn" onclick="lc()">获取二维码</button>
+        <button class="layui-btn" onclick="refurbish()">刷新</button>
+        <button class="layui-btn" onclick="ec()">强制退出</button>
+    <button class="layui-btn" onclick="sex()">统计性别</button>
+{#    <div><img src="/static/pic/QR.png"></div>#}
+    <img src="" id="oImg" style='display:none' width="160px" hight="200px">
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["男","女","其他"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+
+                data: [{{ sexlist }}]
+
+                {#data:[30, 12, 4]#}
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<script type="text/javascript" charset="UTF-8">
+        function  lc()
+    {
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        {#var data ='{  "url_id" :' + url_id + '}';#}
+        xmlhttp.open("POST","login",true);
+        xmlhttp.send();
+        setTimeout(function(){
+                    document.getElementById("oImg").src = "/static/pic/QR.png";
+                    document.getElementById('oImg').style.display = "block";
+        }, 3000)
+}
+        function refurbish()
+        {
+            var img_src="/static/pic/QR.png?"+Math.random()
+            document.getElementById("oImg").src = img_src;
+}
+        function  ec()
+    {
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        {#var data ='{  "url_id" :' + url_id + '}';#}
+        xmlhttp.open("POST","exit",true);
+        xmlhttp.send();
+        location.reload()
+}
+        function  sex()
+    {
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        {#var data ='{  "url_id" :' + url_id + '}';#}
+        xmlhttp.open("POST","wxtools",true);
+        xmlhttp.send();
+}
+</script>
+
+</body>
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
