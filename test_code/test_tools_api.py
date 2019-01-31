@@ -7,4 +7,4 @@ class Test_Tools_Api(object):
 	"""docstring for Test_Tools_Api"""
 
 	def list1(self):
-		return 'test11111111111'
+		return 'test11'
