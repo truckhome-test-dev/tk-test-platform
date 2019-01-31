@@ -83,7 +83,7 @@ def statistic_friends_sex():
                 result[1] += 1
             else:
                 result[2] += 1
-        return str(result)[1:-1]
+        return result
 # print(statistic_friends_sex())
 
 #统计好友城市分布

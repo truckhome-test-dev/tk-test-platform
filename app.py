@@ -18,29 +18,29 @@ def index():
 	return render_template('index.html')
 
 
-# @app.route('/wxtools')
-# def wxtools():
-# 	# lc()
-# 	return render_template('wxtools.html')
+@app.route('/wxtools')
+def wxtools():
+	# lc()
+	return render_template('wxtools.html')
 
 @app.route('/login',methods=['post'])
 def login():
 	lc()
 	return 'ok'
 
-
 @app.route('/exit',methods=['post'])
 def exit():
 	ec()
 	return 'ok'
 
-@app.route('/wxtools',methods=['get','post'])
-def friends_sex():
-	if request.method == "POST":
-		sexlist=statistic_friends_sex()
-		return render_template('wxtools.html',sexlist=sexlist)
-	else:
-		return render_template('wxtools.html')
+@app.route('/statistic',methods=['post'])
+def statistic():
+	sex = statistic_friends_sex()
+	city = statistic_friends_city()
+	data={"sex":sex,"city":city}
+	return json.dumps(data)
+
+
 
 
 if __name__ == '__main__':
