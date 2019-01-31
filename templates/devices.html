@@ -15,11 +15,38 @@
 	<!-- 页面私有部分 -->
 
 
-		<table class="layui-table" lay-size="sm">
+		<div class="layui-input-inline">
+		  <label class="layui-form-label" >筛选设备</label>
+			<select name="devname" lay-verify="required" lay-search="" style="margin-top:8px;margin-left: 5px">
+			  <option value="">请选择设备</option>
+			    {% for i in devname %}
+			        <option value={{i}}>{{i}}</option>
+			    {% endfor %}
+			</select>
+		</div>
+
+
+		<div class="layui-form-item">
+		    <div class="layui-inline">
+		      <label class="layui-form-label">新增设备</label>
+		      	<div class="layui-input-inline">
+		        	<input type="tel" name="device" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备名称"  class="layui-input">
+		      	</div>
+			  <label class="layui-form-label" >设备类别</label>
+				<select name="devname" lay-verify="required" lay-search="" style="margin-top:8px;margin-left: 5px">
+				   <option value="">请选择设备类别</option>
+			       <option value="手机">手机</option>
+			       <option value="其他">其他</option>
+				</select>
+			</div>
+		</div>
+
+		<table class="layui-table">
 		  <colgroup>
 		    <col width="200">
 		    <col width="150">
-		    <col width="200">		    
+		    <col width="200">
+		    <col width="400">		    
 		    <col>
 		  </colgroup>
 		  <thead>
@@ -27,19 +54,33 @@
 		      <th>设备名称</th>
 		      <th>设备状态</th>
 		      <th>姓名</th>
-		      <th>备注</th>
+		      <th>说明</th>
+		      <th>编辑</th>
 		    </tr> 
 		  </thead>
 		  <tbody>
-		    {% for i in data %}
+		    {% for i in alldata %}
 		    <tr>
 		      <td>{{i[0]}}</td>
 		      <td>{{i[1]}}</td>
 		      <td>{{i[2]}}</td>
 		      <td>{{i[3]}}</td>
+		      <td>{{i[3]}}</td>
 		    </tr>
+		    {% endfor %}     
 		  </tbody>
 		</table>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
