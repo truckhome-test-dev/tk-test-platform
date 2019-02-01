@@ -26,7 +26,12 @@ def wxtools():
 @app.route('/login',methods=['post'])
 def login():
 	lc()
-	return 'ok'
+	if lc()==1:
+		data={"code":1000}
+		return json.dumps(data)
+	else:
+		data={"code":1001}
+		return json.dumps(data)
 
 @app.route('/exit',methods=['post'])
 def exit():
@@ -36,9 +41,13 @@ def exit():
 @app.route('/statistic',methods=['post'])
 def statistic():
 	sex = statistic_friends_sex()
-	city = statistic_friends_city()
-	data={"sex":sex,"city":city}
-	return json.dumps(data)
+	Province = statistic_friends_city()
+	if sex =="nologin" or Province =="nologin":
+		data={"code":1001}
+		return json.dumps(data)
+	else:
+		data = {"code":1000,"sex": sex, "Province": Province}
+		return json.dumps(data)
 
 
 

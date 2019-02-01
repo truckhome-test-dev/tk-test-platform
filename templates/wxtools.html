@@ -16,102 +16,151 @@
 		<legend>{{name}}</legend>
 	</fieldset>
 	<!-- 页面私有部分 -->
-        <button class="layui-btn" onclick="lc()">获取二维码</button>
-        <button class="layui-btn" onclick="refurbish()">刷新</button>
-        <button class="layui-btn" onclick="ec()">强制退出</button>
-    <button class="layui-btn" onclick="sex()">统计性别</button>
+        <button class="layui-btn " name="login" onclick="lc(this);">获取二维码</button>
+        <button class="layui-btn disabled" onclick="refurbish(this)">刷新</button>
+        <button class="layui-btn disabled" onclick="statistic(this)">统计</button>
+        <button class="layui-btn disabled" onclick="ec(this)">强制退出</button>
 {#    <div><img src="/static/pic/QR.png"></div>#}
-    <img src="" id="oImg" style='display:none' width="160px" hight="200px">
+    <br />
+    <img src="" id="oImg" style="display:none;margin: 100px 650px;" width="320px" hight="400px">
+    <img src="data:image/gif;base64,R0lGODlhIAAgALMAAP///7Ozs/v7+9bW1uHh4fLy8rq6uoGBgTQ0NAEBARsbG8TExJeXl/39/VRUVAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFBQAAACwAAAAAIAAgAAAE5xDISSlLrOrNp0pKNRCdFhxVolJLEJQUoSgOpSYT4RowNSsvyW1icA16k8MMMRkCBjskBTFDAZyuAEkqCfxIQ2hgQRFvAQEEIjNxVDW6XNE4YagRjuBCwe60smQUDnd4Rz1ZAQZnFAGDd0hihh12CEE9kjAEVlycXIg7BAsMB6SlnJ87paqbSKiKoqusnbMdmDC2tXQlkUhziYtyWTxIfy6BE8WJt5YEvpJivxNaGmLHT0VnOgGYf0dZXS7APdpB309RnHOG5gDqXGLDaC457D1zZ/V/nmOM82XiHQjYKhKP1oZmADdEAAAh+QQFBQAAACwAAAAAGAAXAAAEchDISasKNeuJFKoHs4mUYlJIkmjIV54Soypsa0wmLSnqoTEtBw52mG0AjhYpBxioEqRNy8V0qFzNw+GGwlJki4lBqx1IBgjMkRIghwjrzcDti2/Gh7D9qN774wQGAYOEfwCChIV/gYmDho+QkZKTR3p7EQAh+QQFBQAAACwBAAAAHQAOAAAEchDISWdANesNHHJZwE2DUSEo5SjKKB2HOKGYFLD1CB/DnEoIlkti2PlyuKGEATMBaAACSyGbEDYD4zN1YIEmh0SCQQgYehNmTNNaKsQJXmBuuEYPi9ECAU/UFnNzeUp9VBQEBoFOLmFxWHNoQw6RWEocEQAh+QQFBQAAACwHAAAAGQARAAAEaRDICdZZNOvNDsvfBhBDdpwZgohBgE3nQaki0AYEjEqOGmqDlkEnAzBUjhrA0CoBYhLVSkm4SaAAWkahCFAWTU0A4RxzFWJnzXFWJJWb9pTihRu5dvghl+/7NQmBggo/fYKHCX8AiAmEEQAh+QQFBQAAACwOAAAAEgAYAAAEZXCwAaq9ODAMDOUAI17McYDhWA3mCYpb1RooXBktmsbt944BU6zCQCBQiwPB4jAihiCK86irTB20qvWp7Xq/FYV4TNWNz4oqWoEIgL0HX/eQSLi69boCikTkE2VVDAp5d1p0CW4RACH5BAUFAAAALA4AAAASAB4AAASAkBgCqr3YBIMXvkEIMsxXhcFFpiZqBaTXisBClibgAnd+ijYGq2I4HAamwXBgNHJ8BEbzgPNNjz7LwpnFDLvgLGJMdnw/5DRCrHaE3xbKm6FQwOt1xDnpwCvcJgcJMgEIeCYOCQlrF4YmBIoJVV2CCXZvCooHbwGRcAiKcmFUJhEAIfkEBQUAAAAsDwABABEAHwAABHsQyAkGoRivELInnOFlBjeM1BCiFBdcbMUtKQdTN0CUJru5NJQrYMh5VIFTTKJcOj2HqJQRhEqvqGuU+uw6AwgEwxkOO55lxIihoDjKY8pBoThPxmpAYi+hKzoeewkTdHkZghMIdCOIhIuHfBMOjxiNLR4KCW1ODAlxSxEAIfkEBQUAAAAsCAAOABgAEgAABGwQyEkrCDgbYvvMoOF5ILaNaIoGKroch9hacD3MFMHUBzMHiBtgwJMBFolDB4GoGGBCACKRcAAUWAmzOWJQExysQsJgWj0KqvKalTiYPhp1LBFTtp10Is6mT5gdVFx1bRN8FTsVCAqDOB9+KhEAIfkEBQUAAAAsAgASAB0ADgAABHgQyEmrBePS4bQdQZBdR5IcHmWEgUFQgWKaKbWwwSIhc4LonsXhBSCsQoOSScGQDJiWwOHQnAxWBIYJNXEoFCiEWDI9jCzESey7GwMM5doEwW4jJoypQQ743u1WcTV0CgFzbhJ5XClfHYd/EwZnHoYVDgiOfHKQNREAIfkEBQUAAAAsAAAPABkAEQAABGeQqUQruDjrW3vaYCZ5X2ie6EkcKaooTAsi7ytnTq046BBsNcTvItz4AotMwKZBIC6H6CVAJaCcT0CUBTgaTg5nTCu9GKiDEMPJg5YBBOpwlnVzLwtqyKnZagZWahoMB2M3GgsHSRsRACH5BAUFAAAALAEACAARABgAAARcMKR0gL34npkUyyCAcAmyhBijkGi2UW02VHFt33iu7yiDIDaD4/erEYGDlu/nuBAOJ9Dvc2EcDgFAYIuaXS3bbOh6MIC5IAP5Eh5fk2exC4tpgwZyiyFgvhEMBBEAIfkEBQUAAAAsAAACAA4AHQAABHMQyAnYoViSlFDGXBJ808Ep5KRwV8qEg+pRCOeoioKMwJK0Ekcu54h9AoghKgXIMZgAApQZcCCu2Ax2O6NUud2pmJcyHA4L0uDM/ljYDCnGfGakJQE5YH0wUBYBAUYfBIFkHwaBgxkDgX5lgXpHAXcpBIsRADs=" id="loading" style="display:none;margin: 200px 800px;" width="32px" hight="40px">
+
+    <style>
+    .disabled{
+        background: #999;
+    }
+    {#.layui-body{#}
+    {#    overflow-y: hidden;#}
+    {#}#}
+    </style>
+
 
 <body>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="sex" style="width: 600px;height:400px;"></div>
-    <div id="city" style="width: 600px;height:400px;"></div>
+    <br />
+    <br />
+    <br />
+    <div style="display:inline">
+    <div id="sex" style="width: 800px;height:600px;float:left"></div>
+    <div id="city" style="width: 800px;height:600px;float:right"></div>
+    </div>
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('sex'));
+        var myCharsex = echarts.init(document.getElementById('sex'));
+        var myCharcity = echarts.init(document.getElementById('city'));
+        // 获取所有按钮
+        var btn = document.querySelectorAll('.layui-btn');
 
         // 指定图表的配置项和数据
-        var option = {
+        var optionsex = {
             title: {
-                text: 'ECharts 入门示例'
+                text: '好友性别分布'
             },
             tooltip: {},
             legend: {
-                data:['销量']
+                data:['人数']
             },
             xAxis: {
-                data: ["其他","男","女"]
+                data: ["男","女","其他"]
             },
             yAxis: {},
             series: [{
-                name: '销量',
+                name: '人数',
                 type: 'bar',
                 data:[]
 
                 {#data:[30, 12, 4]#}
             }]
         };
-        var option1 = {
-    title : {
-        text: '某站点用户访问来源',
-        subtext: '纯属虚构',
-        x:'center'
-    },
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-    },
-    series : [
-        {
-            name: '访问来源',
-            type: 'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
-            data:[
-                {value:335, name:'直接访问'},
-                {value:310, name:'邮件营销'},
-                {value:234, name:'联盟广告'},
-                {value:135, name:'视频广告'},
-                {value:1548, name:'搜索引擎'}
-            ],
-            itemStyle: {
-                emphasis: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-        }
-    ]
-};
+        var optioncity = {
+                backgroundColor: '#FFFFFF',
+                title: {
+                    text: '好友地区分布',
+                    subtext: '',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item'
+                },
+
+                //左侧小导航图标
+                visualMap: {
+                    show : true,
+                    x: 'left',
+                    y: 'center',
+                    splitList: [
+                        {start: 100, end:1000},{start: 50, end: 100},
+                        {start: 20, end: 50},{start: 10, end: 20},
+                        {start: 5, end: 10},{start: 0, end: 5},
+                    ],
+                    color: ['#f50d2d', '#ea34b7', '#b740ef','#782ee2', '#bf3ce6', '#9fb5ea']
+                },
+
+                //配置属性
+                series: [{
+                    name: '地区',
+                    type: 'map',
+                    mapType: 'china',
+                    roam: true,
+                    label: {
+                        normal: {
+                            show: true  //省份名称
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    data:[]  //数据
+                }]
+            };
 
         // 使用刚指定的配置项和数据显示图表。
 
-        function  lc()
+        function  lc(e)
     {
+        if (e.classList.contains('disabled')) {
+                return
+            }
+        document.getElementById('loading').style.display='';
         var xmlhttp;
         xmlhttp = new XMLHttpRequest();
         {#var data ='{  "url_id" :' + url_id + '}';#}
         xmlhttp.open("POST","login",true);
         xmlhttp.send();
         setTimeout(function(){
-                    document.getElementById("oImg").src = "/static/pic/QR.png";
-                    document.getElementById('oImg').style.display = "block";
-        }, 3000)
+            document.getElementById("oImg").src = "/static/pic/QR.png";
+            document.getElementById('oImg').style.display = "block";
+            document.getElementById('loading').style.display = "none";
+        },3000)
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+                var c = JSON.parse(xmlhttp.responseText)
+                if(c.code==1000){
+                    for (let i = 0; i < btn.length; i++) {
+                        if (btn[i].classList.contains('disabled')){
+                            btn[i].classList.remove('disabled')
+                        } else{
+                             btn[i].classList.add('disabled')
+                        }
+                    }
+                }
+            }
+        }
+
 }
-        function refurbish()
+        function refurbish(e)
         {
+            if (e.classList.contains('disabled')) {
+                return
+            }
             var img_src="/static/pic/QR.png?"+Math.random()
             document.getElementById("oImg").src = img_src;
 }
-        function  ec()
+        function  ec(e)
     {
+        if (e.classList.contains('disabled')) {
+                return
+            }
         var xmlhttp;
         xmlhttp = new XMLHttpRequest();
         {#var data ='{  "url_id" :' + url_id + '}';#}
@@ -119,8 +168,13 @@
         xmlhttp.send();
         location.reload()
 }
-        function  sex()
+        function  statistic(e)
     {
+        if (e.classList.contains('disabled')) {
+                return
+            }
+        document.getElementById('loading').style.visibility='hidden';
+
         var xmlhttp;
         xmlhttp = new XMLHttpRequest();
         {#var data ='{  "url_id" :' + url_id + '}';#}
@@ -132,13 +186,21 @@
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
             {
             var c = JSON.parse(xmlhttp.responseText)
-                {#alert(c)#}
+                {#alert(c.code)#}
+                if (c.code == 1001){
+                    alert("未登录")
+                }else {
                 {#var obj = JSON.parse(xmlhttp.responseText)#}
                 {#var data=obj['city']#}
-                option.series[0].data= c.sex
-                option1.series
-                myChart.setOption(option);
-                myChart.setOption(option1);
+                    btn[1].classList.add('disabled')
+                    btn[2].classList.add('disabled')
+                    document.getElementById("oImg").src =""
+                    optionsex.series[0].data= c.sex
+                    optioncity.series[0].data=c.Province
+                    myCharsex.setOption(optionsex);
+                    myCharcity.setOption(optioncity);
+                }
+
 
             }
         }
