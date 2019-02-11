@@ -3,13 +3,13 @@
 # @Date    : 2019-01-28 16:19:44
 
 from flask import Flask, request,render_template,redirect,jsonify
-import json
 from test_code import *
+import settings
 
 app = Flask(__name__)
 # a = Test_Tools_Api()
 
-
+app.config.from_object('settings.DevConfig')
 
 
 @app.route('/',methods=['get'])
@@ -17,11 +17,6 @@ app = Flask(__name__)
 def index():
 	return render_template('index.html')
 
-
-# @app.route('/wxtools')
-# def wxtools():
-# 	# lc()
-# 	return render_template('wxtools.html')
 
 @app.route('/login',methods=['post'])
 def login():
@@ -34,6 +29,7 @@ def exit():
 	ec()
 	return 'ok'
 
+
 @app.route('/wxtools',methods=['get','post'])
 def friends_sex():
 	if request.method == "POST":
@@ -43,5 +39,25 @@ def friends_sex():
 		return render_template('wxtools.html')
 
 
+@app.route('/scheduling',methods=['get','post'])
+def scheduling(name=None):
+	if not name:
+		pq = Scheduling()
+		return pq.get_default_data()
+	else:
+		pass
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+	return render_template('404.html')
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+	return render_template('500.html')
+
+
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',threaded=True,debug=True)
+	# app.run(host='0.0.0.0',threaded=True,debug=True)
+	app.run()
