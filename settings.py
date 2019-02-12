@@ -15,7 +15,3 @@ class TestConfig(BaseConfig):
 
 class DevConfig(BaseConfig):
 	host = '0.0.0.0'
-
-
-
-
