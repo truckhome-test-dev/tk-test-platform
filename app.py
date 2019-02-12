@@ -18,11 +18,21 @@ def index():
 	return render_template('index.html')
 
 
+@app.route('/wxtools')
+def wxtools():
+	# lc()
+	return render_template('wxtools.html')
+
+
 @app.route('/login',methods=['post'])
 def login():
 	lc()
-	return 'ok'
-
+	if lc()==1:
+		data={"code":1000}
+		return json.dumps(data)
+	else:
+		data={"code":1001}
+		return json.dumps(data)
 
 @app.route('/exit',methods=['post'])
 def exit():
@@ -35,8 +45,20 @@ def friends_sex():
 	if request.method == "POST":
 		sexlist=statistic_friends_sex()
 		return render_template('wxtools.html',sexlist=sexlist)
+
+
+@app.route('/statistic',methods=['post'])
+def statistic():
+	sex = statistic_friends_sex()
+	Province = statistic_friends_city()
+	if sex =="nologin" or Province =="nologin":
+		data={"code":1001}
+		return json.dumps(data)
 	else:
-		return render_template('wxtools.html')
+		data = {"code":1000,"sex": sex, "Province": Province}
+		return json.dumps(data)
+
+
 
 
 @app.route('/scheduling',methods=['get','post'])

@@ -21,6 +21,8 @@ class MyThread(threading.Thread):
 def lc():
     itchat.auto_login()
     print("Finash Login!")
+    data=1
+    return data
 
 #判断目录下是否存在登录二维码
 def isQR():
@@ -83,19 +85,32 @@ def statistic_friends_sex():
                 result[1] += 1
             else:
                 result[2] += 1
-        return str(result)[1:-1]
+        return result
 # print(statistic_friends_sex())
 
 #统计好友城市分布
 def statistic_friends_city():
-    myfriend = myfriends()
-    arr=[]
-    for friend in myfriend:
-        city=friend['City']
-        arr.append(city)
+    if myfriends()=='nologin':
+        return 'nologin'
+    else:
+        myfriend = myfriends()
+        arr=[]
+        for friend in myfriend:
+            # City=friend['City']
+            Province=friend['Province']
+            arr.append(Province)
 
-    result = {}
-    for i in set(arr):
-        result[i] = arr.count(i)
-    return result
+        result = {}
+        for i in set(arr):
+            result[i] = arr.count(i)
+        L=[]
+        for i in result.items():
+            d = {}
+            d["name"]=i[0]
+            d["value"]=i[1]
+            print(d)
+            L.append(d)
+        return L
 
+# lc()
+# print(statistic_friends_city())
