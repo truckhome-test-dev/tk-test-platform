@@ -73,8 +73,14 @@ def myfriends():
     else:
         return data
 
-# print(myfriends())
-
+#判断登录状态
+def lc_status():
+    try:
+        itchat.get_friends(update=True)
+    except:
+        return {"code":1001}
+    else:
+        return {"code":1000}
 #统计好友性别
 def statistic_friends_sex():
     if myfriends()=='nologin':
@@ -82,6 +88,7 @@ def statistic_friends_sex():
     else:
         myfriend=myfriends()
         result = [0, 0, 0]
+        sexname=['男','女','其他']
         for friend in myfriend:
             sex = friend['Sex']
             if sex == 1:
@@ -90,7 +97,14 @@ def statistic_friends_sex():
                 result[1] += 1
             else:
                 result[2] += 1
-        return result
+        L = []
+        for i in sexname:
+            d = {}
+            d['name'] = i
+            L.append(d)
+        for i in range(3):
+            L[i]['value'] = result[i]
+        return L
 # print(statistic_friends_sex())
 
 #统计好友城市分布
@@ -104,7 +118,6 @@ def statistic_friends_city():
             # City=friend['City']
             Province=friend['Province']
             arr.append(Province)
-
         result = {}
         for i in set(arr):
             result[i] = arr.count(i)

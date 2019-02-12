@@ -52,7 +52,7 @@
         var btn = document.querySelectorAll('.layui-btn');
 
         // 指定图表的配置项和数据
-        var optionsex = {
+        var optionsex1 = {
             title: {
                 text: '好友性别分布'
             },
@@ -72,6 +72,40 @@
                 {#data:[30, 12, 4]#}
             }]
         };
+        var optionsex = {
+    title : {
+        text: '好友性别分布',
+        subtext: '',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['男','女','其他']
+    },
+    series : [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
         var optioncity = {
                 backgroundColor: '#FFFFFF',
                 title: {
@@ -115,6 +149,27 @@
             };
 
         // 使用刚指定的配置项和数据显示图表。
+        window.onload=function () {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            {#var data ='{  "url_id" :' + url_id + '}';#}
+            xmlhttp.open("POST","status",true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            {
+            var c = JSON.parse(xmlhttp.responseText)
+                {#alert(c.code)#}
+                if (c.code == 1000){
+                   btn[2].classList.remove('disabled');
+                   btn[3].classList.remove('disabled');
+                   btn[0].classList.add('disabled')
+                }
+
+            }
+        }
+        }
 
         function  lc(e)
     {

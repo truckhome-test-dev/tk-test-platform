@@ -18,16 +18,21 @@ def index():
 	return render_template('index.html')
 
 
-@app.route('/wxtools')
+@app.route('/wxtools',methods=['get','post'])
 def wxtools():
-	# lc()
-	return render_template('wxtools.html')
+	if request.method == "GET":
+		return render_template('wxtools.html')
+
+@app.route('/status',methods=['get','post'])
+def status():
+	data=lc_status()
+	return json.dumps(data)
 
 
 @app.route('/login',methods=['post'])
 def login():
-	lc_status=lc()
-	if lc_status==1:
+	ret=lc()
+	if ret==1:
 		data={"code":1000}
 		return json.dumps(data)
 	else:
@@ -40,11 +45,14 @@ def exit():
 	return 'ok'
 
 
-@app.route('/wxtools',methods=['get','post'])
-def friends_sex():
-	if request.method == "POST":
-		sexlist=statistic_friends_sex()
-		return render_template('wxtools.html',sexlist=sexlist)
+# @app.route('/wxtools',methods=['get','post'])
+# def friends_sex():
+# 	if request.method == "POST":
+# 		sexlist=statistic_friends_sex()
+# 		# return render_template('wxtools.html',sexlist=sexlist)
+# 		return '111'
+# 	else:
+# 		return 'get'
 
 
 @app.route('/statistic',methods=['post'])
@@ -85,7 +93,6 @@ def devices():
 	alldata = re.selData('devices',['devname','devstatus','name','notes'])
 	devname = re.selData('devices',['devname'],1)
 	return render_template('devices.html',alldata=alldata,devname=devname)
-
 
 
 if __name__ == '__main__':
