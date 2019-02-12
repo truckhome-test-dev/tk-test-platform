@@ -19,7 +19,7 @@
         <button class="layui-btn " name="login" onclick="lc(this);">获取二维码</button>
         <button class="layui-btn disabled" onclick="refurbish(this)">刷新</button>
         <button class="layui-btn disabled" onclick="statistic(this)">统计</button>
-        <button class="layui-btn disabled" onclick="ec(this)">强制退出</button>
+        <button class="layui-btn disabled" onclick="ec(this)">退出登录</button>
 {#    <div><img src="/static/pic/QR.png"></div>#}
     <br />
     <img src="" id="oImg" style="display:none;margin: 100px 650px;" width="320px" hight="400px">
@@ -91,8 +91,8 @@
         {
             name: '访问来源',
             type: 'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
+            radius : '65%',
+            center: ['50%', '50%'],
             data:[
 
             ],
