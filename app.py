@@ -26,8 +26,8 @@ def wxtools():
 
 @app.route('/login',methods=['post'])
 def login():
-	lc()
-	if lc()==1:
+	lc_status=lc()
+	if lc_status==1:
 		data={"code":1000}
 		return json.dumps(data)
 	else:

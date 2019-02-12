@@ -132,10 +132,13 @@
             document.getElementById('oImg').style.display = "block";
             document.getElementById('loading').style.display = "none";
         },3000)
+        btn[1].classList.remove('disabled');
         xmlhttp.onreadystatechange = function(){
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
                 var c = JSON.parse(xmlhttp.responseText)
                 if(c.code==1000){
+                    alert("登陆成功！")
+                    document.getElementById("oImg").src = "";
                     for (let i = 0; i < btn.length; i++) {
                         if (btn[i].classList.contains('disabled')){
                             btn[i].classList.remove('disabled')

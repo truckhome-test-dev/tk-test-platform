@@ -21,6 +21,11 @@ class MyThread(threading.Thread):
 def lc():
     itchat.auto_login()
     print("Finash Login!")
+    pwd=os.getcwd()
+    print(pwd)
+    # # pwd = os.path.abspath(os.path.dirname(pwd)+os.path.sep+".")
+    QR1=pwd.replace('\\','/')+"/static/pic/QR.png"
+    os.remove(QR1)
     data=1
     return data
 
