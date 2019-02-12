@@ -58,6 +58,14 @@ def internal_server_error(e):
 	return render_template('500.html')
 
 
+@app.route('/devices',methods=['get','post'])
+def devices():
+	alldata = re.selData('devices',['devname','devstatus','name','notes'])
+	devname = re.selData('devices',['devname'],1)
+	return render_template('devices.html',alldata=alldata,devname=devname)
+
+
+
 if __name__ == '__main__':
 	# app.run(host='0.0.0.0',threaded=True,debug=True)
 	app.run()
