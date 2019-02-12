@@ -17,9 +17,11 @@ class MyThread(threading.Thread):
             return self.result  # 如果子线程不使用join方法，此处可能会报没有self.result的错误
         except Exception:
             return None
-
+login_status=0
 def lc():
     itchat.auto_login()
+    global login_status
+    login_status = 1
     print("Finash Login!")
     pwd=os.getcwd()
     print(pwd)
@@ -56,11 +58,13 @@ def lcisQR():
 #退出登录并删除目录下二维码文件
 def ec():
     itchat.logout()
-    pwd=os.getcwd()
-    # pwd = os.path.abspath(os.path.dirname(pwd)+os.path.sep+".")
-    pwd=pwd.replace('\\','/')+"/static/pic/QR.png"
-    if isQR()==1:
-        os.remove(pwd)
+    global login_status
+    login_status = 0
+    # pwd=os.getcwd()
+    # # pwd = os.path.abspath(os.path.dirname(pwd)+os.path.sep+".")
+    # pwd=pwd.replace('\\','/')+"/static/pic/QR.png"
+    # if isQR()==1:
+    #     os.remove(pwd)
     print("exit")
 
 
@@ -75,12 +79,16 @@ def myfriends():
 
 #判断登录状态
 def lc_status():
-    try:
-        itchat.get_friends(update=True)
-    except:
-        return {"code":1001}
+    global login_status
+    if login_status == 0:
+        data = {"code": 1001}
+        print(111)
+        return data
     else:
-        return {"code":1000}
+        print(222)
+        data = {"code": 1000}
+        return data
+
 #统计好友性别
 def statistic_friends_sex():
     if myfriends()=='nologin':
@@ -129,6 +137,13 @@ def statistic_friends_city():
             print(d)
             L.append(d)
         return L
-
 # lc()
 # print(statistic_friends_city())
+# def lc_status():
+#     try:
+#         itchat.get_friends(update=True)
+#     except:
+#         return {"code":1001}
+#     else:
+#         return {"code":1000}
+print(lc_status())

@@ -224,7 +224,15 @@
         {#var data ='{  "url_id" :' + url_id + '}';#}
         xmlhttp.open("POST","exit",true);
         xmlhttp.send();
-        location.reload()
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            {
+            location.reload()
+
+            }
+        }
+
 }
         function  statistic(e)
     {
