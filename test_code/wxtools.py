@@ -165,7 +165,6 @@ def get_nickname():
         f.close()
     print('ok')
 
-
 #词云
 def wc():
     if login_status == 0:
@@ -187,13 +186,14 @@ def wc():
         stopwords.add("said")
 
         # setting
-        wc = WordCloud(font_path=simfang, background_color="black", max_words=2000, mask=test_mask,
+        wc = WordCloud(font_path=simfang, background_color="white", max_words=2000, mask=test_mask,
                        stopwords=None, scale=2)
 
         # 生成词云
-
-        print(text)
-        wc.generate_from_text(text)
+        try:
+            wc.generate_from_text(text)
+        except:
+            return 'nologin'
 
         # 制图
         plt.imshow(wc, interpolation='bilinear')

@@ -35,6 +35,18 @@ class  SqlOperate():
 		return (','.join(fieldlist))
 
 
+	def keyvalue2(self,field_item):
+		"""
+		将字典变成，key='value' and key='value' 的形式,
+		field_item：{字段名:字段值},字典格式
+		"""
+		fieldlist = []
+		for k, v in field_item.items():
+			tmp = "%s='%s'" % (str(k), str(v))
+			fieldlist.append(tmp)
+		return ('and'.join(fieldlist))
+
+
 	#执行sql
 	def sqlExe(self,sqls):
 		self.cur.execute(sqls)
@@ -50,28 +62,44 @@ class  SqlOperate():
 		self.db.close()
 
 
-	#插入数据:tablename:表名，field_item:插入的字段及内容
 	def sqlInsert(self,tablename,field_item):
+		"""插入数据
+			tablename:表名，
+			field_item:插入的字段及内容，字典格式{'字段名称':'字段内容'}
+		"""
 		insql = "insert into %s set "  %(tablename)
 		insql += self.keyvalue(field_item)
 		return insql
 
 
-	#查询数据：tablename:表名，fields：查询的字段，返回数据列表
-	def sqlSelect(self,tablename,fields):
+	def sqlSelect(self,tablename,fields,condition=10,repeat=0):
+		"""	查询数据
+		tablename:表名，
+		fields：查询的字段，[字段名称]
+		condition:查询条件，默认无条件，条件格式：{'字段名称':字段内容}
+		repeat:是否去重，默认去重
+		"""
 		sesql = "select %s " % ','.join(fields)
-		sesql += 'from %s ' %(tablename)
+		sesql += ' from %s ' %(tablename)	
+		if condition != 10:
+			sesql += ' where %s' %(self.keyvalue(condition))
+		if repeat == 0:
+			sesql += ' group by devname'		
 		return sesql
+ 
 
-
-	#修改数据：tablename:表名，field_item:修改的字段及内容,condition:条件的字段内容（字典格式）
 	def sqlUpdate(self,tablename,field_item,condition):
+		"""修改数据
+		tablename:表名，
+		field_item:修改的字段及内容,格式：{'字段名称':修改内容}
+		condition:条件格式：{'字段名称':字段内容}
+		"""	
 		upsql = "update %s set "  %(tablename) 
 		upsql += '%s where %s' %(self.keyvalue(field_item),self.keyvalue(condition))
 		return upsql
 
 
-
+		
 
 # a = SqlOperate()
-# print (a.esoname','resostatus','name','notes']))
+# print (a.sqlUpdate('devices',{'status':1},{'ID':32}))

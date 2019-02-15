@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '设备修改' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+
+
+
+<form class="layui-form" action="/savedev" method="POST"  style="width: 600px ;margin-left: 80px;margin-top: 30px" >
+
+    <div  class="layui-form-item" >
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">设备ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="devid" lay-verify="required" autocomplete="off" value="{{editdata[4]}}" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">设备名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="devname" lay-verify="required" autocomplete="off" placeholder="请输入设备名称(必填)" value="{{editdata[0]}}" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">设备状态：</label>
+            <div class="layui-input-block">
+                <input type="text" name="devst" lay-verify="required" autocomplete="off" placeholder="请输入设备状态(必填)" value="{{editdata[1]}}" class="layui-input">
+            </div>
+        </div>
+                           
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">持有人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入持有人姓名(选填)" value="{{editdata[2]}}" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">设备说明：</label>
+            <div class="layui-input-block">
+                <input type="text" name="notes" lay-verify="required" autocomplete="off" placeholder="请输入设备说明(选填)" value="{{editdata[3]}}" class="layui-input">
+            </div>
+        </div>
+
+        <div style="margin-top: 10px;margin-left: 185px">
+            <input class="layui-btn layui-btn-danger" type="submit" value="保存" style="margin-left:350px;margin-top:20px"></input>
+
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
