@@ -176,3 +176,35 @@
           }
         }
     }
+
+
+        /*编辑设备*/
+        function editdevs(e){
+          window.location.href="http://127.0.0.1:5000/editdev?devid="+e.dataset.id
+        }
+
+
+        //删除设备
+        function deldev(e)
+        {
+          var devid = e.dataset.id;
+          var xmlhttp;
+          xmlhttp = new XMLHttpRequest();
+          var data ='{ "status" : '+ 1 +', "devid" : ' + devid + '}';
+          xmlhttp.open("POST","deldev",true);
+          xmlhttp.send(data);
+          xmlhttp.onreadystatechange = function()
+            {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+              {
+                if (xmlhttp.responseText == 'ok')
+                {
+                  location.reload();
+                }
+                else
+                {
+                  alert('请求出错，请重试')
+                }
+              }
+            }
+        }

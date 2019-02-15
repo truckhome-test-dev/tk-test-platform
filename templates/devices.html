@@ -77,14 +77,14 @@
 		  </thead>
 		  <tbody>
 		    {% for i in alldata %}
-		    <tr>
-		      <td><div name="devname" value={{i[4]}}>{{i[0]}}</td>
+		    <tr class="table-item">
+		      <td>{{i[0]}}</td>
 		      <td>{{i[1]}}</td>
-		      <td><div name="name">{{i[2]}}</td>
-		      <td><div id="devstatus"  name="devnotes" value={{i[4]}}>{{i[3]}}</td>
+		      <td>{{i[2]}}</td>
+		      <td>{{i[3]}}</td>
 		      <td>
 <!-- 		      	<span class="layui-btn layui-btn-danger" id="del_button" name="del" onclick="deldev(this)">删除</span> -->
-		      	<span class="layui-btn" id="edit_button" name="edit" onclick="editdevs(this)">编辑</span>
+		      	<span data-id={{i[4]}} class="layui-btn" id="edit_button" name="edit" onclick="editdev(this)">编辑</span>
 
               </td>
 		    </tr>
@@ -100,14 +100,6 @@
 layui.use('form', function(){
   var form = layui.form;
   })
-
-
-/*编辑内容*/
-function editdevs(e){
-  var td = e.parentNode.previousElementSibling;
-  var devid = td.querySelector('div').getAttribute('value');
-  window.location.href="http://127.0.0.1:5000/editdev?devid="+devid
-}
 
 
 /*查询设备*/
@@ -127,33 +119,6 @@ function search(e){
     document.getElementById('list').innerHTML=seldata
     }
 }
-
-
-/*function deldev(e)
-{
-  var td = e.parentNode.previousElementSibling;
-  var devid = td.querySelector('div').getAttribute('value');
-  var xmlhttp;
-  xmlhttp = new XMLHttpRequest();
-  var data ='{ "status" : '+ 1 +', "devid" : ' + devid + '}';
-  xmlhttp.open("POST","deldev",true);
-  xmlhttp.send(data);
-  xmlhttp.onreadystatechange = function()
-    {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
-      {
-        if (xmlhttp.responseText == 'ok')
-        {
-          location.reload();
-        }
-        else
-        {
-          alert('请求出错，请重试')
-        }
-      }
-    }
-}*/
-
 
 
 </script>
