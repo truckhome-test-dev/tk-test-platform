@@ -15,57 +15,78 @@
 	<!-- 页面私有部分 -->
 
 
-		<div class="layui-input-inline">
-		  <label class="layui-form-label" >筛选设备</label>
-			<select name="devname" lay-verify="required" lay-search="" style="margin-top:8px;margin-left: 5px">
-			  <option value="">请选择设备</option>
-			    {% for i in devname %}
-			        <option value={{i}}>{{i}}</option>
-			    {% endfor %}
-			</select>
-		</div>
+		<form class="layui-form" action="/devices" method="POST" style="margin-left:80px" >
+			<!-- <div class="layui-form-item">			    
+			    <div class="layui-input-inline">
+			    <span>
+			      <select id="seardev" name="serdev" lay-filter="devname">
+			         <option value="">请选择设备</option>
+					    {% for i in devname %}
+					        <option value={{i}}>{{i}}</option>
+					    {% endfor %}
+			      </select>
+			    </span>
+			    </div>
+				<div>
+					<span class="layui-btn layui-btn-danger" id="del_button" name="search" onclick="search(this)">筛选</span>
+			                </div>
+			</div> -->
 
-
-		<div class="layui-form-item">
-		    <div class="layui-inline">
-		      <label class="layui-form-label">新增设备</label>
+			<div class="layui-form-item">
 		      	<div class="layui-input-inline">
-		        	<input type="tel" name="device" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备名称"  class="layui-input">
+		        	<input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备名称"  class="layui-input">
 		      	</div>
-			  <label class="layui-form-label" >设备类别</label>
-				<select name="devname" lay-verify="required" lay-search="" style="margin-top:8px;margin-left: 5px">
+			  	<div class="layui-input-inline">
+				<select name="devtype" lay-verify="required" lay-search="" style="margin-top:8px;margin-left: 5px">
 				   <option value="">请选择设备类别</option>
 			       <option value="手机">手机</option>
 			       <option value="其他">其他</option>
 				</select>
-			</div>
-		</div>
+				</div>
 
-		<table class="layui-table">
+				<div class="layui-input-inline">
+		        	<input type="text" name="name" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备持有人"  class="layui-input">
+		      	</div>
+
+				<div class="layui-input-inline">
+		        	<input type="text" name="devnotes" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备备注"  class="layui-input">
+		      	</div>
+
+				<div>
+                   <input class="layui-btn layui-btn-danger" type="submit" value="添加" style="margin-left:30px"></input>
+                </div>
+			</div>
+		</form>
+
+		<table class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
 		  <colgroup>
-		    <col width="200">
-		    <col width="150">
-		    <col width="200">
-		    <col width="400">		    
+		    <col width=20%>
+		    <col width=15%>
+		    <col width=20%>
+		    <col width=30%>		    
 		    <col>
 		  </colgroup>
 		  <thead>
 		    <tr>
 		      <th>设备名称</th>
 		      <th>设备状态</th>
-		      <th>姓名</th>
-		      <th>说明</th>
-		      <th>编辑</th>
+		      <th>设备持有人</th>
+		      <th>设备说明</th>
+		      <th>操作</th>
 		    </tr> 
 		  </thead>
 		  <tbody>
 		    {% for i in alldata %}
 		    <tr>
-		      <td>{{i[0]}}</td>
+		      <td><div name="devname" value={{i[4]}}>{{i[0]}}</td>
 		      <td>{{i[1]}}</td>
-		      <td>{{i[2]}}</td>
-		      <td>{{i[3]}}</td>
-		      <td>{{i[3]}}</td>
+		      <td><div name="name">{{i[2]}}</td>
+		      <td><div id="devstatus"  name="devnotes" value={{i[4]}}>{{i[3]}}</td>
+		      <td>
+<!-- 		      	<span class="layui-btn layui-btn-danger" id="del_button" name="del" onclick="deldev(this)">删除</span> -->
+		      	<span class="layui-btn" id="edit_button" name="edit" onclick="editdevs(this)">编辑</span>
+
+              </td>
 		    </tr>
 		    {% endfor %}     
 		  </tbody>
@@ -75,13 +96,67 @@
 
 
 
+<script>
+layui.use('form', function(){
+  var form = layui.form;
+  })
+
+
+/*编辑内容*/
+function editdevs(e){
+  var td = e.parentNode.previousElementSibling;
+  var devid = td.querySelector('div').getAttribute('value');
+  window.location.href="http://127.0.0.1:5000/editdev?devid="+devid
+}
+
+
+/*查询设备*/
+function search(e){
+	var data1 = document.getElementById("seardev").value;
+    var xmlhttp;
+    xmlhttp = new XMLHttpRequest();
+    var data ='{"searchdev":"'+ data1 +'"}';
+    xmlhttp.open("POST","selectdev",true);
+    xmlhttp.send(data);
+    xmlhttp.onreadystatechange = function()
+    {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+        {
+        var seldata = xmlhttp.responseText
+        }
+    document.getElementById('list').innerHTML=seldata
+    }
+}
+
+
+/*function deldev(e)
+{
+  var td = e.parentNode.previousElementSibling;
+  var devid = td.querySelector('div').getAttribute('value');
+  var xmlhttp;
+  xmlhttp = new XMLHttpRequest();
+  var data ='{ "status" : '+ 1 +', "devid" : ' + devid + '}';
+  xmlhttp.open("POST","deldev",true);
+  xmlhttp.send(data);
+  xmlhttp.onreadystatechange = function()
+    {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+      {
+        if (xmlhttp.responseText == 'ok')
+        {
+          location.reload();
+        }
+        else
+        {
+          alert('请求出错，请重试')
+        }
+      }
+    }
+}*/
 
 
 
-
-
-
-
+</script>
 
 
 
