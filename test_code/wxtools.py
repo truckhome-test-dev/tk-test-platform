@@ -2,6 +2,13 @@ import os
 import itchat
 import threading
 from pickle import *
+from os import path
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud, STOPWORDS
+
+#多线程，暂时未用到
 class MyThread(threading.Thread):
 
     def __init__(self,func,args=()):
@@ -17,7 +24,20 @@ class MyThread(threading.Thread):
             return self.result  # 如果子线程不使用join方法，此处可能会报没有self.result的错误
         except Exception:
             return None
+def lcisQR():
+    threads = []
+    t1 = threading.Thread(target=isQR,args=())
+    threads.append(t1)
+    t2 = threading.Thread(target=lc,args=())
+    threads.append(t2)
+    for t in threads:
+        t.setDaemon(True)
+        t.start()
+    t.join()
+
 login_status=0
+pwd=os.getcwd()
+#登录
 def lc():
     itchat.auto_login()
     global login_status
@@ -42,18 +62,6 @@ def isQR():
         return status
     else:
         return status
-
-def lcisQR():
-    threads = []
-    t1 = threading.Thread(target=isQR,args=())
-    threads.append(t1)
-    t2 = threading.Thread(target=lc,args=())
-    threads.append(t2)
-    for t in threads:
-        t.setDaemon(True)
-        t.start()
-    t.join()
-
 
 #退出登录并删除目录下二维码文件
 def ec():
@@ -91,7 +99,7 @@ def lc_status():
 
 #统计好友性别
 def statistic_friends_sex():
-    if myfriends()=='nologin':
+    if login_status == 0:
         return 'nologin'
     else:
         myfriend=myfriends()
@@ -117,7 +125,7 @@ def statistic_friends_sex():
 
 #统计好友城市分布
 def statistic_friends_city():
-    if myfriends()=='nologin':
+    if login_status == 0:
         return 'nologin'
     else:
         myfriend = myfriends()
@@ -137,13 +145,64 @@ def statistic_friends_city():
             print(d)
             L.append(d)
         return L
-# lc()
-# print(statistic_friends_city())
-# def lc_status():
-#     try:
-#         itchat.get_friends(update=True)
-#     except:
-#         return {"code":1001}
-#     else:
-#         return {"code":1000}
-print(lc_status())
+#获取微信好友昵称
+
+def get_nickname():
+    if login_status == 0:
+        return 'nologin'
+    else:
+        text=""
+        myfriend=myfriends()
+        for friend in myfriend:
+            RemarkName=friend['RemarkName']
+            if RemarkName=='':
+                RemarkName=friend['NickName']
+            text += (RemarkName+" ")
+        RemarkName = pwd.replace('\\', '/') + "/static/conf/RemarkName.txt"
+        print(text)
+        f=open(RemarkName,"wt",encoding='utf-8')
+        f.write(text)
+        f.close()
+    print('ok')
+
+
+#词云
+def wc():
+    if login_status == 0:
+        return 'nologin'
+    else:
+        # current path
+        d = path.dirname(__file__)
+        print(d)
+        print(os.getcwd())
+        RemarkName = pwd.replace('\\', '/') + "/static/conf/RemarkName.txt"
+
+        # 用于生成词云的文本
+        text = open(RemarkName,encoding='utf-8').read()
+
+        # 图片模板
+        test_mask = np.array(Image.open(pwd.replace('\\', '/') + "/static/pic/test_mask.png"))
+        simfang = pwd.replace('\\', '/') + "/static/conf/simfang.ttf"
+        stopwords = set(STOPWORDS)
+        stopwords.add("said")
+
+        # setting
+        wc = WordCloud(font_path=simfang, background_color="black", max_words=2000, mask=test_mask,
+                       stopwords=None, scale=2)
+
+        # 生成词云
+
+        print(text)
+        wc.generate_from_text(text)
+
+        # 制图
+        plt.imshow(wc, interpolation='bilinear')
+        plt.axis("off")
+        plt.figure()
+        plt.imshow(test_mask, cmap=plt.cm.gray, interpolation='bilinear')
+        # plt.axis("off")
+        # plt.show()
+
+        # 保存文件
+        RemarkNamePic = pwd.replace('\\', '/') + "/static/pic/RemarkName.png"
+        wc.to_file(path.join(d, RemarkNamePic))

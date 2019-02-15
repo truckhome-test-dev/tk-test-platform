@@ -19,6 +19,7 @@
         <button class="layui-btn " name="login" onclick="lc(this);">获取二维码</button>
         <button class="layui-btn disabled" onclick="refurbish(this)">刷新</button>
         <button class="layui-btn disabled" onclick="statistic(this)">统计</button>
+        <button class="layui-btn disabled" onclick="wc(this)">词云</button>
         <button class="layui-btn disabled" onclick="ec(this)">退出登录</button>
 {#    <div><img src="/static/pic/QR.png"></div>#}
     <br />
@@ -44,6 +45,7 @@
     <div id="sex" style="width: 800px;height:600px;float:left"></div>
     <div id="city" style="width: 800px;height:600px;float:right"></div>
     </div>
+    <img src="" id="RemarkName" style="display: none; width: 100%; height: 100%;object-fit: contain;" width="1024px" hight="768px">
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myCharsex = echarts.init(document.getElementById('sex'));
@@ -94,7 +96,6 @@
             radius : '65%',
             center: ['50%', '50%'],
             data:[
-
             ],
             itemStyle: {
                 emphasis: {
@@ -164,6 +165,7 @@
                 if (c.code == 1000){
                    btn[2].classList.remove('disabled');
                    btn[3].classList.remove('disabled');
+                   btn[4].classList.remove('disabled');
                    btn[0].classList.add('disabled')
                 }
 
@@ -265,6 +267,8 @@
                     optioncity.series[0].data=c.Province
                     myCharsex.setOption(optionsex);
                     myCharcity.setOption(optioncity);
+
+
                 }
 
 
@@ -272,6 +276,13 @@
         }
 
 }
+        function  wc(e) {
+            if (e.classList.contains('disabled')) {
+                return
+            }
+            document.getElementById("RemarkName").src = "/static/pic/RemarkName.png";
+            document.getElementById('RemarkName').style.display = "block";
+        }
 </script>
 
 </body>
