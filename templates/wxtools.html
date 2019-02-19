@@ -19,7 +19,8 @@
         <button class="layui-btn " name="login" onclick="lc(this);">获取二维码</button>
         <button class="layui-btn disabled" onclick="refurbish(this)">刷新</button>
         <button class="layui-btn disabled" onclick="statistic(this)">统计</button>
-        <button class="layui-btn disabled" onclick="ec(this)">强制退出</button>
+        <button class="layui-btn disabled" onclick="wc(this)">词云</button>
+        <button class="layui-btn disabled" onclick="ec(this)">退出登录</button>
 {#    <div><img src="/static/pic/QR.png"></div>#}
     <br />
     <img src="" id="oImg" style="display:none;margin: 100px 650px;" width="320px" hight="400px">
@@ -44,6 +45,7 @@
     <div id="sex" style="width: 800px;height:600px;float:left"></div>
     <div id="city" style="width: 800px;height:600px;float:right"></div>
     </div>
+    <img src="" id="RemarkName" style="display: none; width: 100%; height: 100%;object-fit: contain;" width="1024px" hight="768px">
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myCharsex = echarts.init(document.getElementById('sex'));
@@ -52,7 +54,7 @@
         var btn = document.querySelectorAll('.layui-btn');
 
         // 指定图表的配置项和数据
-        var optionsex = {
+        var optionsex1 = {
             title: {
                 text: '好友性别分布'
             },
@@ -72,6 +74,39 @@
                 {#data:[30, 12, 4]#}
             }]
         };
+        var optionsex = {
+    title : {
+        text: '好友性别分布',
+        subtext: '',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['男','女','其他']
+    },
+    series : [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius : '65%',
+            center: ['50%', '50%'],
+            data:[
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
         var optioncity = {
                 backgroundColor: '#FFFFFF',
                 title: {
@@ -115,97 +150,29 @@
             };
 
         // 使用刚指定的配置项和数据显示图表。
-
-        function  lc(e)
-    {
-        if (e.classList.contains('disabled')) {
-                return
-            }
-        document.getElementById('loading').style.display='';
-        var xmlhttp;
-        xmlhttp = new XMLHttpRequest();
-        {#var data ='{  "url_id" :' + url_id + '}';#}
-        xmlhttp.open("POST","login",true);
-        xmlhttp.send();
-        setTimeout(function(){
-            document.getElementById("oImg").src = "/static/pic/QR.png";
-            document.getElementById('oImg').style.display = "block";
-            document.getElementById('loading').style.display = "none";
-        },3000)
-        xmlhttp.onreadystatechange = function(){
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
-                var c = JSON.parse(xmlhttp.responseText)
-                if(c.code==1000){
-                    for (let i = 0; i < btn.length; i++) {
-                        if (btn[i].classList.contains('disabled')){
-                            btn[i].classList.remove('disabled')
-                        } else{
-                             btn[i].classList.add('disabled')
-                        }
-                    }
-                }
-            }
-        }
-
-}
-        function refurbish(e)
-        {
-            if (e.classList.contains('disabled')) {
-                return
-            }
-            var img_src="/static/pic/QR.png?"+Math.random()
-            document.getElementById("oImg").src = img_src;
-}
-        function  ec(e)
-    {
-        if (e.classList.contains('disabled')) {
-                return
-            }
-        var xmlhttp;
-        xmlhttp = new XMLHttpRequest();
-        {#var data ='{  "url_id" :' + url_id + '}';#}
-        xmlhttp.open("POST","exit",true);
-        xmlhttp.send();
-        location.reload()
-}
-        function  statistic(e)
-    {
-        if (e.classList.contains('disabled')) {
-                return
-            }
-        document.getElementById('loading').style.visibility='hidden';
-
-        var xmlhttp;
-        xmlhttp = new XMLHttpRequest();
-        {#var data ='{  "url_id" :' + url_id + '}';#}
-        xmlhttp.open("POST","statistic",true);
-        xmlhttp.send();
-
-        xmlhttp.onreadystatechange = function()
+        window.onload=function () {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            {#var data ='{  "url_id" :' + url_id + '}';#}
+            xmlhttp.open("POST","status",true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function()
         {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
             {
             var c = JSON.parse(xmlhttp.responseText)
                 {#alert(c.code)#}
-                if (c.code == 1001){
-                    alert("未登录")
-                }else {
-                {#var obj = JSON.parse(xmlhttp.responseText)#}
-                {#var data=obj['city']#}
-                    btn[1].classList.add('disabled')
-                    btn[2].classList.add('disabled')
-                    document.getElementById("oImg").src =""
-                    optionsex.series[0].data= c.sex
-                    optioncity.series[0].data=c.Province
-                    myCharsex.setOption(optionsex);
-                    myCharcity.setOption(optioncity);
+                if (c.code == 1000){
+                   btn[2].classList.remove('disabled');
+                   btn[3].classList.remove('disabled');
+                   btn[4].classList.remove('disabled');
+                   btn[0].classList.add('disabled')
                 }
-
 
             }
         }
+        }
 
-}
 </script>
 
 </body>

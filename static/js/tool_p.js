@@ -176,3 +176,144 @@
           }
         }
     }
+
+
+        /*编辑设备*/
+        function editdev(e){
+          window.location.href="http://127.0.0.1:5000/editdev?devid="+e.dataset.id
+        }
+
+
+        //删除设备
+        function deldev(e)
+        {
+          var devid = e.dataset.id;
+          var xmlhttp;
+          xmlhttp = new XMLHttpRequest();
+          var data ='{ "status" : '+ 1 +', "devid" : ' + devid + '}';
+          xmlhttp.open("POST","deldev",true);
+          xmlhttp.send(data);
+          xmlhttp.onreadystatechange = function()
+            {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+              {
+                if (xmlhttp.responseText == 'ok')
+                {
+                  location.reload();
+                }
+                else
+                {
+                  alert('请求出错，请重试')
+                }
+              }
+            }
+        }
+
+
+        function  lc(e)
+    {
+        if (e.classList.contains('disabled')) {
+                return
+            }
+        document.getElementById('loading').style.display='';
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        // {#var data ='{  "url_id" :' + url_id + '}';#}
+        xmlhttp.open("POST","login",true);
+        xmlhttp.send();
+        setTimeout(function(){
+            document.getElementById("oImg").src = "/static/pic/QR.png";
+            document.getElementById('oImg').style.display = "block";
+            document.getElementById('loading').style.display = "none";
+        },3000)
+        btn[1].classList.remove('disabled');
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+                var c = JSON.parse(xmlhttp.responseText)
+                if(c.code==1000){
+                    alert("登陆成功！")
+                    document.getElementById("oImg").src = "";
+                    for (let i = 0; i < btn.length; i++) {
+                        if (btn[i].classList.contains('disabled')){
+                            btn[i].classList.remove('disabled')
+                        } else{
+                             btn[i].classList.add('disabled')
+                        }
+                    }
+                }
+            }
+        }
+
+}
+        function refurbish(e)
+        {
+            if (e.classList.contains('disabled')) {
+                return
+            }
+            var img_src="/static/pic/QR.png?"+Math.random()
+            document.getElementById("oImg").src = img_src;
+}
+        function  ec(e)
+    {
+        if (e.classList.contains('disabled')) {
+                return
+            }
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        // {#var data ='{  "url_id" :' + url_id + '}';#}
+        xmlhttp.open("POST","exit",true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            {
+            location.reload()
+
+            }
+        }
+
+}
+        function  statistic(e)
+    {
+        if (e.classList.contains('disabled')) {
+                return
+            }
+        document.getElementById('loading').style.visibility='hidden';
+
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        // {#var data ='{  "url_id" :' + url_id + '}';#}
+        xmlhttp.open("POST","statistic",true);
+        xmlhttp.send();
+
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            {
+            var c = JSON.parse(xmlhttp.responseText)
+                // {#alert(c.code)#}
+                if (c.code == 1001){
+                    alert("未登录")
+                }else {
+                // {#var obj = JSON.parse(xmlhttp.responseText)#}
+                // {#var data=obj['city']#}
+                    btn[1].classList.add('disabled')
+                    btn[2].classList.add('disabled')
+                    document.getElementById("oImg").src =""
+                    optionsex.series[0].data= c.sex
+                    optioncity.series[0].data=c.Province
+                    myCharsex.setOption(optionsex);
+                    myCharcity.setOption(optioncity);
+                }
+            }
+        }
+}
+        function  wc(e) {
+            if (e.classList.contains('disabled')) {
+                return
+            }
+            var img_RemarkName="/static/pic/RemarkName.png?"+Math.random()
+            document.getElementById("RemarkName").src = img_RemarkName;
+            // {#document.getElementById("RemarkName").src = "/static/pic/RemarkName.png";#}
+            document.getElementById('RemarkName').style.display = "block";
+        }
