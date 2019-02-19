@@ -38,22 +38,14 @@ def login():
     else:
         data={"code":1001}
         return json.dumps(data)
-<<<<<<< HEAD
+
 #退出登录
-=======
-
-
->>>>>>> a1f8523e1d2880944351631f33aa01c8ae6f0781
 @app.route('/exit',methods=['post'])
 def exit():
     ec()
     return 'ok'
 
-<<<<<<< HEAD
 #统计接口
-=======
-
->>>>>>> a1f8523e1d2880944351631f33aa01c8ae6f0781
 @app.route('/statistic',methods=['post'])
 def statistic():
     sex = statistic_friends_sex()
