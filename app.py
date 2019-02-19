@@ -59,8 +59,6 @@ def statistic():
 		return json.dumps(data)
 
 
-
-
 @app.route('/scheduling',methods=['get','post'])
 def scheduling(name=None):
 	if not name:
