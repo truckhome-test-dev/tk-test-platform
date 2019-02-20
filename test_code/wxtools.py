@@ -7,7 +7,11 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
+from configparser import ConfigParser
 
+global login_status
+login_status=0
+pwd=os.getcwd()
 #多线程，暂时未用到
 class MyThread(threading.Thread):
 
@@ -35,8 +39,7 @@ def lcisQR():
         t.start()
     t.join()
 
-login_status=0
-pwd=os.getcwd()
+
 #登录
 def lc():
     itchat.auto_login()
@@ -68,13 +71,7 @@ def ec():
     itchat.logout()
     global login_status
     login_status = 0
-    # pwd=os.getcwd()
-    # # pwd = os.path.abspath(os.path.dirname(pwd)+os.path.sep+".")
-    # pwd=pwd.replace('\\','/')+"/static/pic/QR.png"
-    # if isQR()==1:
-    #     os.remove(pwd)
     print("exit")
-
 
 #获取微信好友信息
 def myfriends():
@@ -90,7 +87,6 @@ def lc_status():
     global login_status
     if login_status == 0:
         data = {"code": 1001}
-        print(111)
         return data
     else:
         print(222)
@@ -121,7 +117,6 @@ def statistic_friends_sex():
         for i in range(3):
             L[i]['value'] = result[i]
         return L
-# print(statistic_friends_sex())
 
 #统计好友城市分布
 def statistic_friends_city():
@@ -145,8 +140,8 @@ def statistic_friends_city():
             print(d)
             L.append(d)
         return L
-#获取微信好友昵称
 
+#获取微信好友昵称
 def get_nickname():
     if login_status == 0:
         return 'nologin'
@@ -159,7 +154,7 @@ def get_nickname():
                 RemarkName=friend['NickName']
             text += (RemarkName+" ")
         RemarkName = pwd.replace('\\', '/') + "/static/conf/RemarkName.txt"
-        print(text)
+        # print(text)
         f=open(RemarkName,"wt",encoding='utf-8')
         f.write(text)
         f.close()
@@ -172,8 +167,8 @@ def wc():
     else:
         # current path
         d = path.dirname(__file__)
-        print(d)
-        print(os.getcwd())
+        # print(d)
+        # print(os.getcwd())
         RemarkName = pwd.replace('\\', '/') + "/static/conf/RemarkName.txt"
 
         # 用于生成词云的文本
@@ -188,18 +183,17 @@ def wc():
         # setting
         wc = WordCloud(font_path=simfang, background_color="white", max_words=2000, mask=test_mask,
                        stopwords=None, scale=2)
-
         # 生成词云
         try:
             wc.generate_from_text(text)
         except:
             return 'nologin'
 
-        # 制图
-        plt.imshow(wc, interpolation='bilinear')
-        plt.axis("off")
-        plt.figure()
-        plt.imshow(test_mask, cmap=plt.cm.gray, interpolation='bilinear')
+        # 制图  mac不支持
+        # plt.imshow(wc, interpolation='bilinear')
+        # plt.axis("off")
+        # plt.figure()
+        # plt.imshow(test_mask, cmap=plt.cm.gray, interpolation='bilinear')
         # plt.axis("off")
         # plt.show()
 

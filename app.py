@@ -17,18 +17,18 @@ app.config.from_object('settings.DevConfig')
 def index():
     return render_template('index.html')
 
-
+#微信小工具首页
 @app.route('/wxtools',methods=['get','post'])
 def wxtools():
     if request.method == "GET":
         return render_template('wxtools.html')
-
+#查询登录状态
 @app.route('/status',methods=['get','post'])
 def status():
     data=lc_status()
     return json.dumps(data)
 
-
+#登录
 @app.route('/login',methods=['post'])
 def login():
     ret=lc()
@@ -39,13 +39,13 @@ def login():
         data={"code":1001}
         return json.dumps(data)
 
-
+#退出登录
 @app.route('/exit',methods=['post'])
 def exit():
     ec()
     return 'ok'
 
-
+#统计接口
 @app.route('/statistic',methods=['post'])
 def statistic():
     sex = statistic_friends_sex()
@@ -78,7 +78,7 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html')
 
-
+#设备管理展示与新增
 @app.route('/devices',methods=['get','post'])
 def devices():
     if request.method == "POST":
@@ -93,7 +93,7 @@ def devices():
         devname = re.appgd()
         return render_template('devices.html',alldata=alldata,devname=devname)
         
-
+#设备查询
 @app.route('/selectdev',methods=['post','get'])
 def seldev():
     if request.method == "POST":
@@ -101,7 +101,7 @@ def seldev():
         seldata = re.appseap(seadev)
         return seldata
 
-
+#测试设备删除
 @app.route('/deldev',methods=['post','get'])
 def deldev():
     if request.method == "POST":
@@ -109,7 +109,7 @@ def deldev():
         re.appdelp(devdata)
         return 'ok'
 
-
+#设备编辑
 @app.route('/editdev',methods=['post','get'])
 def editdev():
     if request.method == "GET":
@@ -118,7 +118,7 @@ def editdev():
         return render_template('editdev.html',editdata=data)
 
 
-
+#设备编辑后保存
 @app.route('/savedev',methods=['post','get'])
 def savedev():
     if request.method == "POST":
