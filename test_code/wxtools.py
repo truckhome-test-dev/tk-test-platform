@@ -10,6 +10,7 @@ from wordcloud import WordCloud, STOPWORDS
 from configparser import ConfigParser
 
 global login_status
+login_status=0
 pwd=os.getcwd()
 #多线程，暂时未用到
 class MyThread(threading.Thread):
