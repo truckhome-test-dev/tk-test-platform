@@ -22,6 +22,7 @@ def index():
 def wxtools():
     if request.method == "GET":
         return render_template('wxtools.html')
+        
 #查询登录状态
 @app.route('/status',methods=['get','post'])
 def status():
@@ -59,14 +60,16 @@ def statistic():
         data = {"code":1000,"sex": sex, "Province": Province}
         return json.dumps(data)
 
-
+#排期展示
 @app.route('/scheduling',methods=['get','post'])
-def scheduling(name=None):
-    if not name:
-        pq = Scheduling()
-        return pq.get_default_data()
+def scheduling():
+    name = request.args.get('name')
+    if name is None:
+        return render_template('Scheduling.html')
     else:
-        pass
+        pq = Scheduling()
+        data = pq.date_rest()
+        return render_template('Scheduling_son.html',data=data)
 
 
 @app.errorhandler(404)
@@ -130,7 +133,20 @@ def savedev():
         re.appeditp(devname,devst,name,notes,devid)
         return redirect("http://192.168.1.59:5000/devices")
 
+
+@app.route('/test',methods=['post','get'])
+def test():
+	return render_template('test.html')
+
+
+@app.route('/test1',methods=['post','get'])
+def test1():
+	data = {"code":1000,"sex": sex, "Province": Province}
+	return json.dumps(data)
+	
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=5000,debug=True)
+
 
 
