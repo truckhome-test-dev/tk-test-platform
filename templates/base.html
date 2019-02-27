@@ -28,12 +28,10 @@
                     <ul class="layui-nav layui-nav-tree"  lay-filter="test">
 
                         <!-- 左侧栏目配置 -->
-<<<<<<< HEAD
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/index','排期': 'http://127.0.0.1:5000/scheduling'}, '趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
-=======
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/devices','排期': 'http://127.0.0.1:5000/addapi'}, '趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
->>>>>>> 6636abe710dd7a109264111f7e07a9cb29e83894
 
+                        {% set left_list = {'资源管理':{'测试设备': 'http://192.168.1.59:5000/devices','排期': 'http://192.168.1.59:5000/addapi'}, '趣味工具':{'微信好友分析': 'http://192.168.1.59:5000/wxtools'}} %}
+                    <!--    {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/devices','排期': 'http://127.0.0.1:5000/addapi'}, '趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
+					-->
                         {% for name,n_list in left_list.items() %}
                         <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>
                             <dl class="layui-nav-child">

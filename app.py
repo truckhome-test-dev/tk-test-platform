@@ -87,7 +87,7 @@ def devices():
         name = request.form.get('name')
         devnotes = request.form.get('devnotes')
         re.appinsp(devname,devtype,name,devnotes)
-        return redirect("http://127.0.0.1:5000/devices")
+        return redirect("http://192.168.1.59:5000/devices")
     else:
         alldata = re.appga()
         devname = re.appgd()
@@ -128,9 +128,9 @@ def savedev():
         name = request.form.get('name')
         notes = request.form.get('notes')
         re.appeditp(devname,devst,name,notes,devid)
-        return redirect("http://127.0.0.1:5000/devices")
+        return redirect("http://192.168.1.59:5000/devices")
 
 if __name__ == '__main__':
-	app.run()
+	app.run(host='0.0.0.0',port=5000,debug=True)
 
 
