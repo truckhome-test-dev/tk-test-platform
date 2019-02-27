@@ -1,0 +1,55 @@
+<body>
+    <meta charset="UTF-8">
+    <title>测试管理系统</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+<!--     <script src="static/layui/layui.js"></script>
+    <script type="text/javascript" src="static/js/tool_p.js"></script> -->
+
+<!-- 页面私有部分 -->
+
+<!-- 	<div>
+		{% for i,o in data.items() %}
+			<li>{{i}}{{o}}</li>
+
+		{% endfor %}
+	</div> -->
+	<div>
+		<table class="layui-table" style="margin-top:5px;margin-left:5px width:1000px">
+			<thead>
+				<tr>
+					<th style="width:50px;font-weight:bold ;text-align:center" >日期</th>
+					{% for date in data['day'] %}
+						{% if date == 'weekend' %}
+							<th style="width:50px;font-weight:bold ;text-align:center" id={{date}}>{{date}}</th>
+						{% else %}
+							<th style="width:120px;font-weight:bold ;text-align:center" id={{date}}>{{date}}</th>
+						{% endif %}
+					{% endfor %}
+				</tr> 
+			</thead>
+			<tbody>
+				{% for name,task in data['task'].items() %}
+					<tr class="table-item">
+						{% for task_q, task_list in task.items() %}
+							<td style="font-weight:bold ;text-align:center;border-width: 1px" bgcolor=" #FFFCEC" rowspan={{task_q}}>{{name}}</td>
+							{% for tasks in task_list %}
+								{% for task_one in tasks[:-1] %}
+									{% if task_one == '' %}
+										<td style="font-weight:bold ;text-align:center;border-width: 1px" bgcolor="#FFFCEC">{{task_one}}</td>
+									{% else %}
+										<td style="font-weight:bold ;text-align:center;border-width: 1px" bgcolor={{tasks[-1][0]}}" >{{task_one}}</td>
+									{% endif %}
+								{% endfor %}
+							</tr> 
+							{% endfor %}	
+						{% endfor %}
+				{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
+</body>
+
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

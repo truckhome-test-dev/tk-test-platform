@@ -5,7 +5,7 @@
 
 class BaseConfig(object):
 	# 公用的配置
-	host = '0.0.0.0'
+	HOST = '0.0.0.0'
 	DEBUG = True
 	TESTING = True
 	THREADED = True
@@ -14,4 +14,4 @@ class TestConfig(BaseConfig):
 	DB = '127.0.0.1'	
 
 class DevConfig(BaseConfig):
-	host = '0.0.0.0'
+	HOST = '0.0.0.0'
