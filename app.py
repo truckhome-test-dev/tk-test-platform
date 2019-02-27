@@ -22,6 +22,7 @@ def index():
 def wxtools():
     if request.method == "GET":
         return render_template('wxtools.html')
+        
 #查询登录状态
 @app.route('/status',methods=['get','post'])
 def status():
