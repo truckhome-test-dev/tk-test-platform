@@ -5,6 +5,7 @@
 from flask import Flask, request,render_template,redirect,jsonify
 from test_code import *
 import settings
+import json
 
 app = Flask(__name__)
 re = Device_Manag()
@@ -86,37 +87,13 @@ def devices():
         devtype = request.form.get('devtype')
         name = request.form.get('name')
         devnotes = request.form.get('devnotes')
-        re.appinsp(devname,devtype,name,devnotes)
+        deversion = request.form.get('deversion')
+        re.appinsp(devname,devtype,name,devnotes,deversion)
         return redirect("http://127.0.0.1:5000/devices")
     else:
         alldata = re.appga()
-        devname = re.appgd()
-        return render_template('devices.html',alldata=alldata,devname=devname)
+        return render_template('devices.html',alldata=alldata)
         
-#设备查询
-@app.route('/selectdev',methods=['post','get'])
-def seldev():
-    if request.method == "POST":
-        seadev = request.get_data()
-        seldata = re.appseap(seadev)
-        return seldata
-
-#测试设备删除
-@app.route('/deldev',methods=['post','get'])
-def deldev():
-    if request.method == "POST":
-        devdata = request.get_data()
-        re.appdelp(devdata)
-        return 'ok'
-
-#设备编辑
-@app.route('/editdev',methods=['post','get'])
-def editdev():
-    if request.method == "GET":
-        devid = request.args.to_dict().get('devid', "")
-        data = re.appeditg(devid)
-        return render_template('editdev.html',editdata=data)
-
 
 #设备编辑后保存
 @app.route('/savedev',methods=['post','get'])
@@ -127,8 +104,25 @@ def savedev():
         devst = request.form.get('devst')
         name = request.form.get('name')
         notes = request.form.get('notes')
-        re.appeditp(devname,devst,name,notes,devid)
+        version = request.form.get('version')
+        re.appeditp(devname,devst,name,notes,version,devid)
         return redirect("http://127.0.0.1:5000/devices")
+
+
+#修改使用状态
+@app.route('/usestatus',methods=['post','get'])
+def usestatus():
+    if request.method == 'POST':
+        devuser = request.get_data()
+        devuser = json.loads(devuser.decode("utf-8"))
+        devid = devuser['devid']
+        user = devuser['user']
+        re.appusep(devid,user)
+        return "ok"
+
+
+
+
 
 if __name__ == '__main__':
 	app.run()
