@@ -15,62 +15,21 @@
 	<!-- 页面私有部分 -->
 
 
-		<form class="layui-form" action="/devices" method="POST" style="margin-left:80px" >
-			<!-- <div class="layui-form-item">			    
-			    <div class="layui-input-inline">
-			    <span>
-			      <select id="seardev" name="serdev" lay-filter="devname">
-			         <option value="">请选择设备</option>
-					    {% for i in devname %}
-					        <option value={{i}}>{{i}}</option>
-					    {% endfor %}
-			      </select>
-			    </span>
-			    </div>
-				<div>
-					<span class="layui-btn layui-btn-danger" id="del_button" name="search" onclick="search(this)">筛选</span>
-			                </div>
-			</div> -->
-
-			<div class="layui-form-item">
-		      	<div class="layui-input-inline">
-		        	<input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备名称"  class="layui-input">
-		      	</div>
-			  	<div class="layui-input-inline">
-				<select name="devtype" lay-verify="required" lay-search="" style="margin-top:8px;margin-left: 5px">
-				   <option value="">请选择设备类别</option>
-			       <option value="手机">手机</option>
-			       <option value="其他">其他</option>
-				</select>
-				</div>
-
-				<div class="layui-input-inline">
-		        	<input type="text" name="name" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备持有人"  class="layui-input">
-		      	</div>
-
-				<div class="layui-input-inline">
-		        	<input type="text" name="devnotes" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备备注"  class="layui-input">
-		      	</div>
-
-				<div>
-                   <input class="layui-btn layui-btn-danger" type="submit" value="添加" style="margin-left:30px"></input>
-                </div>
-			</div>
-		</form>
-
 		<table class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
 		  <colgroup>
 		    <col width=20%>
+		    <col width=10%>
 		    <col width=15%>
 		    <col width=20%>
-		    <col width=30%>		    
+		    <col width=20%>		    
 		    <col>
 		  </colgroup>
 		  <thead>
 		    <tr>
 		      <th>设备名称</th>
 		      <th>设备状态</th>
-		      <th>设备持有人</th>
+		      <th>借用者姓名</th>
+		      <th>设备版本</th>
 		      <th>设备说明</th>
 		      <th>操作</th>
 		    </tr> 
@@ -78,21 +37,30 @@
 		  <tbody>
 		    {% for i in alldata %}
 		    <tr class="table-item">
-		      <td>{{i[0]}}</td>
 		      <td>{{i[1]}}</td>
-		      <td>{{i[2]}}</td>
+			  <td>
+				{% if i[2] == 0 %}
+				  组内
+				{% else %}
+				  出借
+				{% endif %}
+			  </td>
 		      <td>{{i[3]}}</td>
-		      <td>
-<!-- 		      	<span class="layui-btn layui-btn-danger" id="del_button" name="del" onclick="deldev(this)">删除</span> -->
-		      	<span data-id={{i[4]}} class="layui-btn" id="edit_button" name="edit" onclick="editdev(this)">编辑</span>
-
+		      <td>{{i[4]}}</td>
+		      <td>{{i[5]}}</td>
+              <td>
+              	<div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
+	              	{% if i[2] == 0 %}
+						<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">外借</button>
+					{% else %}
+	              		<button data-id={{i[0]}} data-method="offset2" data-type="auto" class="layui-btn layui-btn-warm">归还</button>
+	              	{% endif %}
+              	 </div>
               </td>
 		    </tr>
 		    {% endfor %}     
 		  </tbody>
 		</table>
-
-
 
 
 
@@ -102,28 +70,63 @@ layui.use('form', function(){
   })
 
 
-/*查询设备*/
-function search(e){
-	var data1 = document.getElementById("seardev").value;
-    var xmlhttp;
-    xmlhttp = new XMLHttpRequest();
-    var data ='{"searchdev":"'+ data1 +'"}';
-    xmlhttp.open("POST","selectdev",true);
-    xmlhttp.send(data);
-    xmlhttp.onreadystatechange = function()
-    {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
-        {
-        var seldata = xmlhttp.responseText
-        }
-    document.getElementById('list').innerHTML=seldata
-    }
-}
+layui.use('layer', function(){ //独立版的layer无需执行这一句
+	var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
 
+	//手机外借按钮弹窗触发
+	var active = {
+		offset: function(othis){
+			var type = othis.data('type')
+			,text = othis.text();
+			var devid = othis.data('id');
+			layer.open({
+			type: 1
+			,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+			,id: 'layerDemo'+type //防止重复弹出
+			,content: '<div class="layui-input-inline"><input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入使用者姓名"  class="layui-input"></div>'
+			,btn: '确认'
+			,btnAlign: 'c' //按钮居中
+			,shade: 0 //不显示遮罩
+			,yes: function(index,layero){
+				var user = layero.find('input')[0].value;
+
+		          var xmlhttp;
+		          xmlhttp = new XMLHttpRequest();
+
+		          var data ='{ "devid" : '+ devid +', "user" : "' + user + '"}';
+		          xmlhttp.open("POST","usestatus",true);
+		          xmlhttp.send(data);
+			 	  layer.close(index);
+				  xmlhttp.onreadystatechange = function()
+				        {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+				            {
+				            if (xmlhttp.responseText == 'ok')
+				            {
+				              location.reload();
+				            }
+				            else
+				            {
+				              alert('请求出错，请重试')
+				            }
+				          }
+				        }
+
+			}
+			});
+
+		}
+	};
+
+
+
+$('#layerDemo .layui-btn').on('click', function(){
+var othis = $(this), method = othis.data('method');
+active[method] ? active[method].call(this, othis) : '';
+});
+
+});
 
 </script>
-
-
-
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
