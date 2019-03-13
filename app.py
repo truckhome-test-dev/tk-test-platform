@@ -94,7 +94,6 @@ def devices():
         return redirect("http://127.0.0.1:5000/devices")
     else:
         alldata = re.appga()
-        devname = re.appgd()
         return render_template('devices.html',alldata=alldata,devname=devname)
         
 #设备查询
