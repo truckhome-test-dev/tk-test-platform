@@ -134,6 +134,18 @@ def savedev():
         return redirect("http://127.0.0.1:5000/devices")
 
 
+#修改使用状态
+@app.route('/usestatus',methods=['post','get'])
+def usestatus():
+    if request.method == 'POST':
+        devuser = request.get_data()
+        devuser = json.loads(devuser.decode("utf-8"))
+        devid = devuser['devid']
+        user = devuser['user']
+        re.appusep(devid,user)
+        return "ok"
+
+
 @app.route('/test',methods=['post','get'])
 def test():
 	return render_template('test.html')
