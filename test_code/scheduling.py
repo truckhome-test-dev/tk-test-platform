@@ -11,7 +11,7 @@ import random
 class Scheduling(object):
 	"""docstring for Test_Tools_Api"""
 	def __init__(self):
-		today = datetime.datetime.today()
+		today = datetime.date.today()
 		next_months = today - relativedelta(months=-1)
 		cookies = {'X360CHE_password': '4665afe6cd25c35251a331c576f3b154','X360CHE_uid': '42'}
 		url = 'https://connection.360che.com/server/admin.php/Task/ganTe'
@@ -21,9 +21,12 @@ class Scheduling(object):
 		# data = {'start_date':today, 'end_date':next_months, 'department_id':'0'}
 		self.paiqi_json = requests.post(url, data=data, cookies=cookies)
 		# self.QAname = ['周健','邢猛','崔金月','张恩崎','张蕾蕾','成小宇'] 
+		print(self.paiqi_json.json())
 
 	def get_data(self):
 		#获取所有排期
+		today = datetime.datetime.today()
+		next_months = today - relativedelta(months=-1)
 		return self.paiqi_json.json()
 
 
@@ -43,6 +46,7 @@ class Scheduling(object):
 
 
 	def _r_task(self, index, num ,taskname):
+		#整理新的数据格式
 		l = []
 		for i in range(0, index):
 			l.append('')
@@ -54,6 +58,7 @@ class Scheduling(object):
 
 
 	def get_task(self):
+		#获取任务
 		taskArr = self.get_data()['data']['userTask']
 		taskList = {}
 		colour = ['#F0F8FF', '#FAEBD7', '#7FFFD4', '#8A2BE2', '#5F9EA0', '#87CEEB', '#FF8C00', '#FFD700', '#CD5C5C', '#FFFACD', '#87CEFA', '#FFA500', '#FFB6C1', '#FFEBCD', '#FF9900', '#9ACD32']
@@ -74,7 +79,7 @@ class Scheduling(object):
 
 
 	def date_rest(self):
-
+		#获取任务个数
 		task = {}
 		date = self.get_date()
 		for i,o in self.get_task().items():
