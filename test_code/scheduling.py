@@ -19,9 +19,8 @@ class Scheduling(object):
 		# test 
 		# url = 'http://venus.360che.com/server/admin.php/Task/ganTe'
 		# data = {'start_date':today, 'end_date':next_months, 'department_id':'0'}
-		self.paiqi_json = requests.post(url, data=data, cookies=cookies)
-		# self.QAname = ['周健','邢猛','崔金月','张恩崎','张蕾蕾','成小宇'] 
-		print(self.paiqi_json.json())
+		self.paiqi_json = requests.post(url, data=data, cookies=cookies) 
+		# print(self.paiqi_json.json())
 
 	def get_data(self):
 		#获取所有排期
@@ -58,7 +57,7 @@ class Scheduling(object):
 
 
 	def get_task(self):
-		#获取任务
+		#获取任务,并整理数据格式为{QA：[task1,task2,[colour]]}
 		taskArr = self.get_data()['data']['userTask']
 		taskList = {}
 		colour = ['#F0F8FF', '#FAEBD7', '#7FFFD4', '#8A2BE2', '#5F9EA0', '#87CEEB', '#FF8C00', '#FFD700', '#CD5C5C', '#FFFACD', '#87CEFA', '#FFA500', '#FFB6C1', '#FFEBCD', '#FF9900', '#9ACD32']
@@ -71,7 +70,7 @@ class Scheduling(object):
 				if task.count('') == 12:
 					continue
 				for i in self.week[:11]:
-					if i['x'] < 11:
+					if i['x'] <= 11:
 						task[i['x']] = ''
 				task.append(random.sample(colour,1))
 				taskList[QAname].append(task)
