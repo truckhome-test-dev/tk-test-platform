@@ -44,7 +44,7 @@ class  SqlOperate():
 		for k, v in field_item.items():
 			tmp = "%s='%s'" % (str(k), str(v))
 			fieldlist.append(tmp)
-		return ('and'.join(fieldlist))
+		return (' and '.join(fieldlist))
 
 
 	#执行sql
@@ -95,7 +95,7 @@ class  SqlOperate():
 		condition:条件格式：{'字段名称':字段内容}
 		"""	
 		upsql = "update %s set "  %(tablename) 
-		upsql += '%s where %s' %(self.keyvalue(field_item),self.keyvalue(condition))
+		upsql += '%s where %s' %(self.keyvalue(field_item),self.keyvalue2(condition))
 		return upsql
 
 

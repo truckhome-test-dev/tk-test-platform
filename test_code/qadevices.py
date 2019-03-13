@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
+import json,time
 
 from test_code.sqlop import * 
 # from sqlop import * 
@@ -24,7 +24,7 @@ class Device_Manag(SqlOperate):
 		self.dbcur()
 		sql = self.sqlUpdate(tablename,field_itemm,condition)
 		self.sqlExe(sql)
-		self.sqlCom()		
+		self.sqlCom()	
 		self.sqlclo()
 
 
@@ -49,51 +49,44 @@ class Device_Manag(SqlOperate):
 		self.sqlclo()
 		return ll
 
-
-	def appinsp(self,devname,devtype,name=0,devnotes=0):
+	#插入数据路由
+	def appinsp(self,devname,devtype,name=0,devnotes=0,deversion=0):
 		if devtype == "手机":
 			devtype = 0
 		else :
 			devtype = 1
-		self.insData('devices',{'devname':devname,'devtype':devtype,'name':name,'notes':devnotes})
+		self.insData('devices',{'devname':devname,'devtype':devtype,'name':name,'notes':devnotes,'version':deversion})
 		return "pass"
 
 
-	def appseap(self,param):
-		seadev = json.loads(param)['searchdev']
-		alldata = str(self.selData('devices',['devname','devstatus','name','notes','ID'],condition={'devname':seadev}))
-		return alldata
-
-
-	def appdelp(self,param):
-		devdata = json.loads(param)
-		self.upData('devices',{'status':devdata['status']},{'ID':devdata['devid']})
-		return 'ok'
-
+	#查询数据路由所有
 	def appga(self):
-		data = self.selData('devices',['devname','devstatus','name','notes','ID'],condition={'status':0})
+		data = self.selData('devices',['ID','devname','status','username','version','notes'])
 		return data
 
 
-	def appgd(self):
-		data = self.selData('devices',['devname'],condition={'status':0},indexs=1)
-		return data
-	
-	
-	def appeditg(self,devid):
-		data = self.selData('devices',['devname','devstatus','name','notes','ID'],condition={'ID':devid})
-		data = list(data[0])
-		return data
+	#更新使用状态
+	def appusep(self,devid,name):
+		data = self.selData('devices',['devname','status'],condition={'ID':devid})
+		devname = data[0][0]	
+		if data[0][1] == 1:
+			name2 = "无"
+			devst = 0
+			self.upData('devices',{'status':devst,'username':name2},{'ID':devid})
+		else:
+			devst = 1
+			self.upData('devices',{'status':devst,'username':name},{'ID':devid})
+		self.inslog(devid,devname,name,devst)
 
 
-	def appeditp(self,devname,devst,name,notes,condition):
-		self.upData('devices',{'devname':devname,'devstatus':devst,'name':name,'notes':notes},{'ID':condition})
-		return 'ok'
+	#记录日志
+	def inslog(self,devid,devname,name,devst):
+		timeq = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
+		if devst == 1:
+			self.insData('devuse',{'devid':devid,'devname':devname,'status':devst,'user':name,'usetime':timeq})
+		else:
+			self.upData('devuse',{'retime':timeq,'backer':name,'status':0},{'devid':devid,'status':1})
 
 
-# q = Device_Manag()
-# print (q.appseap({'searchdev':"iPhone6s"}))
-# print(type(q.appeditp(37)))
-# print (type(q.selData('devices',['devname','devstatus','name','notes'],condition={'devname':"荣耀"})))
-# q.upData('devices',{'status':1},{'ID':32})
+
 
