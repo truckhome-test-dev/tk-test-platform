@@ -61,8 +61,7 @@ def statistic():
         return json.dumps(data)
 
 
-
-#排期展示1
+#排期展示
 @app.route('/scheduling',methods=['get','post'])
 def scheduling():
     name = request.args.get('name')
@@ -72,9 +71,6 @@ def scheduling():
         pq = Scheduling()
         data = pq.date_rest()
         return render_template('Scheduling_son.html',data=data)
-
-
-
 
 
 @app.errorhandler(404)
