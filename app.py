@@ -94,7 +94,7 @@ def devices():
         alldata = re.appga()
         return render_template('devices.html',alldata=alldata)
         
-
+1
 #设备编辑后保存
 @app.route('/savedev',methods=['post','get'])
 def savedev():
