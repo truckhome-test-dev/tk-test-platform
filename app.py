@@ -91,37 +91,12 @@ def devices():
         devtype = request.form.get('devtype')
         name = request.form.get('name')
         devnotes = request.form.get('devnotes')
-        re.appinsp(devname,devtype,name,devnotes)
+        deversion = request.form.get('deversion')
+        re.appinsp(devname,devtype,name,devnotes,deversion)
         return redirect("http://127.0.0.1:5000/devices")
     else:
         alldata = re.appga()
         return render_template('devices.html',alldata=alldata)
-
-
-#设备查询
-@app.route('/selectdev',methods=['post','get'])
-def seldev():
-    if request.method == "POST":
-        seadev = request.get_data()
-        seldata = re.appseap(seadev)
-        return seldata
-
-#测试设备删除
-@app.route('/deldev',methods=['post','get'])
-def deldev():
-    if request.method == "POST":
-        devdata = request.get_data()
-        re.appdelp(devdata)
-        return 'ok'
-
-#设备编辑
-@app.route('/editdev',methods=['post','get'])
-def editdev():
-    if request.method == "GET":
-        devid = request.args.to_dict().get('devid', "")
-        data = re.appeditg(devid)
-        return render_template('editdev.html',editdata=data)
-
 
 #设备编辑后保存
 @app.route('/savedev',methods=['post','get'])
@@ -132,7 +107,8 @@ def savedev():
         devst = request.form.get('devst')
         name = request.form.get('name')
         notes = request.form.get('notes')
-        re.appeditp(devname,devst,name,notes,devid)
+        version = request.form.get('version')
+        re.appeditp(devname,devst,name,notes,version,devid)
         return redirect("http://127.0.0.1:5000/devices")
 
 
