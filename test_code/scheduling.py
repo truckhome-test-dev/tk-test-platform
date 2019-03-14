@@ -52,7 +52,6 @@ class Scheduling(object):
 		for auser in taskArr:
 			for atask in auser['listArr']:
 				QAname = auser['name'].split('[')[0]
-				print(atask)
 				if QAname not in taskList:
 					taskList[QAname] = []
 				task = self._dis_task(atask['name'], atask['day'])
@@ -63,7 +62,6 @@ class Scheduling(object):
 						task[i['x']] = ''
 				task.append(random.sample(colour,1))
 				taskList[QAname].append(task)
-		print(taskList['张蕾蕾'])
 		return taskList
 
 
@@ -108,8 +106,6 @@ class Scheduling(object):
 		for i in range((day[-1]['x'] + day[-1]['y']), 31):
 			l.append('')
 		for i in nothing:
-			print(l)
-			print(i)
 			l[i] = ''
 		return l[:12]
 
