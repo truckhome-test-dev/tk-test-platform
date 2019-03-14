@@ -44,18 +44,6 @@ class Scheduling(object):
 		return dateList[:12]
 
 
-	def _r_task(self, index, num ,taskname):
-		#整理新的数据格式
-		l = []
-		for i in range(0, index):
-			l.append('')
-		for i in range(index, index+num):
-			l.append(taskname)
-		for i in range(index+num, 31):
-			l.append('')
-		return l[:12]
-
-
 	def get_task(self):
 		#获取任务,并整理数据格式为{QA：[task1,task2,[colour]]}
 		taskArr = self.get_data()['data']['userTask']
@@ -64,9 +52,10 @@ class Scheduling(object):
 		for auser in taskArr:
 			for atask in auser['listArr']:
 				QAname = auser['name'].split('[')[0]
+				print(atask)
 				if QAname not in taskList:
 					taskList[QAname] = []
-				task = self._r_task(atask['day'][0]['x'], atask['day'][0]['y'], atask['name'])
+				task = self._dis_task(atask['name'], atask['day'])
 				if task.count('') == 12:
 					continue
 				for i in self.week[:11]:
@@ -74,6 +63,7 @@ class Scheduling(object):
 						task[i['x']] = ''
 				task.append(random.sample(colour,1))
 				taskList[QAname].append(task)
+		print(taskList['张蕾蕾'])
 		return taskList
 
 
@@ -86,3 +76,47 @@ class Scheduling(object):
 		data = {'day' : date ,'task' : task}
 		return data
 
+
+	def _dis_task(self, name, day):
+		#计算排期
+		if len(day) == 1:
+			return self._r_task(day[0]['x'], day[0]['y'], name)
+		else:
+			return self._r_tasks(day, name)
+
+
+	def _r_task(self, index, num, taskname):
+		#整理单个排期的数据格式
+		l = []
+		for i in range(0, index):
+			l.append('')
+		for i in range(index, index+num):
+			l.append(taskname)
+		for i in range(index+num, 31):
+			l.append('')
+		return l[:12]
+
+
+	def _r_tasks(self, day, taskname):
+		#整理多个排期的数据格式
+		nothing = self._r_tasks_l(day)
+		l = []
+		for i in range(0, day[0]['x']):
+			l.append('')
+		for i in range(day[0]['x'], day[0]['x'] + (day[-1]['x'] + day[-1]['y'])):
+			l.append(taskname)
+		for i in range((day[-1]['x'] + day[-1]['y']), 31):
+			l.append('')
+		for i in nothing:
+			print(l)
+			print(i)
+			l[i] = ''
+		return l[:12]
+
+
+	def _r_tasks_l(self, day):
+		#整理之间空白的排期
+		nothing = []
+		for d in range(0,len(day) - 1):
+			nothing = nothing + [x for x in range((day[d]['x'] + day[d]['y']), day[d + 1]['x'])]
+		return nothing
