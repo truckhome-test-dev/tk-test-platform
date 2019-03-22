@@ -20,6 +20,7 @@
 <div class="layui-tab layui-tab-card">
     <ul class="layui-tab-title">
         <li class="layui-this">概括</li>
+        <li>bug走势</li>
         <li>处理人统计</li>
         <li>报告人统计</li>
         <li>bug状态统计</li>
@@ -27,8 +28,11 @@
         <li>严重程度统计</li>
         <li>类别统计</li>
     </ul>
-    <div class="layui-tab-content" style="height: 10000px;">
+    <div class="layui-tab-content" style="height: 1000px;">
         <div class="layui-tab-item layui-show">
+            <div id="prover" style="display: block;width: 800px;height:600px;float:left"></div>
+        </div>
+        <div class="layui-tab-item">
             <div id="trend" style="display: block;width: 800px;height:600px;float:left"></div>
         </div>
         <div class="layui-tab-item">
@@ -52,7 +56,8 @@
     </div>
 </div>
     <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
+        // 基于准备好的dom，初始化echarts实例prover
+        var myCharprover = echarts.init(document.getElementById('prover'));
         var myChartrend = echarts.init(document.getElementById('trend'));
         var myCharhandler = echarts.init(document.getElementById('handler'));
         var myCharreporter = echarts.init(document.getElementById('reporter'));
@@ -63,6 +68,46 @@
         {#var myCharcity = echarts.init(document.getElementById('city'));#}
 
         // 指定图表的配置项和数据
+        var optionprover = {
+                color: ['#3398DB'],
+                title: {
+        text: '近7天项目bug数'
+    },
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                    left: '0%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                yAxis : [
+                    {
+                        type : 'category',
+                        data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                xAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'bug数',
+                        type:'bar',
+                        barWidth: '60%',
+                        data:[10, 52, 200, 334, 390, 330, 220]
+                    }
+                ]
+            };
         var optiontrend = {
             title: {
                 text: '近7天新增bug个数走势'
@@ -189,6 +234,9 @@
             };
         var optionreporter = {
                 color: ['#3398DB'],
+            title: {
+        text: '按报告人统计bug数'
+    },
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -226,6 +274,9 @@
             };
         var optionstatus = {
                 color: ['#3398DB'],
+            title: {
+        text: '按状态统计bug数'
+    },
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -263,6 +314,9 @@
             };
         var optionresolution = {
                 color: ['#3398DB'],
+            title: {
+        text: '按类型统计bug数'
+    },
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -300,6 +354,9 @@
             };
         var optionseverity = {
                 color: ['#3398DB'],
+            title: {
+        text: '按严重程度统计bug数'
+    },
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -337,6 +394,9 @@
             };
         var optioncategory = {
                 color: ['#3398DB'],
+            title: {
+        text: '按类别统计bug数'
+    },
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -387,6 +447,10 @@
             var c = JSON.parse(xmlhttp.responseText)
                 {#alert(c.code)#}
                 if (c.code == 1000){
+
+                    optionprover.yAxis[0].data= Object.keys(c['prover'])
+                    optionprover.series[0].data=Object.values(c['prover'])
+                    myCharprover.setOption(optionprover);
 
                     optiontrend.xAxis[0].data= Object.keys(c['trend'])
                     optiontrend.series[0].data=Object.values(c['trend'])

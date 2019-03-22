@@ -34,7 +34,7 @@ class Mantis_Bug(SqlOperate):
         self.sqlclo()
         # data = list(self.cur.fetchall())
         data=self.cur.fetchall()
-        print(data)
+        # print(data)
         if not data:
             return "今日暂时无数据"
 
@@ -55,13 +55,34 @@ class Mantis_Bug(SqlOperate):
 
         return s
 
+    #近7天创建项目的bug数
+    def bug_prover_statistics(self):
+        last_7days_time = self.getTimeOClockOfToday()-86400*7
+        self.dbcur()
+        sql="select p.name,v.version,count(b.id) " \
+            "from mantis_project_table p,mantis_bug_table b,mantis_project_version_table v " \
+            "where b.project_id =p.id and b.version=v.version and p.id=v.project_id and v.date_order>=%d " \
+            "group by p.name,v.version"%last_7days_time
+        print(sql)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        d={}
+        for i in data:
+            key=str(i[0])+"_"+str(i[1])
+            value=i[2]
+            d[key]=value
+        return d
+
     #根据处理人（开发）统计
     def bug_handler_statistics(self):
         self.dbcur()
         sql = "select mantis_user_table.realname,count(mantis_bug_table.id) " \
               "from mantis_user_table,mantis_bug_table " \
               "where mantis_bug_table.handler_id= mantis_user_table.id and mantis_user_table.access_level='40'" \
-              "group by mantis_bug_table.handler_id"
+              "group by mantis_bug_table.handler_id " \
+              "order by count(mantis_bug_table.id) asc "
         print(sql)
         self.sqlExe(sql)
         self.sqlCom()
@@ -85,7 +106,8 @@ class Mantis_Bug(SqlOperate):
         sql = "select mantis_user_table.realname,count(mantis_bug_table.id) " \
               "from mantis_user_table,mantis_bug_table " \
               "where mantis_bug_table.reporter_id= mantis_user_table.id " \
-              "group by mantis_bug_table.reporter_id"
+              "group by mantis_bug_table.reporter_id " \
+              "order by count(mantis_bug_table.id) desc "
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -207,4 +229,4 @@ class Mantis_Bug(SqlOperate):
 
 
 a=Mantis_Bug()
-print(a.bug_trend())
+print(a.bug_prover_statistics())
