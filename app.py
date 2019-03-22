@@ -4,12 +4,14 @@
 
 from flask import Flask, request,render_template,redirect,jsonify
 from test_code import *
+from test_code.mantis_bug import *
 import settings
 import json
 
 app = Flask(__name__)
 re = Device_Manag()
-
+# bug = Mantis_Bug(host='117.50.17.66',user='qa',passwd = 'k04d8gAvDJ8PkvrL',database="bugtracker")
+bug=Mantis_Bug()
 app.config.from_object('settings.DevConfig')
 
 
@@ -124,18 +126,38 @@ def usestatus():
         return "ok"
 
 
-@app.route('/test',methods=['post','get'])
-def test():
-	return render_template('test.html')
+# @app.route('/test',methods=['post','get'])
+# def test():
+# 	return render_template('test.html')
+#
+#
+# @app.route('/test1',methods=['post','get'])
+# def test1():
+# 	data = {"code":1000,"sex": sex, "Province": Province}
+# 	return json.dumps(data)
+#mantis_bug统计
+@app.route('/bug_statistics',methods=['get','post'])
+def bug_statistics():
+    if request.method == "GET":
+        data=bug.activeVersion()
+        return render_template('bug_statistics.html',activeVersion=data)
+
+@app.route('/statistical_details',methods=['post'])
+def statistical_details():
+    if request.method == "POST":
+        trend = bug.bug_trend()
+        handler=bug.bug_handler_statistics()
+        reporter=bug.bug_reporter_statistics()
+        status=bug.bug_status_statistics()
+        resolution=bug.bug_resolution()
+        severity=bug.bug_severity()
+        category=bug.bug_category()
+        data = {"code":1000,"trend":trend,"handler":handler,"reporter":reporter,"status":status,"resolution":resolution,"severity":severity,"category":category}
+        return json.dumps(data)
 
 
-@app.route('/test1',methods=['post','get'])
-def test1():
-	data = {"code":1000,"sex": sex, "Province": Province}
-	return json.dumps(data)
-	
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0')
+	app.run(debug=True,host='0.0.0.0')
 
 
