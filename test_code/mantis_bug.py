@@ -28,7 +28,6 @@ class Mantis_Bug(SqlOperate):
             "from mantis_project_table,mantis_bug_table " \
             "where mantis_project_table.id = mantis_bug_table.project_id and mantis_bug_table.date_submitted >=%d " \
             "group by mantis_project_table.name,mantis_bug_table.version "% today_time
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -50,7 +49,6 @@ class Mantis_Bug(SqlOperate):
             a = list()
             [a.append(i) for i in L if a.count(i) == 0]
             # L=set(L)
-        print(a)
         s=str(a).replace("\'","")
 
         return s
@@ -63,7 +61,6 @@ class Mantis_Bug(SqlOperate):
             "from mantis_project_table p,mantis_bug_table b,mantis_project_version_table v " \
             "where b.project_id =p.id and b.version=v.version and p.id=v.project_id and v.date_order>=%d " \
             "group by p.name,v.version"%last_7days_time
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -83,7 +80,6 @@ class Mantis_Bug(SqlOperate):
               "where mantis_bug_table.handler_id= mantis_user_table.id and mantis_user_table.access_level='40'" \
               "group by mantis_bug_table.handler_id " \
               "order by count(mantis_bug_table.id) asc "
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -112,7 +108,6 @@ class Mantis_Bug(SqlOperate):
         self.sqlCom()
         self.sqlclo()
         data = list(self.cur.fetchall())
-        print(data)
         d={}
         for i in data:
             d[i[0]]=i[1]
