@@ -229,4 +229,4 @@ class Mantis_Bug(SqlOperate):
 
 
 a=Mantis_Bug()
-print(a.bug_prover_statistics())
+print(a.bug_category())

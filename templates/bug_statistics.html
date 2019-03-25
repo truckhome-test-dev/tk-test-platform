@@ -149,7 +149,7 @@
             ],
             series : [
                 {
-                    name:'邮件营销',
+                    name:'bug数',
                     type:'line',
                     stack: '总量',
                     areaStyle: {},
@@ -476,8 +476,8 @@
                     optionseverity.series[0].data=Object.values(c['severity'])
                     myCharseverity.setOption(optionseverity);
 
-                    optioncategory.xAxis[0].data= Object.keys(c['status'])
-                    optioncategory.series[0].data=Object.values(c['status'])
+                    optioncategory.xAxis[0].data= Object.keys(c['category'])
+                    optioncategory.series[0].data=Object.values(c['category'])
                     myCharcategory.setOption(optioncategory);
                 }
 
