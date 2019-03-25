@@ -35,7 +35,7 @@ class Device_Manag(SqlOperate):
 			sql = self.sqlSelect(tablename,fields,condition)
 		else:
 			sql = self.sqlSelect(tablename,fields)
-		sql += ' order by ID desc'
+		sql += ' order by ID asc'
 		self.sqlExe(sql)
 		data = list(self.cur.fetchall())
 		ll = []
@@ -60,8 +60,11 @@ class Device_Manag(SqlOperate):
 
 
 	#查询数据路由所有
-	def appga(self):
-		data = self.selData('devices',['ID','devname','status','username','version','notes'])
+	def appga(self,devtype=2):
+		if devtype != 0 and devtype != 1:
+			data = self.selData('devices',['ID','devname','status','username','version','notes','devtype'])
+		else:
+			data = self.selData('devices',['ID','devname','status','username','version','notes','devtype'],condition={'devtype':devtype})
 		return data
 
 
@@ -89,4 +92,5 @@ class Device_Manag(SqlOperate):
 
 
 
-
+# a = Device_Manag()
+# print (len(a.appga(devtype=8)))
