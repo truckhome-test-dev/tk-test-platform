@@ -173,8 +173,8 @@ def devtype():
         return render_template('devtype.html',alldata=alldata)
 
 
-@app.route('/test',methods=['post','get'])
-def test():
+@app.route('/test2',methods=['post','get'])
+def test1():
 	return render_template('test.html')
 
 

@@ -14,144 +14,111 @@
 	</fieldset>
 	<!-- 页面私有部分 -->
 
+	<div style="margin-top:40px;margin-left:50px;width:60%">
+		<span data-id = 0  class="layui-btn layui-btn-normal" style="font-size:20px" onclick="devtype(this)">手机</span>
+		<span data-id = 1 class="layui-btn layui-btn-warm" style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
+	</div>
 
-<div style="margin-top:40px;margin-left:50px;width:60%">
-	<span data-id = 0  class="layui-btn layui-btn-normal" style="font-size:20px" onclick="devtype(this)">手机</span>
-	<span data-id = 1 class="layui-btn layui-btn-warm" style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
-</div>
-
-		<table id='123' class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
-		  <colgroup>
-		    <col width=20%>
-		    <col width=15%>
-		    <col width=15%>
-		    <col width=15%>
-		    <col width=30%>		    
-		    <col>
-		  </colgroup>
-		  <thead>
-		    <tr>
-		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备名称</th>
-		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备状态</th>
-		      <th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
-		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
-		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
-		      <th style="text-align: center; font-weight: bold ;font-size:18px">操作</th>
-		    </tr> 
-		  </thead>
-		  <tbody>
-		    {% for i in alldata %}
-		    <tr class="table-item">
-		      <td style="text-align: center">{{i[1]}}</td>
-			  <td style="text-align: center">
-				{% if i[2] == 0 %}
-				  组内
-				{% else %}
-				  出借
-				{% endif %}
-			  </td>
-		      <td style="text-align: center">{{i[3]}}</td>
-		      <td style="text-align: center">{{i[4]}}</td>
-		      <td style="text-align: center">{{i[5]}}</td>
-              <td style="text-align: center">
-              	<div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
-	              	{% if i[2] == 0 %}
-						<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
+	<table id='123' class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
+		<colgroup>
+			<col width=20%>
+			<col width=15%>
+			<col width=15%>
+			<col width=15%>
+			<col width=30%>		    
+			<col>
+		</colgroup>
+		<thead>
+			<tr>
+			<th style="text-align: center; font-weight: bold ;font-size:18px">设备名称</th>
+			<th style="text-align: center; font-weight: bold ;font-size:18px">设备状态</th>
+			<th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
+			<th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
+			<th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
+			<th style="text-align: center; font-weight: bold ;font-size:18px">操作</th>
+			</tr> 
+		</thead>
+		<tbody>
+			{% for i in alldata %}
+				<tr class="table-item">
+					<td style="text-align: center">{{i[1]}}</td>
+					<td style="text-align: center">
+					{% if i[2] == 0 %}
+					组内
 					{% else %}
-	              		<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-danger">归还</button>
-	              	{% endif %}
-              	 </div>
-              </td>
-		    </tr>
-		    {% endfor %}     
-		  </tbody>
-		</table>
-
-
+					出借
+					{% endif %}
+					</td>
+					<td style="text-align: center">{{i[3]}}</td>
+					<td style="text-align: center">{{i[4]}}</td>
+					<td style="text-align: center">{{i[5]}}</td>
+					<td style="text-align: center">
+						<div class="site-demo-button" style="margin-bottom: 0;">
+							{% if i[2] == 0 %}
+								<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
+							{% else %}
+								<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-danger">归还</button>
+							{% endif %}
+						 </div>
+					</td>
+				</tr>
+			{% endfor %}     
+		</tbody>
+	</table>
 
 <script>
-	function devtype(e){
-			var devtype = e.dataset.id;
-		    var xmlhttp;
-		    xmlhttp = new XMLHttpRequest();
-		    var data ='{ "devtype" : '+ devtype +'}';
-		    xmlhttp.open("POST","typedev",true);
-		    xmlhttp.send(data);
-		    xmlhttp.onreadystatechange = function()
-		    {
-		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
-		        {
-		        document.getElementById("123").innerHTML=xmlhttp.responseText
-		        }
-		    }
-		}
-
-
-layui.use('form', function(){
-  var form = layui.form;
-  })
-
-
-layui.use('layer', function(){ //独立版的layer无需执行这一句
-	var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
-
-	//手机外借按钮弹窗触发
-	var active = {
-		offset: function(othis){
-			var type = othis.data('type')
-			,text = othis.text();
-			var devid = othis.data('id');
-			layer.open({
-			type: 1
-			,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-			,id: 'layerDemo'+type //防止重复弹出
-			,content: '<div class="layui-input-inline"><input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入使用者姓名"  class="layui-input"></div>'
-			,btn: '确认'
-			,btnAlign: 'c' //按钮居中
-			,shade: 0 //不显示遮罩
-			,yes: function(index,layero){
-				var user = layero.find('input')[0].value;
-
-		          var xmlhttp;
-		          xmlhttp = new XMLHttpRequest();
-
-		          var data ='{ "devid" : '+ devid +', "user" : "' + user + '"}';
-		          xmlhttp.open("POST","usestatus",true);
-		          xmlhttp.send(data);
-			 	  layer.close(index);
-				  xmlhttp.onreadystatechange = function()
-				        {
+ 
+	layui.use('layer', function(){ //独立版的layer无需执行这一句
+		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+		//手机外借按钮弹窗触发
+		var active = {
+			offset: function(othis){
+				var type = othis.data('type')
+				,text = othis.text();
+				var devid = othis.data('id');
+				layer.open({
+				type: 1
+				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+				,id: 'all '+devid //防止重复弹出
+				,content: '<div class="layui-input-inline"><input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入使用者姓名"  class="layui-input"></div>'
+				,btn: '确认'
+				,btnAlign: 'c' //按钮居中
+				,shade: 0 //不显示遮罩
+				,yes: function(index,layero){
+					var user = layero.find('input')[0].value;
+					var xmlhttp;
+			        xmlhttp = new XMLHttpRequest();
+ 
+			        var data ='{ "devid" : '+ devid +', "user" : "' + user + '"}';
+			        xmlhttp.open("POST","usestatus",true);
+			        xmlhttp.send(data);
+				 	layer.close(index);
+					xmlhttp.onreadystatechange = function()
+					{
 				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
 				            {
-				            if (xmlhttp.responseText == 'ok')
-				            {
-				              location.reload();
-				            }
-				            else
-				            {
-				              alert('请求出错，请重试')
-				            }
-				          }
-				        }
+					            if (xmlhttp.responseText == 'ok')
+					            {
+					              location.reload();
+					            }
+					            else
+					            {
+					              alert('请求出错，请重试')
+					            }
+				          	}
+					    }
 
+					}
+				});
 			}
-			});
+		};
 
-		}
-	};
+		$('#123').on('click', 'button', function(){
+			var othis = $(this), method = othis.data('method');
+			active[method] ? active[method].call(this, othis) : '';
+		})
 
-
-
-
-
-
-
-$('#layerDemo .layui-btn').on('click', function(){
-var othis = $(this), method = othis.data('method');
-active[method] ? active[method].call(this, othis) : '';
-});
-
-});
+	});
 
 </script>
 

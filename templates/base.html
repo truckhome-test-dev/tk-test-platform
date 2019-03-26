@@ -29,15 +29,11 @@
 
                         <!-- 左侧栏目配置 -->
 
-<<<<<<< HEAD
-                        {% set left_list = {'资源管理':{'测试设备': 'http://192.168.1.59:5000/devices','排期': 'http://192.168.1.59:5000/scheduling', 'bug统计': 'http://127.0.0.1:5000/bug_statistics'}, '测试工具':{'响应时间测试':'http://127.0.0.1:5000/time_test'}, '趣味工具':{'微信好友分析': 'http://192.168.1.59:5000/wxtools'}} %}
+                        {% set left_list = {'资源管理':{'测试设备': 'http://192.168.1.59:5000/device','排期': 'http://192.168.1.59:5000/scheduling', 'bug统计': 'http://127.0.0.1:5000/bug_statistics'}, '测试工具':{'响应时间测试':'http://127.0.0.1:5000/time_test'}, '趣味工具':{'微信好友分析': 'http://192.168.1.59:5000/wxtools'}} %}
 
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/devices','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics'},'测试工具':{'响应时间测试':'http://127.0.0.1:5000/time_test'} ,'趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
+                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics'},'测试工具':{'响应时间测试':'http://127.0.0.1:5000/time_test'} ,'趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
 
-=======
-                        {% set left_list = {'资源管理':{'测试设备': 'http://192.168.1.59:5000/device','排期': 'http://192.168.1.59:5000/scheduling'}, '趣味工具':{'微信好友分析': 'http://192.168.1.59:5000/wxtools'}} %}
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling'}, '趣味工具':{'微信好友分析': 'http://127.0.0.1:5000/wxtools'}} %}
->>>>>>> ll
+
                         {% for name,n_list in left_list.items() %}
                         <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>
                             <dl class="layui-nav-child">
