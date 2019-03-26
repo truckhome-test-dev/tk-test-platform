@@ -124,7 +124,7 @@ def usestatus():
         return "ok"
 
 
-@app.route('/test',methods=['post','get'])
+@app.route('/time_test',methods=['post','get'])
 def test(): 
     if request.args.get('url'):
         url = request.args.get('url')
