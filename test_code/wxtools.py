@@ -28,6 +28,7 @@ class MyThread(threading.Thread):
             return self.result  # 如果子线程不使用join方法，此处可能会报没有self.result的错误
         except Exception:
             return None
+
 def lcisQR():
     threads = []
     t1 = threading.Thread(target=isQR,args=())
@@ -39,7 +40,6 @@ def lcisQR():
         t.start()
     t.join()
 
-
 #登录
 def lc():
     itchat.auto_login()
@@ -47,12 +47,21 @@ def lc():
     login_status = 1
     print("Finash Login!")
     pwd=os.getcwd()
-    print(pwd)
     # # pwd = os.path.abspath(os.path.dirname(pwd)+os.path.sep+".")
     QR1=pwd.replace('\\','/')+"/static/pic/QR.png"
     os.remove(QR1)
     data=1
     return data
+
+#清除登录状态
+def itinit():
+    ec()
+    QR = pwd.replace('\\', '/') + "/static/pic/QR.png"
+    RemarkName = pwd.replace('\\', '/') + "/static/pic/RemarkName.png"
+    if os.path.exists(QR):
+        os.remove(QR)
+    if os.path.exists(RemarkName):
+        os.remove(RemarkName)
 
 #判断目录下是否存在登录二维码
 def isQR():
@@ -71,6 +80,9 @@ def ec():
     itchat.logout()
     global login_status
     login_status = 0
+    RemarkName=pwd.replace('\\','/')+"/static/pic/RemarkName.png"
+    if os.path.exists(RemarkName):
+        os.remove(RemarkName)
     print("exit")
 
 #获取微信好友信息
@@ -89,7 +101,6 @@ def lc_status():
         data = {"code": 1001}
         return data
     else:
-        print(222)
         data = {"code": 1000}
         return data
 
@@ -137,7 +148,7 @@ def statistic_friends_city():
             d = {}
             d["name"]=i[0]
             d["value"]=i[1]
-            print(d)
+            # print(d)
             L.append(d)
         return L
 

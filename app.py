@@ -24,6 +24,9 @@ def index():
 @app.route('/wxtools',methods=['get','post'])
 def wxtools():
     if request.method == "GET":
+        global login_status
+        if login_status==0:
+            itinit()
         return render_template('wxtools.html')
         
 #查询登录状态
@@ -57,6 +60,8 @@ def statistic():
     nickname=get_nickname()
     wc1=wc()
     if sex =="nologin" or Province =="nologin" or nickname =="nologin" or wc1 =="nologin" :
+        global login_status
+        login_status=0
         data={"code":1001}
         return json.dumps(data)
     else:
@@ -126,15 +131,6 @@ def usestatus():
         return "ok"
 
 
-# @app.route('/test',methods=['post','get'])
-# def test():
-# 	return render_template('test.html')
-#
-#
-# @app.route('/test1',methods=['post','get'])
-# def test1():
-# 	data = {"code":1000,"sex": sex, "Province": Province}
-# 	return json.dumps(data)
 #mantis_bug统计
 @app.route('/bug_statistics',methods=['get','post'])
 def bug_statistics():
