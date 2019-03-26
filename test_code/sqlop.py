@@ -6,21 +6,17 @@ pymysql.install_as_MySQLdb
 class  SqlOperate():
 	"""数据库的基本操作"""
 
-	def __init__(self):
-
-		host = '192.168.0.20'
-		user='test'
-		passwd='jghAeuXL0x7npvSS'
-		db='qa'
-
-		self.db = pymysql.connect(host,user,passwd,db,charset='utf8')
-		self.cur =self.db.cursor()
+	def __init__(self, host='192.168.0.20', user='test', passwd='jghAeuXL0x7npvSS', database='qa'):
+		self.host = host
+		self.user = user
+		self.passwd = passwd
+		self.database = database
 
 
 	#连接数据库，创建游标
 	def dbcur(self):
-		self.db = pymysql.connect('192.168.0.20','test','jghAeuXL0x7npvSS','qa',charset='utf8')
-		self.cur =self.db.cursor()
+		self.db = pymysql.connect(self.host, self.user, self.passwd, self.database, charset='utf8')
+		self.cur = self.db.cursor()
 
 
 	def keyvalue(self,field_item):
