@@ -86,19 +86,18 @@ def internal_server_error(e):
     return render_template('500.html')
 
 #设备管理展示与新增
-@app.route('/devices',methods=['get','post'])
-def devices():
+@app.route('/device',methods=['get','post'])
+def device():
     if request.method == "POST":
-        devname = request.form.get('devname')
-        devtype = request.form.get('devtype')
-        name = request.form.get('name')
-        devnotes = request.form.get('devnotes')
-        deversion = request.form.get('deversion')
-        re.appinsp(devname,devtype,name,devnotes,deversion)
-        return redirect("http://127.0.0.1:5000/devices")
+        devtype = request.get_data()
+        devtype = json.loads(devtype.decode("utf-8"))
+        devtype = devtype['devtype']
+        alldata = re.appga(devtype)
+        return render_template('device.html',alldata=alldata)
     else:
         alldata = re.appga()
-        return render_template('devices.html',alldata=alldata)
+        return render_template('device.html',alldata=alldata)
+
 
 #设备编辑后保存
 @app.route('/savedev',methods=['post','get'])
@@ -111,7 +110,7 @@ def savedev():
         notes = request.form.get('notes')
         version = request.form.get('version')
         re.appeditp(devname,devst,name,notes,version,devid)
-        return redirect("http://127.0.0.1:5000/devices")
+        return redirect("http://127.0.0.1:5000/device")
 
 
 #修改使用状态
@@ -142,6 +141,7 @@ def bug_statistics():
         data=bug.activeVersion()
         return render_template('bug_statistics.html',activeVersion=data)
 
+
 @app.route('/statistical_details',methods=['post'])
 def statistical_details():
     if request.method == "POST":
@@ -162,9 +162,21 @@ def test_1():
     return render_template('hello.html') 
 
 
-@app.route('/test',methods=['post','get'])  
-def test1(): 
-    return render_template('test.html')
+# 查询手机类型
+@app.route('/typedev',methods=['post','get'])
+def devtype():
+    if request.method == 'POST':
+        devtype = request.get_data()
+        devtype = json.loads(devtype.decode("utf-8"))
+        devtype = devtype['devtype']
+        alldata = re.appga(devtype)
+        return render_template('devtype.html',alldata=alldata)
+
+
+@app.route('/test',methods=['post','get'])
+def test():
+	return render_template('test.html')
+
 
 
 @app.route('/test1',methods=['post','get'])

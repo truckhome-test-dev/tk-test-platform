@@ -1,59 +1,42 @@
-{% extends "base.html" %}
-{% block head %}
-	{{ super() }}
-{% endblock head %}
-{% block left %}
-	{{ super() }}
-{% endblock left %}
-{% block right %}
-	{{ super() }}
-	<!-- 修改name（页面名称） -->
-	{% set name = '设备管理' %}
-	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-		<legend>{{name}}</legend>
-	</fieldset>
-	<!-- 页面私有部分 -->
-
-
-		<table class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
+		<table id='123' class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
 		  <colgroup>
 		    <col width=20%>
-		    <col width=10%>
 		    <col width=15%>
-		    <col width=20%>
-		    <col width=20%>		    
+		    <col width=15%>
+		    <col width=15%>
+		    <col width=30%>		    
 		    <col>
 		  </colgroup>
 		  <thead>
 		    <tr>
-		      <th>设备名称</th>
-		      <th>设备状态</th>
-		      <th>借用者姓名</th>
-		      <th>设备版本</th>
-		      <th>设备说明</th>
-		      <th>操作</th>
+		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备名称</th>
+		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备状态</th>
+		      <th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
+		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
+		      <th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
+		      <th style="text-align: center; font-weight: bold ;font-size:18px">操作</th>
 		    </tr> 
 		  </thead>
 		  <tbody>
 		    {% for i in alldata %}
 		    <tr class="table-item">
-		      <td>{{i[1]}}</td>
-			  <td>
+		      <td style="text-align: center">{{i[1]}}</td>
+			  <td style="text-align: center">
 				{% if i[2] == 0 %}
 				  组内
 				{% else %}
 				  出借
 				{% endif %}
 			  </td>
-		      <td>{{i[3]}}</td>
-		      <td>{{i[4]}}</td>
-		      <td>{{i[5]}}</td>
-              <td>
-              	<div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
+		      <td style="text-align: center">{{i[3]}}</td>
+		      <td style="text-align: center">{{i[4]}}</td>
+		      <td style="text-align: center">{{i[5]}}</td>
+              <td style="text-align: center">
+              	<div class="site-demo-button" id="layerDemo1" style="margin-bottom: 0;">
 	              	{% if i[2] == 0 %}
-						<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">外借</button>
+						<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
 					{% else %}
-	              		<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-warm">归还</button>
+	              		<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-danger">归还</button>
 	              	{% endif %}
               	 </div>
               </td>
@@ -65,6 +48,23 @@
 
 
 <script>
+	function devtype(e){
+			var devtype = e.dataset.id;
+		    var xmlhttp;
+		    xmlhttp = new XMLHttpRequest();
+		    var data ='{ "devtype" : '+ devtype +'}';
+		    xmlhttp.open("POST","typedev",true);
+		    xmlhttp.send(data);
+		    xmlhttp.onreadystatechange = function()
+		    {
+		    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+		        {
+		        document.getElementById("123").innerHTML=xmlhttp.responseText
+		        }
+		    }
+		}
+
+
 layui.use('form', function(){
   var form = layui.form;
   })
@@ -82,7 +82,7 @@ layui.use('layer', function(){ //独立版的layer无需执行这一句
 			layer.open({
 			type: 1
 			,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-			,id: 'layerDemo'+type //防止重复弹出
+			,id: 'layerDemo1'+type //防止重复弹出
 			,content: '<div class="layui-input-inline"><input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入使用者姓名"  class="layui-input"></div>'
 			,btn: '确认'
 			,btnAlign: 'c' //按钮居中
@@ -120,7 +120,11 @@ layui.use('layer', function(){ //独立版的layer无需执行这一句
 
 
 
-$('#layerDemo .layui-btn').on('click', function(){
+
+
+
+
+$('#layerDemo1 .layui-btn').on('click', function(){
 var othis = $(this), method = othis.data('method');
 active[method] ? active[method].call(this, othis) : '';
 });
@@ -128,5 +132,4 @@ active[method] ? active[method].call(this, othis) : '';
 });
 
 </script>
-{% endblock right %}
-<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
+

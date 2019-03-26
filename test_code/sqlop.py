@@ -7,6 +7,7 @@ class  SqlOperate():
 	"""数据库的基本操作"""
 
 	def __init__(self, host='192.168.0.20', user='test', passwd='jghAeuXL0x7npvSS', database='qa'):
+
 		self.host = host
 		self.user = user
 		self.passwd = passwd
@@ -95,7 +96,3 @@ class  SqlOperate():
 		return upsql
 
 
-		
-
-# a = SqlOperate()
-# print (a.sqlUpdate('devices',{'status':1},{'ID':32}))
