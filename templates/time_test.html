@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = 'ReTime Test' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+	<body>
+		<div >
+			<form style="float:left;" class="layui-form" action="" width="5000">
+				<div class="layui-form-item">
+					<label class="layui-form-label">验证链接</label>
+					<div class="layui-input-inline">
+			 			<input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-input-inline">
+		      				<button class="layui-btn" lay-submit="" lay-filter="demo1">测试</button>
+		  			</div>
+		  		</div>
+		  		<div class="layui-form-item" style="margin:50px 20px 0px 20px">
+		  			<div class="layui-col-md6" style="width:300px;">
+						<div class="layui-card">
+							<div class="layui-card-header">结果</div>
+							<div class="layui-card-body" id="time">
+							
+							
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div style="float:right;">
+	  			<iframe name="myiframe" id="myrame" src={{url}} style="zoom:100%;margin-right:10px"  frameborder="0" align="right"  scrolling="" width="1024" height="680" ></iframe>
+	 		</div>
+		</div>
+		<script>
+			var start_time = (new Date()).getTime();
+			console.log('开始时间',start_time)
+			var end_time = "" ;
+
+			var t = setInterval(function(){
+			if(document.readyState=="complete"){aa();}
+			},1)
+			function aa(){
+			end_time = (new Date()).getTime();
+			var cars = {
+			'解析dom树耗时' : window.performance.timing.domComplete - window.performance.timing.domInteractive,
+			'request请求耗时' : window.performance.timing.responseEnd - window.performance.timing.responseStart,
+			'白屏时间' : window.performance.timing.domLoading - window.performance.timing.fetchStart,
+			'domready时间' : window.performance.timing.domContentLoadedEventEnd - window.performance.timing.fetchStart,
+			'onload时间' : window.performance.timing.loadEventEnd - window.performance.timing.fetchStart
+			};
+			// alert(cars);
+			clearInterval(t);
+			let content=''
+			for(let a in cars){
+				content += a + ': ' +cars[a] + 'ms' + '<br>'
+			}
+			document.getElementById("time").innerHTML=content
+			}
+
+		</script>
+	</body>
+
+
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

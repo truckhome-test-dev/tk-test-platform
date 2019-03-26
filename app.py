@@ -125,15 +125,30 @@ def usestatus():
 
 
 @app.route('/test',methods=['post','get'])
-def test():
-	return render_template('test.html')
+def test(): 
+    if request.args.get('url'):
+        url = request.args.get('url')
+    else:
+        url = 'http://127.0.0.1:5000/test_1'
+    return render_template('time_test.html', url=url)       
+
+
+@app.route('/test_1',methods=['post','get'])
+def test_1():
+	return render_template('hello.html') 
+
+
+@app.route('/test',methods=['post','get'])  
+def test1(): 
+    return render_template('test.html')
+
 
 
 @app.route('/test1',methods=['post','get'])
-def test1():
-	data = {"code":1000,"sex": sex, "Province": Province}
-	return json.dumps(data)
-	
+def test2():
+    data = {"code":1000,"sex": sex, "Province": Province}
+    return json.dumps(data)
+
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0')
