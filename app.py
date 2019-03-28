@@ -24,6 +24,9 @@ def index():
 @app.route('/wxtools',methods=['get','post'])
 def wxtools():
     if request.method == "GET":
+        global login_status
+        if login_status==0:
+            itinit()
         return render_template('wxtools.html')
         
 #查询登录状态
@@ -57,6 +60,8 @@ def statistic():
     nickname=get_nickname()
     wc1=wc()
     if sex =="nologin" or Province =="nologin" or nickname =="nologin" or wc1 =="nologin" :
+        global login_status
+        login_status=0
         data={"code":1001}
         return json.dumps(data)
     else:
