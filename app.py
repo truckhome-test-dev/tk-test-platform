@@ -184,7 +184,12 @@ def test2():
     data = {"code":1000,"sex": sex, "Province": Province}
     return json.dumps(data)
 
+#admin页面
+@app.route('/admin',methods=['get','post'])
+def admin():
+    if request.method == "GET":
 
+        return render_template('admin.html',activeVersion='ok')
 
 if __name__ == '__main__':
 	app.run(debug=True,host='0.0.0.0')
