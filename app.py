@@ -69,11 +69,11 @@ def statistic():
 def scheduling():
     name = request.args.get('name')
     if name is None:
-        return render_template('Scheduling.html')
+        return render_template('scheduling.html')
     else:
         pq = Scheduling()
         data = pq.date_rest()
-        return render_template('Scheduling_son.html',data=data)
+        return render_template('scheduling_son.html',data=data)
 
 
 @app.errorhandler(404)
