@@ -4,4 +4,6 @@ from .scheduling import *
 from .qadevices import *
 from .sqlop import *
 from .api_manage import *
+from .mantis_bug import *
+from .check import *
 

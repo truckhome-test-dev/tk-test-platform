@@ -4,7 +4,7 @@
 
 from flask import Flask, request,render_template,redirect,jsonify
 from test_code import *
-from test_code.mantis_bug import *
+
 import settings
 import json
 
@@ -122,12 +122,18 @@ def savedev():
 @app.route('/usestatus',methods=['post','get'])
 def usestatus():
     if request.method == 'POST':
-        devuser = request.get_data()
-        devuser = json.loads(devuser.decode("utf-8"))
-        devid = devuser['devid']
-        user = devuser['user']
-        re.appusep(devid,user)
-        return "ok"
+        token = request.cookies.get('token')
+        data=token_check1(token)
+        if data['code']==1000:
+            devuser = request.get_data()
+            devuser = json.loads(devuser.decode("utf-8"))
+            devid = devuser['devid']
+            user = devuser['user']
+            re.appusep(devid,user)
+            return "ok"
+        else:
+            return "no"
+
 
 
 @app.route('/time_test',methods=['post','get'])
@@ -177,6 +183,17 @@ def devtype():
         alldata = re.appga(devtype)
         return render_template('devtype.html',alldata=alldata)
 
+#验证token
+@app.route('/token_check',methods=['post','get'])
+def token_check():
+    token = request.get_data()
+    if token ==b'':
+        token = request.cookies.get('token')
+    else:
+        token = json.loads(token.decode("utf-8"))
+        token = str(token['token'])
+    data=token_check1(token)
+    return json.dumps(data)
 
 @app.route('/test2',methods=['post','get'])
 def test1():

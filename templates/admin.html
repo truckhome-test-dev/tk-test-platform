@@ -1,44 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html style="
+    height: 100%;" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
     <link rel="stylesheet" href="static/layui/css/layui.css">
     <script src="static/layui/layui.js"></script>
+    <script type="text/javascript" src="static/js/tool_p.js"></script>
 </head>
-<body>
-
-<form style="float:left;" class="layui-form" action="" width="5000">
-				<div class="layui-form-item">
-					<label class="layui-form-label">验证链接</label>
-					<div class="layui-input-inline">
-			 			<input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
-					</div>
-					<div class="layui-input-inline">
-		      				<button class="layui-btn" lay-submit="" lay-filter="demo1">测试</button>
-		  			</div>
-		  		</div>
-			</form>
-
+<body style="
+    height: 100%;">
+<div style="
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;">
+<form name="form1" method="post" action="" class="layui-form"  style="text-align:center">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="70" height="50">token：</td>
+            <td><input name="token" type="password" id="token" maxlength="16" class="layui-input"></td>
+            <td colspan="200" align="center">
+            <input name="button" type="button" class="layui-btn" value="登录" onclick="token_check()">
+        </tr>
+    </table>
+</form>
+</div>
 
 <script>
-    function lc(e){
-        setCookie("name","hayden");
-alert(getCookie("name"));
-    }
-    function setCookie(name,value) {
-    document.cookie = name + '=' + escape(value);
-}
-    function getCookie(name)
-    {
-        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
-        if(arr=document.cookie.match(reg)){
-          return unescape(arr[2]);
-        }
-        else{
-         return null;
-        }
-    }
+
 </script>
 </body>
 </html>

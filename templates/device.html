@@ -35,7 +35,7 @@
 			<th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
-			<th style="text-align: center; font-weight: bold ;font-size:18px">操作</th>
+			<th id = 't1' style="text-align: center; font-weight: bold ;font-size:18px;display: none">操作</th>
 			</tr> 
 		</thead>
 		<tbody>
@@ -52,8 +52,8 @@
 					<td style="text-align: center">{{i[3]}}</td>
 					<td style="text-align: center">{{i[4]}}</td>
 					<td style="text-align: center">{{i[5]}}</td>
-					<td style="text-align: center">
-						<div class="site-demo-button" style="margin-bottom: 0;">
+                    <td class="t2" style="text-align: center;display: none">
+						<div  class="site-demo-button" style="margin-bottom: 0;">
 							{% if i[2] == 0 %}
 								<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
 							{% else %}
@@ -67,7 +67,19 @@
 	</table>
 
 <script>
- 
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
+        if(arr=document.cookie.match(reg)){
+          return unescape(arr[2]);
+        }
+        else{
+         return null;
+        }
+    }
+window.onload=function() {
+    isShowTd()
+    }
 	layui.use('layer', function(){ //独立版的layer无需执行这一句
 		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
 		//手机外借按钮弹窗触发
@@ -103,7 +115,7 @@
 					            }
 					            else
 					            {
-					              alert('请求出错，请重试')
+					              alert('token校验失败')
 					            }
 				          	}
 					    }

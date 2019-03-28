@@ -325,7 +325,25 @@
         document.getElementById('RemarkName').style.display = "block";
     }
 
-
+    function isShowTd() {
+            var xmlhttp;
+                    xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open("POST","token_check",true);
+                    xmlhttp.send();
+                    xmlhttp.onreadystatechange = function()
+                    {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+                        var c = JSON.parse(xmlhttp.responseText)
+                            if (c.code == 1000){
+                                document.getElementById('t1').style.display = '';
+                                var t2List = document.querySelectorAll('.t2');
+                                for (var i = 0; i < t2List.length; i++) {
+                                    t2List[i].style.display = 'inline-block';
+                                }
+                            }
+                        }
+                    }
+    }
     function devtype(e){
         var devtype = e.dataset.id;
         var xmlhttp;
@@ -338,15 +356,46 @@
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
             {
             document.getElementById("123").innerHTML=xmlhttp.responseText
+                        isShowTd()
             }
-
-            btn[3].classList.add('disabled')
-            var img_RemarkName="/static/pic/RemarkName.png?"+Math.random()
-            document.getElementById("RemarkName").src = img_RemarkName;
-            // {#document.getElementById("RemarkName").src = "/static/pic/RemarkName.png";#}
-            document.getElementById('RemarkName').style.display = "block";
-
         }
     }
+    //校验token
+    function token_check(){
+        var xmlhttp;
+        var token = form1.token.value
+        xmlhttp = new XMLHttpRequest();
+        var data ='{  "token" :"' + token + '"}';
+        xmlhttp.open("POST","token_check",true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+            var c = JSON.parse(xmlhttp.responseText)
+                if (c.code == 1000){
+                    var token=form1.token.value;//获取表单form1的token值
+                    setCookie("token",token);
+                    window.location.href="http://127.0.0.1:5000"
+                    }else {
+                    alert("token校验失败")
+                }
 
+                }
+            }
+    }
+    //设置cookie
+    function setCookie(name,value) {
+    document.cookie = name + '=' + escape(value);
+}
+    //获取cookie
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
+        if(arr=document.cookie.match(reg)){
+          return unescape(arr[2]);
+        }
+        else{
+         return null;
+        }
+    }
 
