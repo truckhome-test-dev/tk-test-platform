@@ -24,6 +24,9 @@ def index():
 @app.route('/wxtools',methods=['get','post'])
 def wxtools():
     if request.method == "GET":
+        global login_status
+        if login_status==0:
+            itinit()
         return render_template('wxtools.html')
         
 #查询登录状态
@@ -57,6 +60,8 @@ def statistic():
     nickname=get_nickname()
     wc1=wc()
     if sex =="nologin" or Province =="nologin" or nickname =="nologin" or wc1 =="nologin" :
+        global login_status
+        login_status=0
         data={"code":1001}
         return json.dumps(data)
     else:
@@ -69,11 +74,11 @@ def statistic():
 def scheduling():
     name = request.args.get('name')
     if name is None:
-        return render_template('Scheduling.html')
+        return render_template('scheduling.html')
     else:
         pq = Scheduling()
         data = pq.date_rest()
-        return render_template('Scheduling_son.html',data=data)
+        return render_template('scheduling_son.html',data=data)
 
 
 @app.errorhandler(404)
@@ -184,7 +189,12 @@ def test2():
     data = {"code":1000,"sex": sex, "Province": Province}
     return json.dumps(data)
 
+#admin页面
+@app.route('/admin',methods=['get','post'])
+def admin():
+    if request.method == "GET":
 
+        return render_template('admin.html',activeVersion='ok')
 
 if __name__ == '__main__':
 	app.run(debug=True,host='0.0.0.0')

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <script src="static/layui/layui.js"></script>
+</head>
+<body>
+
+<form style="float:left;" class="layui-form" action="" width="5000">
+				<div class="layui-form-item">
+					<label class="layui-form-label">验证链接</label>
+					<div class="layui-input-inline">
+			 			<input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-input-inline">
+		      				<button class="layui-btn" lay-submit="" lay-filter="demo1">测试</button>
+		  			</div>
+		  		</div>
+			</form>
+
+
+<script>
+    function lc(e){
+        setCookie("name","hayden");
+alert(getCookie("name"));
+    }
+    function setCookie(name,value) {
+    document.cookie = name + '=' + escape(value);
+}
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
+        if(arr=document.cookie.match(reg)){
+          return unescape(arr[2]);
+        }
+        else{
+         return null;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="c9d39d47-141b-4d79-b040-5bc9251ddba3" name="Default Changelist" comment="" />
+=======
     <list default="true" id="c9d39d47-141b-4d79-b040-5bc9251ddba3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/conf/RemarkName.txt" beforeDir="false" afterPath="$PROJECT_DIR$/static/conf/RemarkName.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/pic/RemarkName.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/pic/RemarkName.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/bug_statistics.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/bug_statistics.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_code/mantis_bug.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_code/mantis_bug.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/tool_p.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/tool_p.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/pic/RemarkName.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/wxtools.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/wxtools.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_code/wxtools.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_code/wxtools.py" afterDir="false" />
     </list>
+>>>>>>> mantis_bug
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,62 +31,115 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="411">
-              <caret line="149" column="44" lean-forward="true" selection-start-line="149" selection-start-column="44" selection-end-line="149" selection-end-column="44" />
+              <caret line="83" column="22" lean-forward="true" selection-start-line="83" selection-start-column="22" selection-end-line="83" selection-end-column="22" />
+=======
+        <entry file="file://$PROJECT_DIR$/test_code/wxtools.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="53" column="15" lean-forward="true" selection-start-line="53" selection-start-column="15" selection-end-line="53" selection-end-column="15" />
+>>>>>>> mantis_bug
               <folding>
-                <element signature="e#80#145#0" expanded="true" />
+                <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_code/mantis_bug.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="9" column="42" lean-forward="true" selection-start-line="9" selection-start-column="42" selection-end-line="9" selection-end-column="42" />
-              <folding>
-                <element signature="e#46#75#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/conf/config.ini">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="19" lean-forward="true" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_code/test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="3" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/test_code/sqlop.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="154">
-              <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
+=======
+        <entry file="file://D:/python3.6.0/Lib/site-packages/itchat/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="88">
+              <caret line="4" column="4" lean-forward="true" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#56#0" expanded="true" />
+              </folding>
+>>>>>>> mantis_bug
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/templates/bug_statistics.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="126" column="22" lean-forward="true" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
+            <state relative-caret-position="1298">
+              <caret line="59" column="75" selection-start-line="59" selection-start-column="75" selection-end-line="59" selection-end-column="75" />
+=======
+        <entry file="file://$PROJECT_DIR$/app.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="134">
+              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+              <folding>
+                <element signature="e#80#145#0" expanded="true" />
+              </folding>
+>>>>>>> mantis_bug
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
+        <entry file="file://$PROJECT_DIR$/templates/admin.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="484">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
+              <folding>
+                <element signature="n#style#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+=======
+        <entry file="file://$PROJECT_DIR$/test_code/sqlop.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+>>>>>>> mantis_bug
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
+        <entry file="file://$PROJECT_DIR$/templates/test.html">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/time_test.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+              <folding>
+                <element signature="n#style#0;n#fieldset#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#form#0;n#div#0;n#body#0;n#!!top" expanded="true" />
+              </folding>
+=======
+        <entry file="file://$PROJECT_DIR$/test_code/scheduling.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="44">
+              <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
+              <folding>
+                <element signature="e#79#94#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/bug_statistics.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="183">
+              <caret line="125" column="14" lean-forward="true" selection-start-line="125" selection-start-column="14" selection-end-line="125" selection-end-column="14" />
+>>>>>>> mantis_bug
             </state>
           </provider>
         </entry>
@@ -88,8 +147,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/base.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="21" column="93" selection-start-line="21" selection-start-column="93" selection-end-line="21" selection-end-column="93" />
+            <state relative-caret-position="704">
+              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
             </state>
           </provider>
         </entry>
@@ -106,8 +165,16 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/js/tool_p.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6688">
-              <caret line="304" column="51" selection-start-line="304" selection-start-column="51" selection-end-line="304" selection-end-column="51" />
+<<<<<<< HEAD
+            <state relative-caret-position="456">
+              <caret line="208" selection-start-line="208" selection-end-line="208" />
+=======
+            <state relative-caret-position="200">
+              <caret line="222" column="23" lean-forward="true" selection-start-line="222" selection-start-column="23" selection-end-line="222" selection-end-column="23" />
+              <folding>
+                <element signature="n#style#0;n#a#0;n#li#0;n#!!top" expanded="true" />
+              </folding>
+>>>>>>> mantis_bug
             </state>
           </provider>
         </entry>
@@ -115,8 +182,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/wxtools.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1078">
-              <caret line="49" column="33" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+<<<<<<< HEAD
+            <state relative-caret-position="302">
+              <caret line="28" column="11" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
+=======
+            <state relative-caret-position="-464">
+              <caret line="28" column="11" lean-forward="true" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
+              <folding>
+                <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#1;n#!!top" expanded="true" />
+              </folding>
+>>>>>>> mantis_bug
             </state>
           </provider>
         </entry>
@@ -135,7 +211,6 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>myChart</find>
-      <find>lc</find>
       <find>exit</find>
       <find>ec</find>
       <find>text</find>
@@ -154,10 +229,23 @@
       <find>scheduling</find>
       <find>status</find>
       <find>toolbox</find>
+<<<<<<< HEAD
+      <find>ele</find>
+=======
+      <find>print</find>
+      <find>wc</find>
+      <find>QR.PNG</find>
+>>>>>>> mantis_bug
+      <find>lc</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -167,21 +255,28 @@
         <option value="D:/p/locust/test.py" />
         <option value="$PROJECT_DIR$/test_code/ciyun.py" />
         <option value="$PROJECT_DIR$/test_code/test1.py" />
-        <option value="$PROJECT_DIR$/templates/wxtools.html" />
-        <option value="$PROJECT_DIR$/static/js/tool_p.js" />
-        <option value="$PROJECT_DIR$/test_code/wxtools.py" />
         <option value="$PROJECT_DIR$/templates/base.html" />
         <option value="$PROJECT_DIR$/test_code/sqlop.py" />
         <option value="$PROJECT_DIR$/test_code/test.py" />
         <option value="$PROJECT_DIR$/test_code/configparser_demo.py" />
         <option value="$PROJECT_DIR$/templates/rt.html" />
-        <option value="$PROJECT_DIR$/app.py" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/test_code/mantis_bug.py" />
         <option value="$PROJECT_DIR$/templates/bug_statistics.html" />
+        <option value="$PROJECT_DIR$/app.py" />
+        <option value="$PROJECT_DIR$/templates/admin.html" />
+=======
+        <option value="$PROJECT_DIR$/templates/bug_statistics.html" />
+        <option value="$PROJECT_DIR$/test_code/mantis_bug.py" />
+        <option value="$PROJECT_DIR$/templates/wxtools.html" />
+        <option value="$PROJECT_DIR$/app.py" />
+        <option value="$PROJECT_DIR$/test_code/wxtools.py" />
+        <option value="$PROJECT_DIR$/static/js/tool_p.js" />
+>>>>>>> mantis_bug
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -192,7 +287,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -208,6 +302,7 @@
             <path>
               <item name="tk-test-platform" type="b2602c69:ProjectViewProjectNode" />
               <item name="tk-test-platform" type="462c0819:PsiDirectoryNode" />
+<<<<<<< HEAD
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="conf" type="462c0819:PsiDirectoryNode" />
             </path>
@@ -221,22 +316,25 @@
               <item name="tk-test-platform" type="b2602c69:ProjectViewProjectNode" />
               <item name="tk-test-platform" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tk-test-platform" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tk-test-platform" type="462c0819:PsiDirectoryNode" />
+=======
               <item name="test_code" type="462c0819:PsiDirectoryNode" />
+>>>>>>> mantis_bug
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../leilei/tk-test-platform" />
+<<<<<<< HEAD
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+=======
+    <property name="last_opened_file_path" value="D:/python3.6.0/Lib/site-packages/itchat" />
+>>>>>>> mantis_bug
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -381,10 +479,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.mantis_bug" />
-        <item itemvalue="Python.test (1)" />
         <item itemvalue="Python.wxtools" />
         <item itemvalue="Python.test1" />
+        <item itemvalue="Python.test (1)" />
+        <item itemvalue="Python.mantis_bug" />
         <item itemvalue="Python.ciyun" />
       </list>
     </recent_temporary>
@@ -411,21 +509,34 @@
       <workItem from="1553232108322" duration="1842000" />
       <workItem from="1553237286292" duration="8469000" />
       <workItem from="1553495275573" duration="2959000" />
+<<<<<<< HEAD
+      <workItem from="1553687913689" duration="4734000" />
+=======
+      <workItem from="1553511294545" duration="3138000" />
+      <workItem from="1553593478412" duration="9458000" />
+>>>>>>> mantis_bug
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135749000" />
+<<<<<<< HEAD
+    <option name="totallyTimeSpent" value="140483000" />
+=======
+    <option name="totallyTimeSpent" value="148345000" />
+>>>>>>> mantis_bug
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2803838" />
+<<<<<<< HEAD
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2835821" />
+=======
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2867804" />
+>>>>>>> mantis_bug
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49946696" weight="0.32936078" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -434,7 +545,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50053304" side_tool="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50053304" side_tool="true" visible="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32936078" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -564,13 +675,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_code/wxtools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="19" lean-forward="true" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/scheduling.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="286">
@@ -592,16 +696,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_code/scheduling.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="75" selection-start-line="75" selection-end-line="75" />
-          <folding>
-            <element signature="e#79#94#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_code/qadevices.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="44">
@@ -612,17 +706,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_code/test.py">
+    <entry file="file://$PROJECT_DIR$/test_code/mantis_bug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" selection-end-column="8" />
+        <state relative-caret-position="374">
+          <caret line="17" column="35" lean-forward="true" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
+          <folding>
+            <element signature="e#46#75#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html">
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/test_code/mantis_bug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="21" column="93" selection-start-line="21" selection-start-column="93" selection-end-line="21" selection-end-column="93" />
+        <state relative-caret-position="154">
+          <caret line="10" column="42" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
+          <folding>
+            <element signature="e#46#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+=======
+>>>>>>> mantis_bug
+    <entry file="file://$PROJECT_DIR$/static/conf/config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_code/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" column="8" lean-forward="true" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_code/sqlop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_code/sqlop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
@@ -633,58 +764,126 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/bug_statistics.html">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="1298">
+          <caret line="59" column="75" selection-start-line="59" selection-start-column="75" selection-end-line="59" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/static/js/tool_p.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6688">
-          <caret line="304" column="51" selection-start-line="304" selection-start-column="51" selection-end-line="304" selection-end-column="51" />
+        <state relative-caret-position="456">
+          <caret line="208" selection-start-line="208" selection-end-line="208" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/test.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+          <folding>
+            <element signature="n#style#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+=======
+        <state relative-caret-position="183">
+          <caret line="125" column="14" lean-forward="true" selection-start-line="125" selection-start-column="14" selection-end-line="125" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_code/scheduling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
+          <folding>
+            <element signature="e#79#94#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python3.6.0/Lib/site-packages/itchat/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="4" lean-forward="true" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#56#0" expanded="true" />
+>>>>>>> mantis_bug
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/wxtools.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1078">
-          <caret line="49" column="33" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+<<<<<<< HEAD
+        <state relative-caret-position="302">
+          <caret line="28" column="11" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_code/sqlop.py">
+    <entry file="file://$PROJECT_DIR$/templates/time_test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="220">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+          <folding>
+            <element signature="n#style#0;n#fieldset#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#form#0;n#div#0;n#body#0;n#!!top" expanded="true" />
+=======
+        <state relative-caret-position="-464">
+          <caret line="28" column="11" lean-forward="true" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#1;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/conf/config.ini">
+    <entry file="file://$PROJECT_DIR$/static/js/tool_p.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="19" lean-forward="true" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
+        <state relative-caret-position="200">
+          <caret line="222" column="23" lean-forward="true" selection-start-line="222" selection-start-column="23" selection-end-line="222" selection-end-column="23" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#li#0;n#!!top" expanded="true" />
+>>>>>>> mantis_bug
+          </folding>
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="704">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="411">
-          <caret line="149" column="44" lean-forward="true" selection-start-line="149" selection-start-column="44" selection-end-line="149" selection-end-column="44" />
+          <caret line="83" column="22" lean-forward="true" selection-start-line="83" selection-start-column="22" selection-end-line="83" selection-end-column="22" />
+          <folding>
+            <element signature="e#80#145#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="e#80#145#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_code/mantis_bug.py">
+    <entry file="file://$PROJECT_DIR$/test_code/wxtools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="42" lean-forward="true" selection-start-line="9" selection-start-column="42" selection-end-line="9" selection-end-column="42" />
+        <state relative-caret-position="156">
+          <caret line="53" column="15" lean-forward="true" selection-start-line="53" selection-start-column="15" selection-end-line="53" selection-end-column="15" />
           <folding>
-            <element signature="e#46#75#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+>>>>>>> mantis_bug
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/bug_statistics.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="126" column="22" lean-forward="true" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
         </state>
       </provider>
     </entry>

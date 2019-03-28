@@ -219,10 +219,13 @@
         xmlhttp.send();
         setTimeout(function(){
             document.getElementById("oImg").src = "/static/pic/QR.png";
+            var img_src="/static/pic/QR.png?"+Math.random()
+            document.getElementById("oImg").src = img_src;
             document.getElementById('oImg').style.display = "block";
             document.getElementById('loading').style.display = "none";
         },3000)
         btn[1].classList.remove('disabled');
+        btn[0].classList.add('disabled')
         xmlhttp.onreadystatechange = function(){
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
                 var c = JSON.parse(xmlhttp.responseText)
@@ -236,6 +239,8 @@
                              btn[i].classList.add('disabled')
                         }
                     }
+                    btn[0].classList.add('disabled')
+                    btn[3].classList.add('disabled')
                 }
             }
         }
@@ -275,7 +280,8 @@
         if (e.classList.contains('disabled')) {
                 return
             }
-        document.getElementById('loading').style.visibility='hidden';
+        // document.getElementById('loading').style.visibility='hidden';
+        document.getElementById('loading').style.display='';
 
         var xmlhttp;
         xmlhttp = new XMLHttpRequest();
@@ -294,8 +300,10 @@
                 }else {
                 // {#var obj = JSON.parse(xmlhttp.responseText)#}
                 // {#var data=obj['city']#}
+                    document.getElementById('loading').style.display = "none";
                     btn[1].classList.add('disabled')
                     btn[2].classList.add('disabled')
+                    btn[3].classList.remove('disabled')
                     document.getElementById("oImg").src =""
                     optionsex.series[0].data= c.sex
                     optioncity.series[0].data=c.Province
@@ -331,6 +339,13 @@
             {
             document.getElementById("123").innerHTML=xmlhttp.responseText
             }
+
+            btn[3].classList.add('disabled')
+            var img_RemarkName="/static/pic/RemarkName.png?"+Math.random()
+            document.getElementById("RemarkName").src = img_RemarkName;
+            // {#document.getElementById("RemarkName").src = "/static/pic/RemarkName.png";#}
+            document.getElementById('RemarkName').style.display = "block";
+
         }
     }
 
