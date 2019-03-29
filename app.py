@@ -198,9 +198,9 @@ def token_check():
     else:
         return render_template('admin.html')
 
-@app.route('/test2',methods=['post','get'])
-def test1():
-	return render_template('test.html')
+# @app.route('/test2',methods=['post','get'])
+# def test1():
+# 	return render_template('test.html')
 
 
 
@@ -213,6 +213,12 @@ def test2():
 @app.route('/admin',methods=['get','post'])
 def admin():
     return render_template('admin.html')
+
+#flask动态路由测试
+@app.route('/1/<url>',methods=['post','get'])
+def test1(url):
+    data="1/%s.html"% url
+    return render_template(data)
 
 if __name__ == '__main__':
 	app.run(debug=True,host='0.0.0.0')
