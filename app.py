@@ -186,14 +186,17 @@ def devtype():
 #验证token
 @app.route('/token_check',methods=['post','get'])
 def token_check():
-    token = request.get_data()
-    if token ==b'':
-        token = request.cookies.get('token')
+    if request.method == 'POST':
+        token = request.get_data()
+        if token ==b'':
+            token = request.cookies.get('token')
+        else:
+            token = json.loads(token.decode("utf-8"))
+            token = str(token['token'])
+        data=token_check1(token)
+        return json.dumps(data)
     else:
-        token = json.loads(token.decode("utf-8"))
-        token = str(token['token'])
-    data=token_check1(token)
-    return json.dumps(data)
+        return render_template('admin.html')
 
 @app.route('/test2',methods=['post','get'])
 def test1():
@@ -209,9 +212,7 @@ def test2():
 #admin页面
 @app.route('/admin',methods=['get','post'])
 def admin():
-    if request.method == "GET":
-
-        return render_template('admin.html',activeVersion='ok')
+    return render_template('admin.html')
 
 if __name__ == '__main__':
 	app.run(debug=True,host='0.0.0.0')

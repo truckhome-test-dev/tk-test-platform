@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="static/layui/css/layui.css">
     <script src="static/layui/layui.js"></script>
     <script type="text/javascript" src="static/js/tool_p.js"></script>
@@ -30,7 +31,12 @@
 </div>
 
 <script>
-
+document.onkeydown =cdk;
+function cdk(){
+    if(event.keyCode ==13){
+        token_check();
+    }
+}
 </script>
 </body>
 </html>
