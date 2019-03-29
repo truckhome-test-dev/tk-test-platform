@@ -149,8 +149,12 @@ def test():
 @app.route('/bug_statistics',methods=['get','post'])
 def bug_statistics():
     if request.method == "GET":
-        data=bug.activeVersion()
-        return render_template('bug_statistics.html',activeVersion=data)
+        L=[]
+        data=bug.active_version()
+        sumbug=bug.bug_week()
+        L.append(data)
+        L.append(sumbug)
+        return render_template('bug_statistics.html',data=L)
 
 
 @app.route('/statistical_details',methods=['post'])

@@ -17,15 +17,23 @@ class Mantis_Bug(SqlOperate):
 
 
     #获得当天0点时间戳（单位：秒）
-    def getTimeOClockOfToday(self):
+    def get_time_today(self):
         t = time.localtime(time.time())
         time1 = time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00', t), '%Y-%m-%d %H:%M:%S'))
         return int(time1)
 
 
+    #获取本周周一0点时间戳
+    def get_current_week_begin_timestamp(self):
+        date1 = datetime.datetime.now()
+        this_week_start_dt = str(date1 - datetime.timedelta(days=date1.weekday())).split()[0]
+        timestamp = int(time.mktime(datetime.datetime.strptime(this_week_start_dt, "%Y-%m-%d").timetuple()))
+        return timestamp
+
+
     #查询当前活跃的版本
-    def activeVersion(self):
-        today_time=self.getTimeOClockOfToday()
+    def active_version(self):
+        today_time=self.get_time_today()
         self.dbcur()
         sql="select mantis_project_table.name,mantis_bug_table.version " \
             "from mantis_project_table,mantis_bug_table " \
@@ -56,7 +64,7 @@ class Mantis_Bug(SqlOperate):
 
     #近7天创建项目的bug数
     def bug_prover_statistics(self):
-        last_7days_time = self.getTimeOClockOfToday()-86400*7
+        last_7days_time = self.get_time_today()-86400*7
         self.dbcur()
         sql="select p.name,v.version,count(b.id) " \
             "from mantis_project_table p,mantis_bug_table b,mantis_project_version_table v " \
@@ -181,20 +189,21 @@ class Mantis_Bug(SqlOperate):
         return d
 
 
-    #最近7天bug趋势(报告数量)
+    #本周bug趋势(报告数量)
     def bug_trend(self):
         #7天前0点时间
-        today_time=self.getTimeOClockOfToday()-86400*6
+        today_time=self.get_time_today()-86400*6
+        week_time=self.get_current_week_begin_timestamp()
         self.dbcur()
         sqlfrom="select FROM_UNIXTIME(date_submitted,'%Y-%m-%d'),count(*) from mantis_bug_table"
-        sqlwhere=" where date_submitted>%d "%today_time
+        sqlwhere=" where date_submitted>%d "%week_time
         sqlgroupby="group by FROM_UNIXTIME(date_submitted,'%Y-%m-%d') desc"
         sql=sqlfrom+sqlwhere+sqlgroupby
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
         data = list(self.cur.fetchall())
-        for i in range(-6,1):
+        for i in range(-4,1):
             now = datetime.datetime.now()
             delta = datetime.timedelta(days=i)
             n_days = now + delta
@@ -211,3 +220,14 @@ class Mantis_Bug(SqlOperate):
             d[i[0]]=i[1]
         return d
 
+
+    #获取本周内bug总数
+    def bug_week(self):
+        week_time=self.get_current_week_begin_timestamp()
+        self.dbcur()
+        sql="select count(id) from mantis_bug_table where date_submitted>%d"%week_time
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchone()[0]
+        return data

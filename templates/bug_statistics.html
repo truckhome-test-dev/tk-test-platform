@@ -16,7 +16,7 @@
 		<legend>{{name}}</legend>
 	</fieldset>
 
-<blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">当前活跃的版本：{{ activeVersion }}</blockquote>
+<blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">当前活跃的版本：{{ data[0] }}</blockquote>
 <div class="layui-tab layui-tab-card">
     <ul class="layui-tab-title">
         <li class="layui-this">概括</li>
@@ -110,7 +110,7 @@
             };
         var optiontrend = {
             title: {
-                text: '近7天新增bug个数走势'
+                text: '本周新增bug走势(总数：{{ data[1] }})'
             },
             tooltip : {
                 trigger: 'axis',
