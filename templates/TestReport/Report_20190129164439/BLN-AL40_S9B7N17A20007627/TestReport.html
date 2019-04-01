@@ -1,0 +1,4262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>BLN-AL40自动化测试报告</title>
+    <meta name="generator" content="HTMLTestRunner 1.2.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+    
+<style type="text/css" media="screen">
+body        { font-family: Microsoft YaHei;padding: 20px; font-size: 100%; }
+table       { font-size: 100%; }
+.table tbody tr td{
+            vertical-align: middle;
+        }
+
+/* -- heading ---------------------------------------------------------------------- */
+.heading .description, .attribute {
+    clear: both;
+}
+
+/* --- 失败和错误合集样式 -- Gelomen --- */
+.failCollection, .errorCollection {
+    width: 100px;
+    float: left;
+}
+#failCaseOl li {
+    color: red
+}
+#errorCaseOl li {
+    color: orange
+}
+
+/* --- 打开截图特效样式 -- Gelomen --- */
+.data-img{
+    cursor:pointer
+}
+
+.pic_looper{
+    width:100%;
+    height:100%;
+    position: fixed;
+    left: 0;
+    top:0;
+    opacity: 0.6;
+    background: #000;
+    display: none;
+    z-index: 100;
+}
+
+.pic_show{
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    text-align: center;
+    display: none;
+    z-index: 100;
+}
+
+.pic_box{
+    padding:10px;
+    width:90%;
+    height:90%;
+    margin:40px auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.pic_box img{
+    width: auto;
+    height: 100%;
+    -moz-box-shadow: 0px 0px 20px 0px #000;
+    -webkit-box-shadow: 0px 0px 20px 0px #000;
+    box-shadow: 0px 0px 20px 0px #000;
+}
+
+/* --- 饼状图div样式 -- Gelomen --- */
+#container {
+    width: 450px;
+    height: 300px;
+    float: left;
+}
+
+/* -- report ------------------------------------------------------------------------ */
+#total_row  { font-weight: bold; }
+.passCase   { color: #5cb85c; }
+.failCase   { color: #d9534f; font-weight: bold; }
+.errorCase  { color: #f0ad4e; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+.screenshot:link { text-decoration: none;color: deeppink; }
+.screenshot:visited { text-decoration: none;color: deeppink; }
+.screenshot:hover { text-decoration: none;color: darkcyan; }
+.screenshot:active { text-decoration: none;color: deeppink; }
+</style>
+
+</head>
+<body >
+<script language="javascript" type="text/javascript">
+
+    $(function(){
+        // 修改 失败 和 错误 用例里对应按钮的颜色ClassName为动态加载 -- Gelomen
+    	$("button").each(function () {
+    	    var text = $(this).text();
+    	    if(text == "失败"){
+    	        $(this).addClass("btn-danger")
+            }else if(text == "错误") {
+                $(this).addClass("btn-warning")
+            }
+        });
+
+        // 给失败和错误合集加样式 -- Gelomen
+        var p_attribute = $("p.attribute");
+        p_attribute.eq(4).addClass("failCollection");
+        p_attribute.eq(5).addClass("errorCollection");
+
+        // 打开截图，放大，点击任何位置可以关闭图片  -- Gelomen
+        $(".screenshot").click(function(){
+            var img = $(this).attr("img");
+            $('.pic_show img').attr('src', img);
+            $('.pic_looper').fadeIn(200);
+            $('.pic_show').fadeIn(200);
+
+            var browserHeight = $(window).height();
+            var pic_boxHeight = $(".pic_box").height();
+            var top = (browserHeight - pic_boxHeight)/2;
+            $('.pic_box').css("margin-top", top + "px")
+
+        });
+        $('.pic_looper, .pic_show').click(function(){
+            $('.pic_looper').fadeOut(200);
+            $('.pic_show').fadeOut(200)
+        });
+        
+        var browserWidth = $(window).width();
+        var margin_left = browserWidth/2 - 450;
+        if(margin_left <= 240){
+            $("#container").css("margin", "auto");
+        }else {
+            $("#container").css("margin-left", margin_left + "px");
+        }
+
+        $(window).resize(function(){
+            // 改变窗口大小时，自动改变图片与顶部的距离  -- Gelomen
+            var browserHeight = $(window).height();
+            var pic_boxHeight = $(".pic_box").height();
+            var top = (browserHeight - pic_boxHeight)/2;
+            $('.pic_box').css("margin-top", top + "px");
+
+
+            // 改变窗口大小时，自动改变饼图的边距  -- Gelomen
+            var browserWidth = $(window).width();
+            var margin_left = browserWidth/2 - 450;
+            if(margin_left <= 240){
+                $("#container").css("margin", "auto");
+            }else {
+                $("#container").css("margin-left", margin_left + "px");
+            }
+        });
+
+        // 距离顶部超过浏览器窗口一屏时，回到顶部按钮才出现  -- Gelomen
+        $(window).scroll(function(){
+            var browserHeight = $(window).height();
+            var top = $(window).scrollTop();
+            if(top >= browserHeight){
+                $("#toTop").css("display", "block")
+            }else {
+                $("#toTop").css("display", "none")
+            }
+        })
+        
+        // 增加回到顶部过程的动画，以看上去不会那么生硬  -- Gelomen
+        $("#toTop").click(function() {
+            $("html,body").animate({"scrollTop":0}, 700)
+        })
+        
+        // 增加饼状图  -- Gelomen
+        $('#container').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                spacing : [0, 0, 0, 0]
+            },
+            credits: {
+                enabled: false
+            },
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            },
+            title: {
+                floating:true,
+                text: '测试结果占比'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    colors: ['#81ca9d', '#f16d7e', '#fdc68c'],
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    },
+                    point: {
+                        events: {
+                            mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+                                chart.setTitle({
+                                    text: e.target.name+ '\t'+ e.target.y + ' 个'
+                                });
+                            }
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                innerSize: '80%',
+                name: '比例',
+                data: [
+                    ['通过', 165],
+                    {
+                        name: '失败',
+                        y: 0,
+                        sliced: true,
+                        selected: true
+                    },
+                    ['错误', 20]
+                ]
+            }]
+        }, function(c) {
+            // 环形图圆心
+            var centerY = c.series[0].center[1],
+                titleHeight = parseInt(c.title.styles.fontSize);
+            c.setTitle({
+                y:centerY + titleHeight/2
+            });
+            chart = c;
+        });
+        
+        // 查看 失败 和 错误 合集链接文字切换  -- Gelomen
+        $(".showDetail").click(function () {
+            if($(this).html() == "点击查看"){
+                $(this).html("点击收起")
+            }else {
+                $(this).html("点击查看")
+            }
+        })
+    });
+    
+    
+output_list = Array();
+
+/*level 调整增加只显示通过用例的分类 --Findyou / 修复筛选显示bug --Gelomen
+0:Summary //all hiddenRow
+1:Failed  //pt&et hiddenRow, ft none
+2:Pass    //pt none, ft&et hiddenRow
+3:Error   //pt&ft hiddenRow, et none
+4:All     //all none
+*/
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level == 2 || level == 0 || level == 3) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+                // 切换筛选时只显示预览   -- Gelomen
+                $("div[id^='div_ft']").attr("class", "collapse");
+                $("div[id^='div_et']").attr("class", "collapse");
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level == 1 || level == 0 || level == 3) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+                // 切换筛选时只显示预览   -- Gelomen
+                $("div[id^='div_ft']").attr("class", "collapse");
+                $("div[id^='div_et']").attr("class", "collapse");
+            }
+        }
+        if (id.substr(0,2) == 'et') {
+            if (level == 1 || level == 0 || level == 2) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+                // 切换筛选时只显示预览   -- Gelomen
+                $("div[id^='div_ft']").attr("class", "collapse");
+                $("div[id^='div_et']").attr("class", "collapse");
+            }
+        }
+    }
+
+    //加入【详细】切换文字变化 --Findyou
+    detail_class=document.getElementsByClassName('detail');
+	//console.log(detail_class.length)
+	if (level == 3) {
+		for (var i = 0; i < detail_class.length; i++){
+			detail_class[i].innerHTML="收起"
+		}
+	}
+	else{
+			for (var i = 0; i < detail_class.length; i++){
+			detail_class[i].innerHTML="详细"
+		}
+	}
+}
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        //ID修改 点 为 下划线 -Findyou
+        tid0 = 't' + cid.substr(1) + '_' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+            if (!tr) {
+                tid = 'e' + tid0;
+                tr = document.getElementById(tid);
+            }
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        //修改点击无法收起的BUG，加入【详细】切换文字变化 --Findyou
+        if (toHide) {
+            document.getElementById(tid).className = 'hiddenRow';
+            document.getElementById(cid).innerText = "详细"
+        }
+        else {
+            document.getElementById(tid).className = '';
+            document.getElementById(cid).innerText = "收起"
+        }
+    }
+}
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+</script>
+<div class='pic_looper'></div> <div class='pic_show'><div class='pic_box'><img src=''/></div> </div>
+<div class='heading'>
+<div style="width: 650px; float: left;">
+    <h1 style="font-family: Microsoft YaHei">BLN-AL40自动化测试报告</h1>
+    <p class='attribute'><strong>测试人员 : </strong> QA</p>
+<p class='attribute'><strong>开始时间 : </strong> 2019-01-29 16:44:50</p>
+<p class='attribute'><strong>合计耗时 : </strong> 0:31:42.636385</p>
+<p class='attribute'><strong>测试结果 : </strong> 共计 185，通过 165，失败 0，错误 20，通过率 = 89.19%</p>
+<p class='attribute'><strong>失败用例合集 : </strong> <ol style='float: left;'>无</ol></p>
+<p class='attribute'><strong>错误用例合集 : </strong> <div class='panel-default' style='float: left;'><a class='showDetail' data-toggle='collapse' href='#errorCaseOl' style='text-decoration: none;'>点击查看</a></div><ol id='errorCaseOl' class='collapse' style='float: left;'><li>test_25_卡友圈最新详情关注 (AppCase7.test_02_登陆入口检查.登陆入口检查)</li><li>test_29_卡友圈最新详情评论 (AppCase7.test_02_登陆入口检查.登陆入口检查)</li><li>test_33_卡友圈最新详情点赞 (AppCase7.test_02_登陆入口检查.登陆入口检查)</li><li>test_34_卡友圈视频详情点赞 (AppCase7.test_02_登陆入口检查.登陆入口检查)</li><li>test_35_卡友圈附近详情点赞 (AppCase7.test_02_登陆入口检查.登陆入口检查)</li><li>test_14_卡友圈推荐列表 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_15_卡友圈最新列表 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_19_卡友圈最新详情 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_01_资讯新闻点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_03_资讯图片点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_05_资讯养车点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_07_资讯政策点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_08_资讯物流点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_10_卡友圈推荐点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_12_卡友圈视频点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_13_卡友圈附近点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_14_卡友圈关注点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_01_资讯新闻收藏 (AppCase7.test_05_收藏检查.收藏检查)</li><li>test_100_卡友圈附近评论按钮 (AppCase7.test_06_固定元素检查.固定元素检查)</li><li>test_101卡友圈附近赞按钮 (AppCase7.test_06_固定元素检查.固定元素检查)</li></ol></p>
+
+    <p class='description'>用例执行情况：</p>
+</div>
+<div id="container"></div>
+</div>
+
+
+
+<div style="width: 500px; clear: both;">
+<p id='show_detail_line'>
+<a class="btn btn-primary" href='javascript:showCase(0)'>概要</a>
+<a class="btn btn-success" href='javascript:showCase(2)'>通过: 165 </a>
+<a class="btn btn-danger" href='javascript:showCase(1)'>错误: 0 </a>
+<a class="btn btn-warning" href='javascript:showCase(3)'>失败: 20 </a>
+<a class="btn btn-info" href='javascript:showCase(4)'>所有: 185 </a>
+</p>
+</div>
+<table id='result_table' class="table table-condensed table-bordered table-hover">
+<colgroup>
+<col align='left' style="width: 300px;"/>
+<col align='right' style="width: 300px;"/>
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' style="width: 200px;"/>
+</colgroup>
+<tr id='header_row' class="text-center success" style="font-weight: bold;font-size: 14px;">
+    <td>用例集/测试用例</td>
+    <td>说明</td>
+    <td>总计</td>
+    <td>通过</td>
+    <td>错误</td>
+    <td>失败</td>
+    <td>耗时</td>
+    <td>详细</td>
+</tr>
+
+<tr class='passClass warning'>
+    <td>初始化</td>
+    <td></td>
+    <td class="text-center">3</td>
+    <td class="text-center">3</td>
+    <td class="text-center">0</td>
+    <td class="text-center">0</td>
+    <td class="text-center">36.76秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c1',3)" class="detail" id='c1'>详细</a></td>
+</tr>
+
+<tr id='pt1_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_打开App</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt1_1' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt1_1'>通过</button>
+    <div id='div_pt1_1' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt1_1' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt1_1,#div_pt1_1_screenshot'>通过</button>
+    <div id='div_pt1_1' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt1_1: sleep 5s, left  5ssleep 5s, left  4ssleep 5s, left  3ssleep 5s, left  2ssleep 5s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt1_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_登陆</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt1_2' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt1_2'>通过</button>
+    <div id='div_pt1_2' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt1_2' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt1_2,#div_pt1_2_screenshot'>通过</button>
+    <div id='div_pt1_2' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt1_2: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt1_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_100_退出</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>登陆入口检查</td>
+    <td></td>
+    <td class="text-center">36</td>
+    <td class="text-center">31</td>
+    <td class="text-center">0</td>
+    <td class="text-center">5</td>
+    <td class="text-center">816.5秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c2',36)" class="detail" id='c2'>详细</a></td>
+</tr>
+
+<tr id='pt2_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_新闻</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_1' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_1'>通过</button>
+    <div id='div_pt2_1' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_1' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_1,#div_pt2_1_screenshot'>通过</button>
+    <div id='div_pt2_1' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_1: sleep 5s, left  5ssleep 5s, left  4ssleep 5s, left  3ssleep 5s, left  2ssleep 5s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_视频</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_2' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_2'>通过</button>
+    <div id='div_pt2_2' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_2' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_2,#div_pt2_2_screenshot'>通过</button>
+    <div id='div_pt2_2' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_2: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_图片</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_3'>通过</button>
+    <div id='div_pt2_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_3,#div_pt2_3_screenshot'>通过</button>
+    <div id='div_pt2_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_3: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_行情</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_4' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_4'>通过</button>
+    <div id='div_pt2_4' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_4' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_4,#div_pt2_4_screenshot'>通过</button>
+    <div id='div_pt2_4' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_4: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_养车</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_5'>通过</button>
+    <div id='div_pt2_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_5,#div_pt2_5_screenshot'>通过</button>
+    <div id='div_pt2_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_5: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_评测</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_6' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_6'>通过</button>
+    <div id='div_pt2_6' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_6' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_6,#div_pt2_6_screenshot'>通过</button>
+    <div id='div_pt2_6' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_6: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_政策</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_7' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_7'>通过</button>
+    <div id='div_pt2_7' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_7' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_7,#div_pt2_7_screenshot'>通过</button>
+    <div id='div_pt2_7' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_7: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_物流</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_8'>通过</button>
+    <div id='div_pt2_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_8,#div_pt2_8_screenshot'>通过</button>
+    <div id='div_pt2_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_8: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛推荐</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_9' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_9'>通过</button>
+    <div id='div_pt2_9' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_9' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_9,#div_pt2_9_screenshot'>通过</button>
+    <div id='div_pt2_9' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_9: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_论坛我的消息系统通知</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_10' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_10'>通过</button>
+    <div id='div_pt2_10' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_10' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_10,#div_pt2_10_screenshot'>通过</button>
+    <div id='div_pt2_10' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_10: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_论坛我的消息私信消息</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_11' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_11'>通过</button>
+    <div id='div_pt2_11' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_11' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_11,#div_pt2_11_screenshot'>通过</button>
+    <div id='div_pt2_11' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_11: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_论坛我的消息赞我的</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_12' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_12'>通过</button>
+    <div id='div_pt2_12' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_12' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_12,#div_pt2_12_screenshot'>通过</button>
+    <div id='div_pt2_12' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_12: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_论坛我的消息关注我的</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_13' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_13'>通过</button>
+    <div id='div_pt2_13' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_13' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_13,#div_pt2_13_screenshot'>通过</button>
+    <div id='div_pt2_13' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_13: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_论坛关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_14' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_14'>通过</button>
+    <div id='div_pt2_14' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_14' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_14,#div_pt2_14_screenshot'>通过</button>
+    <div id='div_pt2_14' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_14: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_论坛发帖</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_15' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_15'>通过</button>
+    <div id='div_pt2_15' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_15' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_15,#div_pt2_15_screenshot'>通过</button>
+    <div id='div_pt2_15' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_15: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_论坛求助</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_16' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_16'>通过</button>
+    <div id='div_pt2_16' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_16' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_16,#div_pt2_16_screenshot'>通过</button>
+    <div id='div_pt2_16' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_16: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_论坛牛人</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_17' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_17'>通过</button>
+    <div id='div_pt2_17' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_17' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_17,#div_pt2_17_screenshot'>通过</button>
+    <div id='div_pt2_17' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_17: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_卡友圈关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_18' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_18'>通过</button>
+    <div id='div_pt2_18' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_18' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_18,#div_pt2_18_screenshot'>通过</button>
+    <div id='div_pt2_18' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_18: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_卡友圈推荐关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_19' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_19'>通过</button>
+    <div id='div_pt2_19' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_19' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_19,#div_pt2_19_screenshot'>通过</button>
+    <div id='div_pt2_19' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_19: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_卡友圈视频关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_20' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_20'>通过</button>
+    <div id='div_pt2_20' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_20' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_20,#div_pt2_20_screenshot'>通过</button>
+    <div id='div_pt2_20' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_20: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_卡友圈附近关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_21' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_21'>通过</button>
+    <div id='div_pt2_21' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_21' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_21,#div_pt2_21_screenshot'>通过</button>
+    <div id='div_pt2_21' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_21: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_卡友圈集赞达人</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_22' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_22'>通过</button>
+    <div id='div_pt2_22' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_22' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_22,#div_pt2_22_screenshot'>通过</button>
+    <div id='div_pt2_22' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_22: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_卡友圈头像</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_23' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_23'>通过</button>
+    <div id='div_pt2_23' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_23' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_23,#div_pt2_23_screenshot'>通过</button>
+    <div id='div_pt2_23' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_23: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_24' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_24_卡友圈推荐详情关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_24' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_24'>通过</button>
+    <div id='div_pt2_24' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_24' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_24,#div_pt2_24_screenshot'>通过</button>
+    <div id='div_pt2_24' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_24: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et2_25' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_25_卡友圈最新详情关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et2_25' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et2_25'>错误</button>
+    <div id='div_et2_25' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et2_25' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et2_25,#div_et2_25_screenshot'>错误</button>
+    <div id='div_et2_25' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et2_25: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_02_登陆入口检查.py", line 223, in test_25_卡友圈最新详情关注
+    a.click_R('com.truckhome.bbs:id/truck_friends_circle_img_guanzhu')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 141, in click_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:登陆入口检查.test_25_卡友圈最新详情关注-20190129165439.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_25_卡友圈最新详情关注-20190129165439.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt2_26' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_26_卡友圈视频详情关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_26' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_26'>通过</button>
+    <div id='div_pt2_26' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_26' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_26,#div_pt2_26_screenshot'>通过</button>
+    <div id='div_pt2_26' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_26: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_27' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_27_卡友圈附近详情关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_27' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_27'>通过</button>
+    <div id='div_pt2_27' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_27' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_27,#div_pt2_27_screenshot'>通过</button>
+    <div id='div_pt2_27' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_27: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_28' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_28_卡友圈推荐详情评论</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_28' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_28'>通过</button>
+    <div id='div_pt2_28' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_28' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_28,#div_pt2_28_screenshot'>通过</button>
+    <div id='div_pt2_28' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_28: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et2_29' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_29_卡友圈最新详情评论</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et2_29' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et2_29'>错误</button>
+    <div id='div_et2_29' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et2_29' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et2_29,#div_et2_29_screenshot'>错误</button>
+    <div id='div_et2_29' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et2_29: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_02_登陆入口检查.py", line 258, in test_29_卡友圈最新详情评论
+    a.click_R('com.truckhome.bbs:id/iv_comment')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 141, in click_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:登陆入口检查.test_29_卡友圈最新详情评论-20190129165612.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_29_卡友圈最新详情评论-20190129165612.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt2_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_卡友圈视频详情评论</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_30' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_30'>通过</button>
+    <div id='div_pt2_30' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_30' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_30,#div_pt2_30_screenshot'>通过</button>
+    <div id='div_pt2_30' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_30: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_31' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_31_卡友圈附近详情评论</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_31' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_31'>通过</button>
+    <div id='div_pt2_31' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_31' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_31,#div_pt2_31_screenshot'>通过</button>
+    <div id='div_pt2_31' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_31: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt2_32' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_卡友圈推荐详情点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_32' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_32'>通过</button>
+    <div id='div_pt2_32' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_32' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_32,#div_pt2_32_screenshot'>通过</button>
+    <div id='div_pt2_32' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_32: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et2_33' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_33_卡友圈最新详情点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et2_33' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et2_33'>错误</button>
+    <div id='div_et2_33' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et2_33' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et2_33,#div_et2_33_screenshot'>错误</button>
+    <div id='div_et2_33' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et2_33: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_02_登陆入口检查.py", line 294, in test_33_卡友圈最新详情点赞
+    a.click_R('com.truckhome.bbs:id/iv_comment')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 141, in click_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:登陆入口检查.test_33_卡友圈最新详情点赞-20190129165746.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_33_卡友圈最新详情点赞-20190129165746.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et2_34' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_34_卡友圈视频详情点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et2_34' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et2_34'>错误</button>
+    <div id='div_et2_34' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et2_34' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et2_34,#div_et2_34_screenshot'>错误</button>
+    <div id='div_et2_34' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et2_34: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_02_登陆入口检查.py", line 305, in test_34_卡友圈视频详情点赞
+    a.cha_T('立即注册')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 165, in cha_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:登陆入口检查.test_34_卡友圈视频详情点赞-20190129165805.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_34_卡友圈视频详情点赞-20190129165805.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et2_35' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_35_卡友圈附近详情点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et2_35' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et2_35'>错误</button>
+    <div id='div_et2_35' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et2_35' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et2_35,#div_et2_35_screenshot'>错误</button>
+    <div id='div_et2_35' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et2_35: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_02_登陆入口检查.py", line 314, in test_35_卡友圈附近详情点赞
+    a.cha_T('立即注册')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 165, in cha_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:登陆入口检查.test_35_卡友圈附近详情点赞-20190129165838.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_35_卡友圈附近详情点赞-20190129165838.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt2_36' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_36_发布卡友圈</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt2_36' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt2_36'>通过</button>
+    <div id='div_pt2_36' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt2_36' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt2_36,#div_pt2_36_screenshot'>通过</button>
+    <div id='div_pt2_36' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt2_36: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>分享入口检查</td>
+    <td></td>
+    <td class="text-center">21</td>
+    <td class="text-center">18</td>
+    <td class="text-center">0</td>
+    <td class="text-center">3</td>
+    <td class="text-center">472.81秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c3',21)" class="detail" id='c3'>详细</a></td>
+</tr>
+
+<tr id='pt3_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_1' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_1'>通过</button>
+    <div id='div_pt3_1' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_1' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_1,#div_pt3_1_screenshot'>通过</button>
+    <div id='div_pt3_1' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_1: sleep 5s, left  5ssleep 5s, left  4ssleep 5s, left  3ssleep 5s, left  2ssleep 5s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯视频分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_2' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_2'>通过</button>
+    <div id='div_pt3_2' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_2' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_2,#div_pt3_2_screenshot'>通过</button>
+    <div id='div_pt3_2' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_2: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯图片分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_3'>通过</button>
+    <div id='div_pt3_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_3,#div_pt3_3_screenshot'>通过</button>
+    <div id='div_pt3_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_3: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯行情分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_4' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_4'>通过</button>
+    <div id='div_pt3_4' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_4' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_4,#div_pt3_4_screenshot'>通过</button>
+    <div id='div_pt3_4' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_4: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯养车分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_5'>通过</button>
+    <div id='div_pt3_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_5,#div_pt3_5_screenshot'>通过</button>
+    <div id='div_pt3_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_5: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯评测分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_6' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_6'>通过</button>
+    <div id='div_pt3_6' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_6' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_6,#div_pt3_6_screenshot'>通过</button>
+    <div id='div_pt3_6' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_6: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯政策分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_7' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_7'>通过</button>
+    <div id='div_pt3_7' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_7' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_7,#div_pt3_7_screenshot'>通过</button>
+    <div id='div_pt3_7' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_7: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯物流分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_8'>通过</button>
+    <div id='div_pt3_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_8,#div_pt3_8_screenshot'>通过</button>
+    <div id='div_pt3_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_8: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛十大</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_9' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_9'>通过</button>
+    <div id='div_pt3_9' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_9' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_9,#div_pt3_9_screenshot'>通过</button>
+    <div id='div_pt3_9' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_9: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_论坛牛人加入</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_10' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_10'>通过</button>
+    <div id='div_pt3_10' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_10' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_10,#div_pt3_10_screenshot'>通过</button>
+    <div id='div_pt3_10' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_10: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_论坛推荐</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_11' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_11'>通过</button>
+    <div id='div_pt3_11' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_11' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_11,#div_pt3_11_screenshot'>通过</button>
+    <div id='div_pt3_11' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_11: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_论坛最新</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_12' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_12'>通过</button>
+    <div id='div_pt3_12' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_12' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_12,#div_pt3_12_screenshot'>通过</button>
+    <div id='div_pt3_12' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_12: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_论坛视频</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_13' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_13'>通过</button>
+    <div id='div_pt3_13' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_13' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_13,#div_pt3_13_screenshot'>通过</button>
+    <div id='div_pt3_13' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_13: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et3_14' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_14_卡友圈推荐列表</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et3_14' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et3_14'>错误</button>
+    <div id='div_et3_14' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et3_14' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et3_14,#div_et3_14_screenshot'>错误</button>
+    <div id='div_et3_14' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et3_14: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_03_分享入口检查.py", line 138, in test_14_卡友圈推荐列表
+    a.click_R('com.truckhome.bbs:id/lay_app_forward')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 141, in click_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:分享入口检查.test_14_卡友圈推荐列表-20190129170449.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="分享入口检查.test_14_卡友圈推荐列表-20190129170449.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et3_15' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_15_卡友圈最新列表</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et3_15' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et3_15'>错误</button>
+    <div id='div_et3_15' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et3_15' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et3_15,#div_et3_15_screenshot'>错误</button>
+    <div id='div_et3_15' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et3_15: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_03_分享入口检查.py", line 146, in test_15_卡友圈最新列表
+    a.click_R('com.truckhome.bbs:id/lay_app_forward')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 141, in click_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:分享入口检查.test_15_卡友圈最新列表-20190129170500.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="分享入口检查.test_15_卡友圈最新列表-20190129170500.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt3_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_卡友圈视频列表</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_16' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_16'>通过</button>
+    <div id='div_pt3_16' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_16' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_16,#div_pt3_16_screenshot'>通过</button>
+    <div id='div_pt3_16' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_16: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_卡友圈附近列表</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_17' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_17'>通过</button>
+    <div id='div_pt3_17' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_17' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_17,#div_pt3_17_screenshot'>通过</button>
+    <div id='div_pt3_17' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_17: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_卡友圈推荐详情</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_18' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_18'>通过</button>
+    <div id='div_pt3_18' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_18' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_18,#div_pt3_18_screenshot'>通过</button>
+    <div id='div_pt3_18' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_18: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et3_19' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_19_卡友圈最新详情</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et3_19' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et3_19'>错误</button>
+    <div id='div_et3_19' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et3_19' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et3_19,#div_et3_19_screenshot'>错误</button>
+    <div id='div_et3_19' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et3_19: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_03_分享入口检查.py", line 178, in test_19_卡友圈最新详情
+    a.click_R('com.truckhome.bbs:id/iv_comment')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 141, in click_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:分享入口检查.test_19_卡友圈最新详情-20190129170617.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="分享入口检查.test_19_卡友圈最新详情-20190129170617.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt3_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_卡友圈视频详情</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_20' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_20'>通过</button>
+    <div id='div_pt3_20' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_20' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_20,#div_pt3_20_screenshot'>通过</button>
+    <div id='div_pt3_20' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_20: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_卡友圈附近详情</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt3_21' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt3_21'>通过</button>
+    <div id='div_pt3_21' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt3_21' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt3_21,#div_pt3_21_screenshot'>通过</button>
+    <div id='div_pt3_21' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt3_21: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>点赞检查</td>
+    <td></td>
+    <td class="text-center">14</td>
+    <td class="text-center">5</td>
+    <td class="text-center">0</td>
+    <td class="text-center">9</td>
+    <td class="text-center">304.53秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c4',14)" class="detail" id='c4'>详细</a></td>
+</tr>
+
+<tr id='et4_1' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_1' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_1'>错误</button>
+    <div id='div_et4_1' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_1' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_1,#div_et4_1_screenshot'>错误</button>
+    <div id='div_et4_1' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_1: sleep 5s, left  5ssleep 5s, left  4ssleep 5s, left  3ssleep 5s, left  2ssleep 5s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 32, in test_01_资讯新闻点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_01_资讯新闻点赞-20190129170726.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_01_资讯新闻点赞-20190129170726.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯视频点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt4_2' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt4_2'>通过</button>
+    <div id='div_pt4_2' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt4_2' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt4_2,#div_pt4_2_screenshot'>通过</button>
+    <div id='div_pt4_2' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt4_2: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et4_3' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯图片点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_3'>错误</button>
+    <div id='div_et4_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_3,#div_et4_3_screenshot'>错误</button>
+    <div id='div_et4_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_3: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 48, in test_03_资讯图片点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_03_资讯图片点赞-20190129170801.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_03_资讯图片点赞-20190129170801.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯行情点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt4_4' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt4_4'>通过</button>
+    <div id='div_pt4_4' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt4_4' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt4_4,#div_pt4_4_screenshot'>通过</button>
+    <div id='div_pt4_4' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt4_4: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et4_5' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯养车点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_5'>错误</button>
+    <div id='div_et4_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_5,#div_et4_5_screenshot'>错误</button>
+    <div id='div_et4_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_5: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 64, in test_05_资讯养车点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_05_资讯养车点赞-20190129170836.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_05_资讯养车点赞-20190129170836.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯评测点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt4_6' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt4_6'>通过</button>
+    <div id='div_pt4_6' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt4_6' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt4_6,#div_pt4_6_screenshot'>通过</button>
+    <div id='div_pt4_6' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt4_6: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et4_7' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯政策点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_7' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_7'>错误</button>
+    <div id='div_et4_7' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_7' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_7,#div_et4_7_screenshot'>错误</button>
+    <div id='div_et4_7' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_7: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 80, in test_07_资讯政策点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_07_资讯政策点赞-20190129170911.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_07_资讯政策点赞-20190129170911.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et4_8' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯物流点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_8'>错误</button>
+    <div id='div_et4_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_8,#div_et4_8_screenshot'>错误</button>
+    <div id='div_et4_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_8: sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 88, in test_08_资讯物流点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_08_资讯物流点赞-20190129170929.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_08_资讯物流点赞-20190129170929.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛帖子点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt4_9' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt4_9'>通过</button>
+    <div id='div_pt4_9' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt4_9' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt4_9,#div_pt4_9_screenshot'>通过</button>
+    <div id='div_pt4_9' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt4_9: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et4_10' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_10_卡友圈推荐点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_10' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_10'>错误</button>
+    <div id='div_et4_10' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_10' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_10,#div_et4_10_screenshot'>错误</button>
+    <div id='div_et4_10' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_10: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 107, in test_10_卡友圈推荐点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_10_卡友圈推荐点赞-20190129171012.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_10_卡友圈推荐点赞-20190129171012.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_卡友圈最新点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt4_11' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt4_11'>通过</button>
+    <div id='div_pt4_11' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt4_11' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt4_11,#div_pt4_11_screenshot'>通过</button>
+    <div id='div_pt4_11' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt4_11: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et4_12' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_12_卡友圈视频点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_12' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_12'>错误</button>
+    <div id='div_et4_12' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_12' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_12,#div_et4_12_screenshot'>错误</button>
+    <div id='div_et4_12' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_12: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 126, in test_12_卡友圈视频点赞
+    a.cha_T('已赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 165, in cha_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_12_卡友圈视频点赞-20190129171058.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_12_卡友圈视频点赞-20190129171058.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et4_13' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_13_卡友圈附近点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_13' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_13'>错误</button>
+    <div id='div_et4_13' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_13' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_13,#div_et4_13_screenshot'>错误</button>
+    <div id='div_et4_13' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_13: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 135, in test_13_卡友圈附近点赞
+    a.cha_T('已赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 165, in cha_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_13_卡友圈附近点赞-20190129171132.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_13_卡友圈附近点赞-20190129171132.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et4_14' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_14_卡友圈关注点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_14' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_14'>错误</button>
+    <div id='div_et4_14' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_14' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_14,#div_et4_14_screenshot'>错误</button>
+    <div id='div_et4_14' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_14: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_04_点赞入口检查.py", line 143, in test_14_卡友圈关注点赞
+    a.click_T('点赞')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_14_卡友圈关注点赞-20190129171200.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_14_卡友圈关注点赞-20190129171200.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>收藏检查</td>
+    <td></td>
+    <td class="text-center">9</td>
+    <td class="text-center">8</td>
+    <td class="text-center">0</td>
+    <td class="text-center">1</td>
+    <td class="text-center">150.95秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c5',9)" class="detail" id='c5'>详细</a></td>
+</tr>
+
+<tr id='et5_1' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et5_1' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et5_1'>错误</button>
+    <div id='div_et5_1' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et5_1' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et5_1,#div_et5_1_screenshot'>错误</button>
+    <div id='div_et5_1' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et5_1: sleep 5s, left  5ssleep 5s, left  4ssleep 5s, left  3ssleep 5s, left  2ssleep 5s, left  1s
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_05_收藏检查.py", line 27, in test_01_资讯新闻收藏
+    a.login('test1091','z123456z')
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 102, in login
+    self.click_T("卡车之家账号登录")
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 133, in click_T
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:收藏检查.test_01_资讯新闻收藏-20190129171214.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="收藏检查.test_01_资讯新闻收藏-20190129171214.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt5_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯视频收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_2' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_2'>通过</button>
+    <div id='div_pt5_2' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_2' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_2,#div_pt5_2_screenshot'>通过</button>
+    <div id='div_pt5_2' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_2: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯图片收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_3'>通过</button>
+    <div id='div_pt5_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_3,#div_pt5_3_screenshot'>通过</button>
+    <div id='div_pt5_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_3: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯行情收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_4' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_4'>通过</button>
+    <div id='div_pt5_4' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_4' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_4,#div_pt5_4_screenshot'>通过</button>
+    <div id='div_pt5_4' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_4: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯养车收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_5'>通过</button>
+    <div id='div_pt5_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_5,#div_pt5_5_screenshot'>通过</button>
+    <div id='div_pt5_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_5: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯评测收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_6' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_6'>通过</button>
+    <div id='div_pt5_6' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_6' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_6,#div_pt5_6_screenshot'>通过</button>
+    <div id='div_pt5_6' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_6: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯政策收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_7' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_7'>通过</button>
+    <div id='div_pt5_7' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_7' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_7,#div_pt5_7_screenshot'>通过</button>
+    <div id='div_pt5_7' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_7: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯物流收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_8'>通过</button>
+    <div id='div_pt5_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_8,#div_pt5_8_screenshot'>通过</button>
+    <div id='div_pt5_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_8: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt5_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_卡友圈动态收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt5_9' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt5_9'>通过</button>
+    <div id='div_pt5_9' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt5_9' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt5_9,#div_pt5_9_screenshot'>通过</button>
+    <div id='div_pt5_9' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt5_9: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>固定元素检查</td>
+    <td></td>
+    <td class="text-center">102</td>
+    <td class="text-center">100</td>
+    <td class="text-center">0</td>
+    <td class="text-center">2</td>
+    <td class="text-center">120.94秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c6',102)" class="detail" id='c6'>详细</a></td>
+</tr>
+
+<tr id='pt6_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_1' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_1'>通过</button>
+    <div id='div_pt6_1' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_1' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_1,#div_pt6_1_screenshot'>通过</button>
+    <div id='div_pt6_1' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_1: sleep 5s, left  5ssleep 5s, left  4ssleep 5s, left  3ssleep 5s, left  2ssleep 5s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯新闻类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯新闻图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯新闻评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯视频标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_5'>通过</button>
+    <div id='div_pt6_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_5,#div_pt6_5_screenshot'>通过</button>
+    <div id='div_pt6_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_5: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯视频类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯视频评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯视频播放数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯图片标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_9' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_9'>通过</button>
+    <div id='div_pt6_9' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_9' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_9,#div_pt6_9_screenshot'>通过</button>
+    <div id='div_pt6_9' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_9: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_资讯图片类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='et6_11' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_100_卡友圈附近评论按钮</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et6_11' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et6_11'>错误</button>
+    <div id='div_et6_11' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et6_11' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et6_11,#div_et6_11_screenshot'>错误</button>
+    <div id='div_et6_11' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et6_11: Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_06_固定元素检查.py", line 475, in test_100_卡友圈附近评论按钮
+    a.cha_R('com.truckhome.bbs:id/iv_comment') #评论按钮
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 172, in cha_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:固定元素检查.test_100_卡友圈附近评论按钮-20190129171452.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="固定元素检查.test_100_卡友圈附近评论按钮-20190129171452.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='et6_12' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_101卡友圈附近赞按钮</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et6_12' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et6_12'>错误</button>
+    <div id='div_et6_12' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et6_12' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et6_12,#div_et6_12_screenshot'>错误</button>
+    <div id='div_et6_12' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et6_12: Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\TestCase\AppCase7\test_06_固定元素检查.py", line 479, in test_101卡友圈附近赞按钮
+    a.cha_R('com.truckhome.bbs:id/iv_like_nor') #赞按钮
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\AppAtxLibrary.py", line 172, in cha_R
+    raise Exception('错了')
+Exception: 错了
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\test\Desktop\ATX-Test-master1.0.1\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:固定元素检查.test_101卡友圈附近赞按钮-20190129171458.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="固定元素检查.test_101卡友圈附近赞按钮-20190129171458.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt6_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_资讯图片评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_资讯图片查看数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_资讯行情地区</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_15' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_15'>通过</button>
+    <div id='div_pt6_15' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_15' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_15,#div_pt6_15_screenshot'>通过</button>
+    <div id='div_pt6_15' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_15: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_资讯行情标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_资讯行情类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_资讯行情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_资讯行情图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_资讯导购类型筛选</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_20' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_20'>通过</button>
+    <div id='div_pt6_20' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_20' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_20,#div_pt6_20_screenshot'>通过</button>
+    <div id='div_pt6_20' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_20: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_资讯导购品牌筛选</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_资讯导购价格筛选</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_资讯导购地区</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_24' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_资讯导购标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_25' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_资讯导购类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_26' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_资讯导购价格</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_27' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_24_资讯导购图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_28' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_25_资讯养车标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_28' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_28'>通过</button>
+    <div id='div_pt6_28' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_28' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_28,#div_pt6_28_screenshot'>通过</button>
+    <div id='div_pt6_28' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_28: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_29' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_26_资讯养车类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_27_资讯养车评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_31' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_28_资讯养车图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_32' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_29_资讯评测标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_32' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_32'>通过</button>
+    <div id='div_pt6_32' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_32' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_32,#div_pt6_32_screenshot'>通过</button>
+    <div id='div_pt6_32' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_32: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_33' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_资讯评测类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_34' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_31_资讯评测评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_35' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_资讯评测图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_36' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_33_资讯政策标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_36' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_36'>通过</button>
+    <div id='div_pt6_36' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_36' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_36,#div_pt6_36_screenshot'>通过</button>
+    <div id='div_pt6_36' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_36: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_37' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_34_资讯政策类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_38' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_35_资讯政策评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_39' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_36_资讯政策图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_40' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_37_资讯政策标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_40' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_40'>通过</button>
+    <div id='div_pt6_40' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_40' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_40,#div_pt6_40_screenshot'>通过</button>
+    <div id='div_pt6_40' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_40: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_41' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_38_资讯政策类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_42' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_39_资讯政策评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_43' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_40_资讯政策图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_44' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_41_资讯物流标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_44' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_44'>通过</button>
+    <div id='div_pt6_44' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_44' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_44,#div_pt6_44_screenshot'>通过</button>
+    <div id='div_pt6_44' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_44: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_45' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_42_资讯物流类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_46' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_43_资讯物流评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_47' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_44_资讯物流图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_48' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_45_资讯音频标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_48' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_48'>通过</button>
+    <div id='div_pt6_48' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_48' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_48,#div_pt6_48_screenshot'>通过</button>
+    <div id='div_pt6_48' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_48: sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_49' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_46_资讯音频图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_50' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_47_资讯音频播放数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_51' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_48_资讯音频播放按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_52' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_49_论坛列表关注</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_52' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_52'>通过</button>
+    <div id='div_pt6_52' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_52' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_52,#div_pt6_52_screenshot'>通过</button>
+    <div id='div_pt6_52' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_52: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_53' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_50_论坛列表推荐</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_53' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_53'>通过</button>
+    <div id='div_pt6_53' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_53' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_53,#div_pt6_53_screenshot'>通过</button>
+    <div id='div_pt6_53' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_53: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_54' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_51_论坛列表最新</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_54' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_54'>通过</button>
+    <div id='div_pt6_54' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_54' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_54,#div_pt6_54_screenshot'>通过</button>
+    <div id='div_pt6_54' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_54: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_55' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_52_论坛列表求助</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_55' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_55'>通过</button>
+    <div id='div_pt6_55' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_55' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_55,#div_pt6_55_screenshot'>通过</button>
+    <div id='div_pt6_55' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_55: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_56' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_53_论坛列表十大热帖</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_56' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_56'>通过</button>
+    <div id='div_pt6_56' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_56' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_56,#div_pt6_56_screenshot'>通过</button>
+    <div id='div_pt6_56' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_56: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_57' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_54_论坛列表牛人</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_57' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_57'>通过</button>
+    <div id='div_pt6_57' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_57' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_57,#div_pt6_57_screenshot'>通过</button>
+    <div id='div_pt6_57' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_57: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_58' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_55_论坛列表视频</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_58' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_58'>通过</button>
+    <div id='div_pt6_58' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_58' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_58,#div_pt6_58_screenshot'>通过</button>
+    <div id='div_pt6_58' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_58: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_59' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_56_论坛推荐求助问答</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_59' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_59'>通过</button>
+    <div id='div_pt6_59' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_59' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_59,#div_pt6_59_screenshot'>通过</button>
+    <div id='div_pt6_59' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_59: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_60' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_57_论坛推荐活动标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_61' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_58_论坛推荐查看全部</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_61' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_61'>通过</button>
+    <div id='div_pt6_61' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_61' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_61,#div_pt6_61_screenshot'>通过</button>
+    <div id='div_pt6_61' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_61: sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_62' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_59_论坛推荐标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_63' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_60_论坛推荐发帖人昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_64' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_61_论坛推荐查看回帖数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_65' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_62_论坛最新标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_65' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_65'>通过</button>
+    <div id='div_pt6_65' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_65' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_65,#div_pt6_65_screenshot'>通过</button>
+    <div id='div_pt6_65' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_65: sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_66' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_63_论坛最新昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_67' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_64_论坛最新浏览观看数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_68' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_65_论坛求助标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_68' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_68'>通过</button>
+    <div id='div_pt6_68' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_68' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_68,#div_pt6_68_screenshot'>通过</button>
+    <div id='div_pt6_68' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_68: sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_69' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_66_论坛求助类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_70' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_67_论坛求助帮助数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_71' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_68_论坛视频标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_71' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_71'>通过</button>
+    <div id='div_pt6_71' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_71' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_71,#div_pt6_71_screenshot'>通过</button>
+    <div id='div_pt6_71' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_71: sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_72' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_69_论坛视频封面</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_73' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_70_论坛视频发帖人昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_74' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_71_论坛视频回帖数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_75' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_72_卡友圈推荐热议话题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_75' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_75'>通过</button>
+    <div id='div_pt6_75' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_75' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_75,#div_pt6_75_screenshot'>通过</button>
+    <div id='div_pt6_75' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_75: sleep 1s, left  1s
+sleep 1s, left  1s
+sleep 3s, left  3ssleep 3s, left  2ssleep 3s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_76' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_73_卡友圈推荐热议话题一</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_77' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_74_卡友圈推荐热议话题二</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_78' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_75_卡友圈推荐热议话题三</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_79' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_76_卡友圈推荐热议话题四</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_80' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_77_卡友圈最新关注按钮</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_80' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_80'>通过</button>
+    <div id='div_pt6_80' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_80' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_80,#div_pt6_80_screenshot'>通过</button>
+    <div id='div_pt6_80' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_80: sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_81' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_78_卡友圈最新昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_82' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_79_卡友圈最新等级</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_83' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_80_卡友圈最新关注粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_84' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_81_卡友圈最新头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_85' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_82_卡友圈最新转发按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_86' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_83_卡友圈最新评论按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_87' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_84_卡友圈最新赞按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_88' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_85_卡友圈视频关注按钮</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_88' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_88'>通过</button>
+    <div id='div_pt6_88' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_88' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_88,#div_pt6_88_screenshot'>通过</button>
+    <div id='div_pt6_88' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_88: sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_89' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_86_卡友圈视频昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_90' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_87_卡友圈视频等级</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_91' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_88_卡友圈视频关注粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_92' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_89_卡友圈视频头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_93' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_90_卡友圈视频转发按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_94' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_91_卡友圈视频评论按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_95' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_92_卡友圈视频赞按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_96' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_93_卡友圈视频视频封面</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_97' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_94_卡友圈附近关注按钮</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_pt6_97' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_pt6_97'>通过</button>
+    <div id='div_pt6_97' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_pt6_97' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_pt6_97,#div_pt6_97_screenshot'>通过</button>
+    <div id='div_pt6_97' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+pt6_97: sleep 1s, left  1s
+sleep 1s, left  1s
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt6_98' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_95_卡友圈附近昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_99' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_96_卡友圈附近等级</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_100' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_97_卡友圈附近关注粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_101' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_98_卡友圈附近头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_102' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_99_卡友圈附近转发按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='total_row' class="text-center active">
+    <td colspan='2'>总计</td>
+    <td>185</td>
+    <td>165</td>
+    <td>0</td>
+    <td>20</td>
+    <td>1902.49秒</td>
+    <td>通过率：89.19%</td>
+</tr>
+</table>
+
+<div id='ending'>&nbsp;</div>
+    <div id="toTop" style=" position:fixed;right:50px; bottom:30px; width:20px; height:20px;cursor:pointer; display: none">
+    <a><span class="glyphicon glyphicon-eject" style = "font-size:30px;" aria-hidden="true">
+    </span></a></div>
+    
+
+</body>
+</html>

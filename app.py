@@ -4,12 +4,18 @@
 
 from flask import Flask, request,render_template,redirect,jsonify
 from test_code import *
+<<<<<<< HEAD
 
+=======
+from test_code.mantis_bug import *
+from test_code.appreport import *
+>>>>>>> zuixin
 import settings
 import json
 
 app = Flask(__name__)
 re = Device_Manag()
+pt = APP_Report()
 # bug = Mantis_Bug(host='117.50.17.66',user='qa',passwd = 'k04d8gAvDJ8PkvrL',database="bugtracker")
 bug=Mantis_Bug()
 app.config.from_object('settings.DevConfig')
@@ -94,11 +100,15 @@ def internal_server_error(e):
 @app.route('/device',methods=['get','post'])
 def device():
     if request.method == "POST":
-        devtype = request.get_data()
-        devtype = json.loads(devtype.decode("utf-8"))
-        devtype = devtype['devtype']
-        alldata = re.appga(devtype)
-        return render_template('device.html',alldata=alldata)
+        data = request.get_data()
+        data = json.loads(data)
+        devtype = data['devtype']
+        devname = data['devname']
+        name = data['name']
+        version = data['version']
+        devnotes = data['notes']
+        re.appinsp(devname,devtype,name,devnotes,version)
+        return "ok"
     else:
         alldata = re.appga()
         return render_template('device.html',alldata=alldata)
@@ -223,6 +233,21 @@ def admin():
 def test1(url):
     data="1/%s.html"% url
     return render_template(data)
+
+#app自动化测试报告
+@app.route('/appreport',methods=['post','get'])
+def appreport():
+    newreport = pt.new_report()
+    reportlist = pt.title_url()
+    return render_template('appreport.html',newreport=newreport,reportlist=reportlist) 
+
+#更多报告列表
+@app.route('/TestReport/<rpttime>/<dev>/TestReport',methods=['post','get'])
+def morerpt(rpttime,dev):
+    url = "TestReport/%s/%s/TestReport.html" % (rpttime,dev)
+    return render_template(url) 
+
+
 
 if __name__ == '__main__':
 	app.run(debug=True,host='0.0.0.0')
