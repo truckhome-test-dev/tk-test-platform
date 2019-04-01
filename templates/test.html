@@ -13,47 +13,83 @@
 		<legend>{{name}}</legend>
 	</fieldset>
 	<!-- 页面私有部分 -->
-	<div>
-<div class="site-demo-button" id="layerDemo" style="margin-bottom: 0;">
+<form class="layui-form">
 
-  <button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">居中弹出</button>
-</div>
+	<div class="site-demo-button" id="add" style="margin-bottom: 0;">
+	<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">新增设备</button>
+	</div>
 
+
+    <label class="layui-form-label">设备类型：</label><div class="layui-input-inline"><select name="devtype" lay-verify="required" lay-search=""><option value="">请选择设备类型</option><option value="0">手机</option><option value="1">其他</option></select></div>
+
+</form>
 <script>
+ 	layui.use(['form', 'layedit', 'laydate'], function(){
+  		var form = layui.form
+
 	layui.use('layer', function(){ //独立版的layer无需执行这一句
 		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
-
-		//触发事件
+		//手机外借按钮弹窗触发
 		var active = {
 			offset: function(othis){
 				var type = othis.data('type')
 				,text = othis.text();
-
+				var devid = othis.data('id');
 				layer.open({
 				type: 1
+				,area: ['350px', '400px']
+				,title:"新增设备"
 				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-				,id: 'layerDemo'+type //防止重复弹出
-				,content: '<div class="layui-input-inline"><input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入设备名称"  class="layui-input">  	</div><input class="layui-btn layui-btn-danger" type="submit" value="添加" style="margin-left:30px"></input>'
-				,btn: '关闭全部'
+				,id: 'add '+devid //防止重复弹出
+				,content:'<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备名称：</label><div class="layui-input-block"><input type="text" name="devname" lay-verify="required" autocomplete="off" placeholder="请输入设备名称" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">设备归属：</label><div class="layui-input-block"><input type="text" name="peoname" lay-verify="required" autocomplete="off" placeholder="请输入设备归属人" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">设备版本：</label><div class="layui-input-block"><input type="text" name="deversion" lay-verify="required" autocomplete="off" placeholder="请输入设备版本" class="layui-input"></div></div>\
+<label class="layui-form-label">设备说明：</label><div class="layui-input-block"><textarea name="devnote" placeholder="请输入设备说明" class="layui-textarea"></textarea></div>'
+				,btn: '提交'
 				,btnAlign: 'c' //按钮居中
 				,shade: 0 //不显示遮罩
-				,yes: function(){
-				  layer.closeAll();
-				}
+				,yes: function(index,layero){
+					var devname = layero.find('input')[0].value;
+					var peoname = layero.find('input')[1].value;
+					var deversion = layero.find('input')[2].value;
+					var devnote = layero.find('textarea')[0].value;
+
+
+					var xmlhttp;
+			        xmlhttp = new XMLHttpRequest();
+ 
+			        var data ='{ "devname" : "'+ devname +'", "name" : "' + peoname + '","version" : "' + deversion + '", "notes" : "' + devnote + '"}';
+			        xmlhttp.open("POST","device",true);
+			        xmlhttp.send(data);
+				 	layer.close(index);
+					xmlhttp.onreadystatechange = function()
+					{
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+				            {
+					            if (xmlhttp.responseText == 'ok')
+					            {
+					              location.reload();
+					            }
+					            else
+					            {
+					              alert('请求出错，请重试')
+					            }
+				          	}
+					    }
+
+					}
 				});
 			}
 		};
 
-		$('#layerDemo .layui-btn').on('click', function(){
-		var othis = $(this), method = othis.data('method');
-		active[method] ? active[method].call(this, othis) : '';
-		});
+		$('#add').on('click', 'button', function(){
+			var othis = $(this), method = othis.data('method');
+			active[method] ? active[method].call(this, othis) : '';
+		})
 
 	});
+})
 </script>
-
-
-	</div>
 
 
 {% endblock right %}
