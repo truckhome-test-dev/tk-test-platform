@@ -15,9 +15,16 @@
 	<!-- 页面私有部分 -->
 
 	<div style="margin-top:40px;margin-left:50px;width:60%">
-		<span data-id = 0  class="layui-btn layui-btn-normal" style="font-size:20px" onclick="devtype(this)">手机</span>
-		<span data-id = 1 class="layui-btn layui-btn-warm" style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
+		<span data-id = 2 class="layui-btn" style="font-size:20px" onclick="devtype(this)">全部</span>	
+		<span data-id = 0  class="layui-btn " style="margin-left:50px;font-size:20px" onclick="devtype(this)">手机</span>
+		<span data-id = 1 class="layui-btn " style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
+
+		<span class="site-demo-button" id="add">
+			<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px">新增设备</button>
+		</span>
 	</div>
+
+	
 
 	<table id='123' class="layui-table" style="margin-top:40px;margin-left:30px;width:60%">
 		<colgroup>
@@ -67,11 +74,15 @@
 	</table>
 
 <script>
- 
+ 	layui.use(['form', 'layedit', 'laydate'], function(){
+  		var form = layui.form
+
 	layui.use('layer', function(){ //独立版的layer无需执行这一句
 		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+
 		//手机外借按钮弹窗触发
-		var active = {
+		var use = {
 			offset: function(othis){
 				var type = othis.data('type')
 				,text = othis.text();
@@ -80,11 +91,13 @@
 				type: 1
 				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
 				,id: 'all '+devid //防止重复弹出
+				,title:"设备外借"
 				,content: '<div class="layui-input-inline"><input type="text" name="devname" lay-verify="required|phone" autocomplete="off" placeholder="请输入使用者姓名"  class="layui-input"></div>'
 				,btn: '确认'
 				,btnAlign: 'c' //按钮居中
 				,shade: 0 //不显示遮罩
 				,yes: function(index,layero){
+
 					var user = layero.find('input')[0].value;
 					var xmlhttp;
 			        xmlhttp = new XMLHttpRequest();
@@ -115,10 +128,73 @@
 
 		$('#123').on('click', 'button', function(){
 			var othis = $(this), method = othis.data('method');
-			active[method] ? active[method].call(this, othis) : '';
+			use[method] ? use[method].call(this, othis) : '';
+		})
+
+		//手机新增弹窗触发
+		var adddev = {
+			offset: function(othis){
+				var type = othis.data('type')
+				,text = othis.text();
+				var devid = othis.data('id');
+				layer.open({
+				type: 1
+				,area: ['350px', '450px']
+				,title:"新增设备"
+				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+				,id: 'add '+devid //防止重复弹出
+				,content:'<form class="layui-form">\
+<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备类型：</label><div class="layui-input-inline"><input type="text" name="devtype" lay-verify="required" autocomplete="off" placeholder="手机或者其他" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备名称：</label><div class="layui-input-inline"><input type="text" name="devname" lay-verify="required" autocomplete="off" placeholder="请输入设备名称" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">设备归属：</label><div class="layui-input-inline"><input type="text" name="peoname" lay-verify="required" autocomplete="off" placeholder="请输入设备归属人" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">设备版本：</label><div class="layui-input-inline"><input type="text" name="deversion" lay-verify="required" autocomplete="off" placeholder="请输入设备版本" class="layui-input"></div></div>\
+<label class="layui-form-label">设备说明：</label><div class="layui-input-inline"><textarea name="devnote" placeholder="请输入设备说明" class="layui-textarea"></textarea></div></form>'
+				,btn: '提交'
+				,btnAlign: 'c' //按钮居中
+				,shade: 0 //不显示遮罩
+				,yes: function(index,layero){
+					var devtype = layero.find('input')[0].value;
+					var devname = layero.find('input')[1].value;
+					var peoname = layero.find('input')[2].value;
+					var deversion = layero.find('input')[3].value;
+					var devnote = layero.find('textarea')[0].value;
+
+
+					var xmlhttp;
+			        xmlhttp = new XMLHttpRequest();
+ 
+			        var data ='{ "devtype":"' + devtype + '","devname" : "'+ devname +'", "name" : "' + peoname + '","version" : "' + deversion + '", "notes" : "' + devnote + '"}';
+			        xmlhttp.open("POST","device",true);
+			        xmlhttp.send(data);
+				 	layer.close(index);
+					xmlhttp.onreadystatechange = function()
+					{
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+				            {
+					            if (xmlhttp.responseText == 'ok')
+					            {
+					              location.reload();
+					              alert ("新增成功")
+					            }
+					            else
+					            {
+					              alert('请求出错，请重试')
+					            }
+				          	}
+					    }
+
+					}
+				});
+			}
+		};
+
+		$('#add').on('click', 'button', function(){
+			var othis = $(this), method = othis.data('method');
+			adddev[method] ? adddev[method].call(this, othis) : '';
 		})
 
 	});
+	})
 
 </script>
 
