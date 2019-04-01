@@ -1,0 +1,3974 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>HWI-AL00自动化测试报告</title>
+    <meta name="generator" content="HTMLTestRunner 1.2.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+    
+<style type="text/css" media="screen">
+body        { font-family: Microsoft YaHei;padding: 20px; font-size: 100%; }
+table       { font-size: 100%; }
+.table tbody tr td{
+            vertical-align: middle;
+        }
+
+/* -- heading ---------------------------------------------------------------------- */
+.heading .description, .attribute {
+    clear: both;
+}
+
+/* --- 失败和错误合集样式 -- Gelomen --- */
+.failCollection, .errorCollection {
+    width: 100px;
+    float: left;
+}
+#failCaseOl li {
+    color: red
+}
+#errorCaseOl li {
+    color: orange
+}
+
+/* --- 打开截图特效样式 -- Gelomen --- */
+.data-img{
+    cursor:pointer
+}
+
+.pic_looper{
+    width:100%;
+    height:100%;
+    position: fixed;
+    left: 0;
+    top:0;
+    opacity: 0.6;
+    background: #000;
+    display: none;
+    z-index: 100;
+}
+
+.pic_show{
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    text-align: center;
+    display: none;
+    z-index: 100;
+}
+
+.pic_box{
+    padding:10px;
+    width:90%;
+    height:90%;
+    margin:40px auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.pic_box img{
+    width: auto;
+    height: 100%;
+    -moz-box-shadow: 0px 0px 20px 0px #000;
+    -webkit-box-shadow: 0px 0px 20px 0px #000;
+    box-shadow: 0px 0px 20px 0px #000;
+}
+
+/* --- 饼状图div样式 -- Gelomen --- */
+#container {
+    width: 450px;
+    height: 300px;
+    float: left;
+}
+
+/* -- report ------------------------------------------------------------------------ */
+#total_row  { font-weight: bold; }
+.passCase   { color: #5cb85c; }
+.failCase   { color: #d9534f; font-weight: bold; }
+.errorCase  { color: #f0ad4e; font-weight: bold; }
+.hiddenRow  { display: none; }
+.testcase   { margin-left: 2em; }
+.screenshot:link { text-decoration: none;color: deeppink; }
+.screenshot:visited { text-decoration: none;color: deeppink; }
+.screenshot:hover { text-decoration: none;color: darkcyan; }
+.screenshot:active { text-decoration: none;color: deeppink; }
+</style>
+
+</head>
+<body >
+<script language="javascript" type="text/javascript">
+
+    $(function(){
+        // 修改 失败 和 错误 用例里对应按钮的颜色ClassName为动态加载 -- Gelomen
+    	$("button").each(function () {
+    	    var text = $(this).text();
+    	    if(text == "失败"){
+    	        $(this).addClass("btn-danger")
+            }else if(text == "错误") {
+                $(this).addClass("btn-warning")
+            }
+        });
+
+        // 给失败和错误合集加样式 -- Gelomen
+        var p_attribute = $("p.attribute");
+        p_attribute.eq(4).addClass("failCollection");
+        p_attribute.eq(5).addClass("errorCollection");
+
+        // 打开截图，放大，点击任何位置可以关闭图片  -- Gelomen
+        $(".screenshot").click(function(){
+            var img = $(this).attr("img");
+            $('.pic_show img').attr('src', img);
+            $('.pic_looper').fadeIn(200);
+            $('.pic_show').fadeIn(200);
+
+            var browserHeight = $(window).height();
+            var pic_boxHeight = $(".pic_box").height();
+            var top = (browserHeight - pic_boxHeight)/2;
+            $('.pic_box').css("margin-top", top + "px")
+
+        });
+        $('.pic_looper, .pic_show').click(function(){
+            $('.pic_looper').fadeOut(200);
+            $('.pic_show').fadeOut(200)
+        });
+        
+        var browserWidth = $(window).width();
+        var margin_left = browserWidth/2 - 450;
+        if(margin_left <= 240){
+            $("#container").css("margin", "auto");
+        }else {
+            $("#container").css("margin-left", margin_left + "px");
+        }
+
+        $(window).resize(function(){
+            // 改变窗口大小时，自动改变图片与顶部的距离  -- Gelomen
+            var browserHeight = $(window).height();
+            var pic_boxHeight = $(".pic_box").height();
+            var top = (browserHeight - pic_boxHeight)/2;
+            $('.pic_box').css("margin-top", top + "px");
+
+
+            // 改变窗口大小时，自动改变饼图的边距  -- Gelomen
+            var browserWidth = $(window).width();
+            var margin_left = browserWidth/2 - 450;
+            if(margin_left <= 240){
+                $("#container").css("margin", "auto");
+            }else {
+                $("#container").css("margin-left", margin_left + "px");
+            }
+        });
+
+        // 距离顶部超过浏览器窗口一屏时，回到顶部按钮才出现  -- Gelomen
+        $(window).scroll(function(){
+            var browserHeight = $(window).height();
+            var top = $(window).scrollTop();
+            if(top >= browserHeight){
+                $("#toTop").css("display", "block")
+            }else {
+                $("#toTop").css("display", "none")
+            }
+        })
+        
+        // 增加回到顶部过程的动画，以看上去不会那么生硬  -- Gelomen
+        $("#toTop").click(function() {
+            $("html,body").animate({"scrollTop":0}, 700)
+        })
+        
+        // 增加饼状图  -- Gelomen
+        $('#container').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                spacing : [0, 0, 0, 0]
+            },
+            credits: {
+                enabled: false
+            },
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            },
+            title: {
+                floating:true,
+                text: '测试结果占比'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    colors: ['#81ca9d', '#f16d7e', '#fdc68c'],
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    },
+                    point: {
+                        events: {
+                            mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+                                chart.setTitle({
+                                    text: e.target.name+ '\t'+ e.target.y + ' 个'
+                                });
+                            }
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                innerSize: '80%',
+                name: '比例',
+                data: [
+                    ['通过', 245],
+                    {
+                        name: '失败',
+                        y: 31,
+                        sliced: true,
+                        selected: true
+                    },
+                    ['错误', 7]
+                ]
+            }]
+        }, function(c) {
+            // 环形图圆心
+            var centerY = c.series[0].center[1],
+                titleHeight = parseInt(c.title.styles.fontSize);
+            c.setTitle({
+                y:centerY + titleHeight/2
+            });
+            chart = c;
+        });
+        
+        // 查看 失败 和 错误 合集链接文字切换  -- Gelomen
+        $(".showDetail").click(function () {
+            if($(this).html() == "点击查看"){
+                $(this).html("点击收起")
+            }else {
+                $(this).html("点击查看")
+            }
+        })
+    });
+    
+    
+output_list = Array();
+
+/*level 调整增加只显示通过用例的分类 --Findyou / 修复筛选显示bug --Gelomen
+0:Summary //all hiddenRow
+1:Failed  //pt&et hiddenRow, ft none
+2:Pass    //pt none, ft&et hiddenRow
+3:Error   //pt&ft hiddenRow, et none
+4:All     //all none
+*/
+function showCase(level) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        tr = trs[i];
+        id = tr.id;
+        if (id.substr(0,2) == 'ft') {
+            if (level == 2 || level == 0 || level == 3) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+                // 切换筛选时只显示预览   -- Gelomen
+                $("div[id^='div_ft']").attr("class", "collapse");
+                $("div[id^='div_et']").attr("class", "collapse");
+            }
+        }
+        if (id.substr(0,2) == 'pt') {
+            if (level == 1 || level == 0 || level == 3) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+                // 切换筛选时只显示预览   -- Gelomen
+                $("div[id^='div_ft']").attr("class", "collapse");
+                $("div[id^='div_et']").attr("class", "collapse");
+            }
+        }
+        if (id.substr(0,2) == 'et') {
+            if (level == 1 || level == 0 || level == 2) {
+                tr.className = 'hiddenRow';
+            }
+            else {
+                tr.className = '';
+                // 切换筛选时只显示预览   -- Gelomen
+                $("div[id^='div_ft']").attr("class", "collapse");
+                $("div[id^='div_et']").attr("class", "collapse");
+            }
+        }
+    }
+
+    //加入【详细】切换文字变化 --Findyou
+    detail_class=document.getElementsByClassName('detail');
+	//console.log(detail_class.length)
+	if (level == 3) {
+		for (var i = 0; i < detail_class.length; i++){
+			detail_class[i].innerHTML="收起"
+		}
+	}
+	else{
+			for (var i = 0; i < detail_class.length; i++){
+			detail_class[i].innerHTML="详细"
+		}
+	}
+}
+
+function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+        //ID修改 点 为 下划线 -Findyou
+        tid0 = 't' + cid.substr(1) + '_' + (i+1);
+        tid = 'f' + tid0;
+        tr = document.getElementById(tid);
+        if (!tr) {
+            tid = 'p' + tid0;
+            tr = document.getElementById(tid);
+            if (!tr) {
+                tid = 'e' + tid0;
+                tr = document.getElementById(tid);
+            }
+        }
+        id_list[i] = tid;
+        if (tr.className) {
+            toHide = 0;
+        }
+    }
+    for (var i = 0; i < count; i++) {
+        tid = id_list[i];
+        //修改点击无法收起的BUG，加入【详细】切换文字变化 --Findyou
+        if (toHide) {
+            document.getElementById(tid).className = 'hiddenRow';
+            document.getElementById(cid).innerText = "详细"
+        }
+        else {
+            document.getElementById(tid).className = '';
+            document.getElementById(cid).innerText = "收起"
+        }
+    }
+}
+
+function html_escape(s) {
+    s = s.replace(/&/g,'&amp;');
+    s = s.replace(/</g,'&lt;');
+    s = s.replace(/>/g,'&gt;');
+    return s;
+}
+</script>
+<div class='pic_looper'></div> <div class='pic_show'><div class='pic_box'><img src=''/></div> </div>
+<div class='heading'>
+<div style="width: 650px; float: left;">
+    <h1 style="font-family: Microsoft YaHei">HWI-AL00自动化测试报告</h1>
+    <p class='attribute'><strong>测试人员 : </strong> QA</p>
+<p class='attribute'><strong>开始时间 : </strong> 2019-03-20 14:08:53</p>
+<p class='attribute'><strong>合计耗时 : </strong> 1:04:41.124791</p>
+<p class='attribute'><strong>测试结果 : </strong> 共计 283，通过 245，失败 31，错误 7，通过率 = 86.57%</p>
+<p class='attribute'><strong>失败用例合集 : </strong> <div class='panel-default' style='float: left;'><a class='showDetail' data-toggle='collapse' href='#failCaseOl' style='text-decoration: none;'>点击查看</a></div><ol id='failCaseOl' class='collapse' style='float: left;'><li>test_03_图片 (AppCase7.test_01_登陆入口检查.登陆入口检查)</li><li>test_07_政策 (AppCase7.test_01_登陆入口检查.登陆入口检查)</li><li>test_08_物流 (AppCase7.test_01_登陆入口检查.登陆入口检查)</li><li>test_16_论坛求助 (AppCase7.test_01_登陆入口检查.登陆入口检查)</li><li>test_03_图片 (AppCase7.test_02_登陆入口微信权限检查.登陆入口检查)</li><li>test_08_物流 (AppCase7.test_02_登陆入口微信权限检查.登陆入口检查)</li><li>test_10_论坛求助 (AppCase7.test_02_登陆入口微信权限检查.登陆入口检查)</li><li>test_03_资讯图片分享 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_04_资讯行情分享 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_08_资讯物流分享 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_09_论坛十大 (AppCase7.test_03_分享入口检查.分享入口检查)</li><li>test_03_资讯图片点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_08_资讯物流点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_14_卡友圈关注点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_05_资讯图片收藏 (AppCase7.test_05_收藏检查.收藏检查)</li><li>test_06_资讯取消图片收藏 (AppCase7.test_05_收藏检查.收藏检查)</li><li>test_15_资讯物流收藏 (AppCase7.test_05_收藏检查.收藏检查)</li><li>test_16_资讯取消物流收藏 (AppCase7.test_05_收藏检查.收藏检查)</li><li>test_26_资讯新闻标题 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_27_资讯新闻类型 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_28_资讯新闻评论 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_29_资讯新闻图片 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_34_资讯图片标题 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_35_资讯图片类型 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_36_资讯图片评论 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_37_资讯图片查看数 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_63_资讯物流标题 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_67_资讯音频标题 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_68_资讯音频图片 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_69_资讯音频播放数 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li><li>test_70_资讯音频播放按钮 (AppCase7.test_06_首页固定元素检查.首页固定元素检查)</li></ol></p>
+<p class='attribute'><strong>错误用例合集 : </strong> <div class='panel-default' style='float: left;'><a class='showDetail' data-toggle='collapse' href='#errorCaseOl' style='text-decoration: none;'>点击查看</a></div><ol id='errorCaseOl' class='collapse' style='float: left;'><li>test_11_卡友圈最新点赞 (AppCase7.test_04_点赞入口检查.点赞检查)</li><li>test_18_论坛推荐发帖子 (AppCase7.test_07_论坛固定元素检查.论坛固定元素检查)</li><li>test_05_选车推荐品牌 (AppCase7.test_09_选车固定元素检查.选车固定元素检查)</li><li>test_06_选车热销排行 (AppCase7.test_09_选车固定元素检查.选车固定元素检查)</li><li>test_07_选车新能源选车 (AppCase7.test_09_选车固定元素检查.选车固定元素检查)</li><li>test_08_选车推荐配件 (AppCase7.test_09_选车固定元素检查.选车固定元素检查)</li><li>test_24_我的我的草稿 (AppCase7.test_10_我的固定元素检查.我的固定元素检查)</li></ol></p>
+
+    <p class='description'>用例执行情况：</p>
+</div>
+<div id="container"></div>
+</div>
+
+
+
+<div style="width: 500px; clear: both;">
+<p id='show_detail_line'>
+<a class="btn btn-primary" href='javascript:showCase(0)'>概要</a>
+<a class="btn btn-success" href='javascript:showCase(2)'>通过: 245 </a>
+<a class="btn btn-danger" href='javascript:showCase(1)'>错误: 31 </a>
+<a class="btn btn-warning" href='javascript:showCase(3)'>失败: 7 </a>
+<a class="btn btn-info" href='javascript:showCase(4)'>所有: 283 </a>
+</p>
+</div>
+<table id='result_table' class="table table-condensed table-bordered table-hover">
+<colgroup>
+<col align='left' style="width: 300px;"/>
+<col align='right' style="width: 300px;"/>
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' />
+<col align='right' style="width: 200px;"/>
+</colgroup>
+<tr id='header_row' class="text-center success" style="font-weight: bold;font-size: 14px;">
+    <td>用例集/测试用例</td>
+    <td>说明</td>
+    <td>总计</td>
+    <td>通过</td>
+    <td>失败</td>
+    <td>错误</td>
+    <td>耗时</td>
+    <td>详细</td>
+</tr>
+
+<tr class='failClass warning'>
+    <td>登陆入口检查</td>
+    <td></td>
+    <td class="text-center">40</td>
+    <td class="text-center">36</td>
+    <td class="text-center">4</td>
+    <td class="text-center">0</td>
+    <td class="text-center">1018.74秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c1',40)" class="detail" id='c1'>详细</a></td>
+</tr>
+
+<tr id='pt1_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_新闻</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_视频</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft1_3' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_03_图片</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft1_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft1_3'>失败</button>
+    <div id='div_ft1_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft1_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft1_3,#div_ft1_3_screenshot'>失败</button>
+    <div id='div_ft1_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft1_3: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_03_图片-20190320141036.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_03_图片-20190320141036.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt1_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_行情</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_养车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_评测</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft1_7' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_07_政策</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft1_7' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft1_7'>失败</button>
+    <div id='div_ft1_7' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft1_7' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft1_7,#div_ft1_7_screenshot'>失败</button>
+    <div id='div_ft1_7' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft1_7: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_07_政策-20190320141223.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_07_政策-20190320141223.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft1_8' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_08_物流</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft1_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft1_8'>失败</button>
+    <div id='div_ft1_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft1_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft1_8,#div_ft1_8_screenshot'>失败</button>
+    <div id='div_ft1_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft1_8: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_08_物流-20190320141235.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_08_物流-20190320141235.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt1_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛推荐</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_论坛我的消息系统通知</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_论坛我的消息私信消息</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_论坛我的消息赞我的</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_论坛我的消息关注我的</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_论坛关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_论坛发帖</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft1_16' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_16_论坛求助</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft1_16' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft1_16'>失败</button>
+    <div id='div_ft1_16' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft1_16' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft1_16,#div_ft1_16_screenshot'>失败</button>
+    <div id='div_ft1_16' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft1_16: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_16_论坛求助-20190320141517.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_16_论坛求助-20190320141517.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt1_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_论坛牛人</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_卡友圈关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_卡友圈推荐关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_卡友圈视频关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_卡友圈附近关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_卡友圈集赞达人</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_卡友圈头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_24' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_24_卡友圈推荐详情关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_25' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_25_卡友圈最新详情关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_26' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_26_卡友圈视频详情关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_27' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_27_卡友圈附近详情关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_28' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_28_卡友圈推荐详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_29' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_29_卡友圈最新详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_卡友圈视频详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_31' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_31_卡友圈附近详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_32' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_卡友圈推荐详情更多</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_33' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_卡友圈推荐详情点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_34' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_33_卡友圈最新详情点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_35' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_34_卡友圈最新详情更多</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_36' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_35_卡友圈视频详情点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_37' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_36_卡友圈视频详情更多</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_38' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_37_卡友圈附近详情点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_39' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_38_卡友圈附近详情更多</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt1_40' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_39_发布卡友圈</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='failClass warning'>
+    <td>登陆入口检查</td>
+    <td></td>
+    <td class="text-center">15</td>
+    <td class="text-center">12</td>
+    <td class="text-center">3</td>
+    <td class="text-center">0</td>
+    <td class="text-center">394.24秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c2',15)" class="detail" id='c2'>详细</a></td>
+</tr>
+
+<tr id='pt2_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_新闻</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_视频</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft2_3' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_03_图片</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft2_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft2_3'>失败</button>
+    <div id='div_ft2_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft2_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft2_3,#div_ft2_3_screenshot'>失败</button>
+    <div id='div_ft2_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft2_3: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_03_图片-20190320142821.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_03_图片-20190320142821.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt2_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_行情</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_养车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_评测</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_政策</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft2_8' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_08_物流</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft2_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft2_8'>失败</button>
+    <div id='div_ft2_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft2_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft2_8,#div_ft2_8_screenshot'>失败</button>
+    <div id='div_ft2_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft2_8: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_08_物流-20190320143032.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_08_物流-20190320143032.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt2_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛发帖</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft2_10' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_10_论坛求助</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft2_10' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft2_10'>失败</button>
+    <div id='div_ft2_10' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft2_10' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft2_10,#div_ft2_10_screenshot'>失败</button>
+    <div id='div_ft2_10' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft2_10: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:登陆入口检查.test_10_论坛求助-20190320143106.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="登陆入口检查.test_10_论坛求助-20190320143106.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt2_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_卡友圈推荐详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_卡友圈最新详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_卡友圈视频详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_卡友圈附近详情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt2_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_发布卡友圈</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='failClass warning'>
+    <td>分享入口检查</td>
+    <td></td>
+    <td class="text-center">21</td>
+    <td class="text-center">17</td>
+    <td class="text-center">4</td>
+    <td class="text-center">0</td>
+    <td class="text-center">455.67秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c3',21)" class="detail" id='c3'>详细</a></td>
+</tr>
+
+<tr id='pt3_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻分享</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯视频分享</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft3_3' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯图片分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft3_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft3_3'>失败</button>
+    <div id='div_ft3_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft3_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft3_3,#div_ft3_3_screenshot'>失败</button>
+    <div id='div_ft3_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft3_3: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:分享入口检查.test_03_资讯图片分享-20190320143517.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="分享入口检查.test_03_资讯图片分享-20190320143517.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft3_4' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯行情分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft3_4' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft3_4'>失败</button>
+    <div id='div_ft3_4' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft3_4' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft3_4,#div_ft3_4_screenshot'>失败</button>
+    <div id='div_ft3_4' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft3_4: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_03_分享入口检查.py", line 58, in test_04_资讯行情分享
+    a.click_R('com.truckhome.bbs:id/tv_title')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 153, in click_R
+    raise AssertionError('出错咯')
+AssertionError: 出错咯
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt3_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯养车分享</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯评测分享</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯政策分享</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft3_8' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯物流分享</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft3_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft3_8'>失败</button>
+    <div id='div_ft3_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft3_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft3_8,#div_ft3_8_screenshot'>失败</button>
+    <div id='div_ft3_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft3_8: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:分享入口检查.test_08_资讯物流分享-20190320143714.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="分享入口检查.test_08_资讯物流分享-20190320143714.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft3_9' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛十大</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft3_9' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft3_9'>失败</button>
+    <div id='div_ft3_9' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft3_9' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft3_9,#div_ft3_9_screenshot'>失败</button>
+    <div id='div_ft3_9' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft3_9: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:分享入口检查.test_09_论坛十大-20190320143735.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="分享入口检查.test_09_论坛十大-20190320143735.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt3_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_论坛牛人加入</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_论坛推荐</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_论坛最新</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_论坛视频</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_卡友圈推荐列表</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_卡友圈最新列表</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_卡友圈视频列表</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_卡友圈附近列表</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_卡友圈推荐详情</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_卡友圈最新详情</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_卡友圈视频详情</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt3_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_卡友圈附近详情</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>点赞检查</td>
+    <td></td>
+    <td class="text-center">14</td>
+    <td class="text-center">10</td>
+    <td class="text-center">3</td>
+    <td class="text-center">1</td>
+    <td class="text-center">250.17秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c4',14)" class="detail" id='c4'>详细</a></td>
+</tr>
+
+<tr id='pt4_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt4_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯视频点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft4_3' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯图片点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft4_3' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft4_3'>失败</button>
+    <div id='div_ft4_3' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft4_3' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft4_3,#div_ft4_3_screenshot'>失败</button>
+    <div id='div_ft4_3' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft4_3: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:点赞检查.test_03_资讯图片点赞-20190320144324.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_03_资讯图片点赞-20190320144324.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯行情点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt4_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯养车点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt4_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯评测点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt4_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯政策点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft4_8' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯物流点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft4_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft4_8'>失败</button>
+    <div id='div_ft4_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft4_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft4_8,#div_ft4_8_screenshot'>失败</button>
+    <div id='div_ft4_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft4_8: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:点赞检查.test_08_资讯物流点赞-20190320144446.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_08_资讯物流点赞-20190320144446.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛帖子点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt4_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_卡友圈推荐点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='et4_11' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_11_卡友圈最新点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et4_11' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et4_11'>错误</button>
+    <div id='div_et4_11' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et4_11' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et4_11,#div_et4_11_screenshot'>错误</button>
+    <div id='div_et4_11' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et4_11: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_04_点赞入口检查.py", line 119, in test_11_卡友圈最新点赞
+    a.click_R('com.truckhome.bbs:id/tv_count_comment')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 151, in click_R
+    d(resourceId=content).click()
+  File "C:\python36\lib\site-packages\uiautomator\__init__.py", line 898, in _inner
+    fn(self, *args, **kwargs)
+  File "C:\python36\lib\site-packages\uiautomator\__init__.py", line 960, in click
+    return self.jsonrpc.click(self.selector)
+  File "C:\python36\lib\site-packages\uiautomator\__init__.py", line 417, in wrapper
+    return _method_obj(*args, **kwargs)
+  File "C:\python36\lib\site-packages\uiautomator\__init__.py", line 196, in __call__
+    return self.remote_call(data)
+  File "C:\python36\lib\site-packages\uiautomator\__init__.py", line 180, in remote_call
+    exception_type = error.get("data", {}).get("exceptionTypeName", 'Unknown')
+AttributeError: 'str' object has no attribute 'get'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 101, in wrapper
+    raise Exception(flag + _screenshot(func.__qualname__))
+Exception: IMAGE:点赞检查.test_11_卡友圈最新点赞-20190320144539.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_11_卡友圈最新点赞-20190320144539.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt4_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_卡友圈视频点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt4_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_卡友圈附近点赞</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft4_14' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_14_卡友圈关注点赞</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft4_14' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft4_14'>失败</button>
+    <div id='div_ft4_14' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft4_14' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft4_14,#div_ft4_14_screenshot'>失败</button>
+    <div id='div_ft4_14' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft4_14: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:点赞检查.test_14_卡友圈关注点赞-20190320144641.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="点赞检查.test_14_卡友圈关注点赞-20190320144641.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr class='failClass warning'>
+    <td>收藏检查</td>
+    <td></td>
+    <td class="text-center">18</td>
+    <td class="text-center">14</td>
+    <td class="text-center">4</td>
+    <td class="text-center">0</td>
+    <td class="text-center">226.49秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c5',18)" class="detail" id='c5'>详细</a></td>
+</tr>
+
+<tr id='pt5_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_资讯新闻收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_资讯取消新闻收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_资讯视频收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_资讯取消视频收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft5_5' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_05_资讯图片收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft5_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft5_5'>失败</button>
+    <div id='div_ft5_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft5_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft5_5,#div_ft5_5_screenshot'>失败</button>
+    <div id='div_ft5_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft5_5: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:收藏检查.test_05_资讯图片收藏-20190320144839.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="收藏检查.test_05_资讯图片收藏-20190320144839.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft5_6' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_06_资讯取消图片收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft5_6' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft5_6'>失败</button>
+    <div id='div_ft5_6' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft5_6' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft5_6,#div_ft5_6_screenshot'>失败</button>
+    <div id='div_ft5_6' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft5_6: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:收藏检查.test_06_资讯取消图片收藏-20190320144850.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="收藏检查.test_06_资讯取消图片收藏-20190320144850.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt5_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_资讯行情收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_资讯取消行情收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_资讯养车收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_资讯取消养车收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_资讯评测收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_资讯取消评测收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_资讯政策收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_资讯取消政策收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft5_15' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_15_资讯物流收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft5_15' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft5_15'>失败</button>
+    <div id='div_ft5_15' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft5_15' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft5_15,#div_ft5_15_screenshot'>失败</button>
+    <div id='div_ft5_15' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft5_15: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:收藏检查.test_15_资讯物流收藏-20190320145039.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="收藏检查.test_15_资讯物流收藏-20190320145039.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft5_16' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_16_资讯取消物流收藏</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft5_16' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft5_16'>失败</button>
+    <div id='div_ft5_16' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft5_16' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft5_16,#div_ft5_16_screenshot'>失败</button>
+    <div id='div_ft5_16' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft5_16: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:收藏检查.test_16_资讯取消物流收藏-20190320145050.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="收藏检查.test_16_资讯取消物流收藏-20190320145050.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt5_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_卡友圈动态收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt5_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_卡友圈取消动态收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='failClass warning'>
+    <td>首页固定元素检查</td>
+    <td></td>
+    <td class="text-center">70</td>
+    <td class="text-center">57</td>
+    <td class="text-center">13</td>
+    <td class="text-center">0</td>
+    <td class="text-center">393.54秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c6',70)" class="detail" id='c6'>详细</a></td>
+</tr>
+
+<tr id='pt6_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_推荐全部</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_推荐轮播图</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_推荐全部资讯</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_推荐全部新闻专题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_推荐全部专题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_推荐全部商城询价</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_推荐全部优选尿素</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_推荐全部优惠购车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_推荐全部挂车集市</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_推荐全部二手车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_推荐全部挂车选购</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_推荐全部挂靠黄页</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_推荐全部看图选车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_推荐全部卡友服务</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_推荐全部司机招聘</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_推荐全部求助</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_推荐全部附近商家</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_推荐全部安全随行</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_推荐全部附近卡友</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_推荐全部附近经销商</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_推荐全部附近服务站</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_推荐全部活动</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_推荐全部购车计算器</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_24' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_24_推荐全部快运贷</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_25' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_25_推荐全部1</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft6_26' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_26_资讯新闻标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_26' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_26'>失败</button>
+    <div id='div_ft6_26' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_26' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_26,#div_ft6_26_screenshot'>失败</button>
+    <div id='div_ft6_26' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_26: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_26_资讯新闻标题-20190320145325.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_26_资讯新闻标题-20190320145325.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_27' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_27_资讯新闻类型</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_27' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_27'>失败</button>
+    <div id='div_ft6_27' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_27' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_27,#div_ft6_27_screenshot'>失败</button>
+    <div id='div_ft6_27' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_27: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_27_资讯新闻类型-20190320145339.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_27_资讯新闻类型-20190320145339.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_28' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_28_资讯新闻评论</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_28' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_28'>失败</button>
+    <div id='div_ft6_28' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_28' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_28,#div_ft6_28_screenshot'>失败</button>
+    <div id='div_ft6_28' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_28: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_28_资讯新闻评论-20190320145352.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_28_资讯新闻评论-20190320145352.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_29' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_29_资讯新闻图片</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_29' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_29'>失败</button>
+    <div id='div_ft6_29' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_29' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_29,#div_ft6_29_screenshot'>失败</button>
+    <div id='div_ft6_29' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_29: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_29_资讯新闻图片-20190320145406.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_29_资讯新闻图片-20190320145406.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt6_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_资讯视频标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_31' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_31_资讯视频类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_32' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_资讯视频评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_33' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_33_资讯视频播放数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft6_34' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_34_资讯图片标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_34' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_34'>失败</button>
+    <div id='div_ft6_34' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_34' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_34,#div_ft6_34_screenshot'>失败</button>
+    <div id='div_ft6_34' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_34: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_34_资讯图片标题-20190320145436.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_34_资讯图片标题-20190320145436.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_35' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_35_资讯图片类型</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_35' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_35'>失败</button>
+    <div id='div_ft6_35' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_35' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_35,#div_ft6_35_screenshot'>失败</button>
+    <div id='div_ft6_35' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_35: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_35_资讯图片类型-20190320145450.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_35_资讯图片类型-20190320145450.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_36' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_36_资讯图片评论</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_36' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_36'>失败</button>
+    <div id='div_ft6_36' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_36' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_36,#div_ft6_36_screenshot'>失败</button>
+    <div id='div_ft6_36' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_36: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_36_资讯图片评论-20190320145503.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_36_资讯图片评论-20190320145503.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_37' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_37_资讯图片查看数</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_37' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_37'>失败</button>
+    <div id='div_ft6_37' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_37' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_37,#div_ft6_37_screenshot'>失败</button>
+    <div id='div_ft6_37' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_37: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_37_资讯图片查看数-20190320145517.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_37_资讯图片查看数-20190320145517.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt6_38' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_38_资讯行情地区</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_39' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_39_资讯行情标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_40' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_40_资讯行情类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_41' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_41_资讯行情评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_42' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_42_资讯行情图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_43' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_43_资讯导购类型筛选</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_44' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_44_资讯导购品牌筛选</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_45' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_45_资讯导购价格筛选</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_46' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_46_资讯导购地区</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_47' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_47_资讯导购标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_48' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_48_资讯导购类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_49' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_49_资讯导购价格</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_50' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_50_资讯导购图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_51' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_51_资讯养车标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_52' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_52_资讯养车类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_53' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_53_资讯养车评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_54' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_54_资讯养车图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_55' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_55_资讯评测标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_56' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_56_资讯评测类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_57' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_57_资讯评测评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_58' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_58_资讯评测图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_59' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_59_资讯政策标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_60' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_60_资讯政策类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_61' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_61_资讯政策评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_62' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_62_资讯政策图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft6_63' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_63_资讯物流标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_63' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_63'>失败</button>
+    <div id='div_ft6_63' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_63' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_63,#div_ft6_63_screenshot'>失败</button>
+    <div id='div_ft6_63' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_63: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_63_资讯物流标题-20190320145715.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_63_资讯物流标题-20190320145715.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='pt6_64' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_64_资讯物流类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_65' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_65_资讯物流评论</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt6_66' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_66_资讯物流图片</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='ft6_67' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_67_资讯音频标题</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_67' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_67'>失败</button>
+    <div id='div_ft6_67' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_67' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_67,#div_ft6_67_screenshot'>失败</button>
+    <div id='div_ft6_67' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_67: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_67_资讯音频标题-20190320145736.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_67_资讯音频标题-20190320145736.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_68' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_68_资讯音频图片</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_68' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_68'>失败</button>
+    <div id='div_ft6_68' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_68' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_68,#div_ft6_68_screenshot'>失败</button>
+    <div id='div_ft6_68' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_68: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_68_资讯音频图片-20190320145750.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_68_资讯音频图片-20190320145750.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_69' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_69_资讯音频播放数</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_69' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_69'>失败</button>
+    <div id='div_ft6_69' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_69' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_69,#div_ft6_69_screenshot'>失败</button>
+    <div id='div_ft6_69' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_69: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_69_资讯音频播放数-20190320145804.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_69_资讯音频播放数-20190320145804.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr id='ft6_70' class='none'>
+    <td class='failCase' style="vertical-align: middle"><div class='testcase'>test_70_资讯音频播放按钮</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_ft6_70' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_ft6_70'>失败</button>
+    <div id='div_ft6_70' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_ft6_70' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_ft6_70,#div_ft6_70_screenshot'>失败</button>
+    <div id='div_ft6_70' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+ft6_70: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+AssertionError: IMAGE:首页固定元素检查.test_70_资讯音频播放按钮-20190320145818.PNG
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </br><a class="screenshot" href="javascript:void(0)" img="首页固定元素检查.test_70_资讯音频播放按钮-20190320145818.PNG">IMAGE_01</a></div></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>论坛固定元素检查</td>
+    <td></td>
+    <td class="text-center">30</td>
+    <td class="text-center">29</td>
+    <td class="text-center">0</td>
+    <td class="text-center">1</td>
+    <td class="text-center">411.3秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c7',30)" class="detail" id='c7'>详细</a></td>
+</tr>
+
+<tr id='pt7_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_论坛列表关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_论坛列表推荐</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_论坛列表最新</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_论坛列表问答</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_论坛列表十大热帖</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_论坛列表牛人</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_论坛列表视频</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_论坛推荐问答</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_论坛推荐活动标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_论坛推荐查看全部</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_论坛推荐标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_论坛推荐发帖人昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_论坛推荐查看回帖数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_论坛推荐发帖按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_论坛推荐发帖按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_论坛推荐发帖按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_论坛推荐发帖子</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='et7_18' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_18_论坛推荐发帖子</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et7_18' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et7_18'>错误</button>
+    <div id='div_et7_18' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et7_18' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et7_18,#div_et7_18_screenshot'>错误</button>
+    <div id='div_et7_18' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et7_18: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_07_论坛固定元素检查.py", line 107, in test_18_论坛推荐发帖子
+    a.cha_T('发求助') #发求助按钮
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 177, in cha_T
+    assert T == True,"出错咯"
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw)
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 80, in create_connection
+    raise err
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 70, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "C:\python36\lib\http\client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1026, in _send_output
+    self.send(msg)
+  File "C:\python36\lib\http\client.py", line 964, in send
+    self.connect()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 181, in connect
+    conn = self._new_conn()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 168, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: &lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4E080&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\python36\lib\site-packages\urllib3\util\retry.py", line 398, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4E080&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 19, in _screenshot
+    driver.screenshot(path)
+  File "&lt;C:\python36\lib\site-packages\decorator.py:decorator-gen-2&gt;", line 2, in screenshot
+  File "C:\python36\lib\site-packages\retry\api.py", line 74, in retry_decorator
+    logger)
+  File "C:\python36\lib\site-packages\retry\api.py", line 33, in __retry_internal
+    return f()
+  File "C:\python36\lib\site-packages\uiautomator2\session.py", line 434, in screenshot
+    r = requests.get(self.server.screenshot_uri, timeout=10)
+  File "C:\python36\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\python36\lib\site-packages\requests\api.py", line 60, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4E080&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt7_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_论坛最新标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_论坛最新昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_论坛最新浏览观看数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_论坛求助标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_论坛求助类型</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_24' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_24_论坛求助帮助数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_25' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_25_论坛十大热帖日期</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_26' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_26_论坛牛人我要加入</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_27' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_27_论坛视频标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_28' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_28_论坛视频封面</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_29' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_29_论坛视频发帖人昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt7_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_论坛视频回帖数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='passClass warning'>
+    <td>卡友圈固定元素检查</td>
+    <td></td>
+    <td class="text-center">32</td>
+    <td class="text-center">32</td>
+    <td class="text-center">0</td>
+    <td class="text-center">0</td>
+    <td class="text-center">147.35秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c8',32)" class="detail" id='c8'>详细</a></td>
+</tr>
+
+<tr id='pt8_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_卡友圈推荐热议话题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_卡友圈推荐热议话题一</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_卡友圈推荐热议话题二</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_卡友圈推荐热议话题三</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_卡友圈推荐热议话题四</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_卡友圈推荐热议话题一</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_卡友圈推荐热议全部</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_卡友圈推荐添加好友按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_卡友圈最新关注按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_卡友圈最新昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_卡友圈最新等级</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_卡友圈最新关注粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_卡友圈最新头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_卡友圈最新转发按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_卡友圈最新评论按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_卡友圈最新赞按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_卡友圈视频关注按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_卡友圈视频昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_卡友圈视频等级</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_卡友圈视频关注粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_卡友圈视频头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_卡友圈视频转发按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_卡友圈视频评论按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_24' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_24_卡友圈视频赞按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_25' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_25_卡友圈视频视频封面</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_26' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_26_卡友圈附近关注按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_27' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_27_卡友圈附近昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_28' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_28_卡友圈附近等级</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_29' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_29_卡友圈附近关注粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_卡友圈附近头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_31' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_31_卡友圈附近转发按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt8_32' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_卡友圈发布按钮</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>选车固定元素检查</td>
+    <td></td>
+    <td class="text-center">8</td>
+    <td class="text-center">4</td>
+    <td class="text-center">0</td>
+    <td class="text-center">4</td>
+    <td class="text-center">103.2秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c9',8)" class="detail" id='c9'>详细</a></td>
+</tr>
+
+<tr id='pt9_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_选车筛选找车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt9_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_选车按工况找车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt9_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_03_选车排行榜</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt9_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_选车最近浏览</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='et9_5' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_05_选车推荐品牌</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et9_5' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et9_5'>错误</button>
+    <div id='div_et9_5' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et9_5' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et9_5,#div_et9_5_screenshot'>错误</button>
+    <div id='div_et9_5' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et9_5: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_09_选车固定元素检查.py", line 49, in test_05_选车推荐品牌
+    a.cha_T('推荐品牌')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 177, in cha_T
+    assert T == True,"出错咯"
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw)
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 80, in create_connection
+    raise err
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 70, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "C:\python36\lib\http\client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1026, in _send_output
+    self.send(msg)
+  File "C:\python36\lib\http\client.py", line 964, in send
+    self.connect()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 181, in connect
+    conn = self._new_conn()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 168, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: &lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB1A400&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\python36\lib\site-packages\urllib3\util\retry.py", line 398, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB1A400&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 19, in _screenshot
+    driver.screenshot(path)
+  File "&lt;C:\python36\lib\site-packages\decorator.py:decorator-gen-2&gt;", line 2, in screenshot
+  File "C:\python36\lib\site-packages\retry\api.py", line 74, in retry_decorator
+    logger)
+  File "C:\python36\lib\site-packages\retry\api.py", line 33, in __retry_internal
+    return f()
+  File "C:\python36\lib\site-packages\uiautomator2\session.py", line 434, in screenshot
+    r = requests.get(self.server.screenshot_uri, timeout=10)
+  File "C:\python36\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\python36\lib\site-packages\requests\api.py", line 60, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB1A400&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et9_6' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_06_选车热销排行</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et9_6' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et9_6'>错误</button>
+    <div id='div_et9_6' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et9_6' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et9_6,#div_et9_6_screenshot'>错误</button>
+    <div id='div_et9_6' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et9_6: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_09_选车固定元素检查.py", line 53, in test_06_选车热销排行
+    a.cha_T('热销排行')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 177, in cha_T
+    assert T == True,"出错咯"
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw)
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 80, in create_connection
+    raise err
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 70, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "C:\python36\lib\http\client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1026, in _send_output
+    self.send(msg)
+  File "C:\python36\lib\http\client.py", line 964, in send
+    self.connect()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 181, in connect
+    conn = self._new_conn()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 168, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: &lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4E278&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\python36\lib\site-packages\urllib3\util\retry.py", line 398, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4E278&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 19, in _screenshot
+    driver.screenshot(path)
+  File "&lt;C:\python36\lib\site-packages\decorator.py:decorator-gen-2&gt;", line 2, in screenshot
+  File "C:\python36\lib\site-packages\retry\api.py", line 74, in retry_decorator
+    logger)
+  File "C:\python36\lib\site-packages\retry\api.py", line 33, in __retry_internal
+    return f()
+  File "C:\python36\lib\site-packages\uiautomator2\session.py", line 434, in screenshot
+    r = requests.get(self.server.screenshot_uri, timeout=10)
+  File "C:\python36\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\python36\lib\site-packages\requests\api.py", line 60, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4E278&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et9_7' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_07_选车新能源选车</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et9_7' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et9_7'>错误</button>
+    <div id='div_et9_7' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et9_7' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et9_7,#div_et9_7_screenshot'>错误</button>
+    <div id='div_et9_7' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et9_7: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_09_选车固定元素检查.py", line 57, in test_07_选车新能源选车
+    a.cha_T('新能源选车')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 177, in cha_T
+    assert T == True,"出错咯"
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw)
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 80, in create_connection
+    raise err
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 70, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "C:\python36\lib\http\client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1026, in _send_output
+    self.send(msg)
+  File "C:\python36\lib\http\client.py", line 964, in send
+    self.connect()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 181, in connect
+    conn = self._new_conn()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 168, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: &lt;urllib3.connection.HTTPConnection object at 0x0000026CCABDE4E0&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\python36\lib\site-packages\urllib3\util\retry.py", line 398, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCABDE4E0&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 19, in _screenshot
+    driver.screenshot(path)
+  File "&lt;C:\python36\lib\site-packages\decorator.py:decorator-gen-2&gt;", line 2, in screenshot
+  File "C:\python36\lib\site-packages\retry\api.py", line 74, in retry_decorator
+    logger)
+  File "C:\python36\lib\site-packages\retry\api.py", line 33, in __retry_internal
+    return f()
+  File "C:\python36\lib\site-packages\uiautomator2\session.py", line 434, in screenshot
+    r = requests.get(self.server.screenshot_uri, timeout=10)
+  File "C:\python36\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\python36\lib\site-packages\requests\api.py", line 60, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCABDE4E0&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='et9_8' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_08_选车推荐配件</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et9_8' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et9_8'>错误</button>
+    <div id='div_et9_8' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et9_8' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et9_8,#div_et9_8_screenshot'>错误</button>
+    <div id='div_et9_8' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et9_8: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_09_选车固定元素检查.py", line 61, in test_08_选车推荐配件
+    a.cha_T('推荐配件')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 177, in cha_T
+    assert T == True,"出错咯"
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw)
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 80, in create_connection
+    raise err
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 70, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "C:\python36\lib\http\client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1026, in _send_output
+    self.send(msg)
+  File "C:\python36\lib\http\client.py", line 964, in send
+    self.connect()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 181, in connect
+    conn = self._new_conn()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 168, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: &lt;urllib3.connection.HTTPConnection object at 0x0000026CCAAC0860&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\python36\lib\site-packages\urllib3\util\retry.py", line 398, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAAC0860&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 19, in _screenshot
+    driver.screenshot(path)
+  File "&lt;C:\python36\lib\site-packages\decorator.py:decorator-gen-2&gt;", line 2, in screenshot
+  File "C:\python36\lib\site-packages\retry\api.py", line 74, in retry_decorator
+    logger)
+  File "C:\python36\lib\site-packages\retry\api.py", line 33, in __retry_internal
+    return f()
+  File "C:\python36\lib\site-packages\uiautomator2\session.py", line 434, in screenshot
+    r = requests.get(self.server.screenshot_uri, timeout=10)
+  File "C:\python36\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\python36\lib\site-packages\requests\api.py", line 60, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAAC0860&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr class='errorClass warning'>
+    <td>我的固定元素检查</td>
+    <td></td>
+    <td class="text-center">35</td>
+    <td class="text-center">34</td>
+    <td class="text-center">0</td>
+    <td class="text-center">1</td>
+    <td class="text-center">132.75秒</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c10',35)" class="detail" id='c10'>详细</a></td>
+</tr>
+
+<tr id='pt10_1' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_01_我的头像</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_2' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_我的卡路里</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_3' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_02_我的昵称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_4' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_04_我的关注</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_5' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_05_我的关注数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_6' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_06_我的粉丝</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_7' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_07_我的粉丝数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_8' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_08_我的加入圈子</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_9' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_09_我的加入圈子数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_10' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_10_我的徽章</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_11' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_11_我的徽章名称</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_12' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_12_我的徽章状态</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_13' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_13_我的全部徽章</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_14' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_14_我的我的任务</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_15' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_15_我的全部任务</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_16' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_16_我的任务标题</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_17' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_17_我的任务经验</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_18' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_18_我的任务活跃</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_19' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_19_我的任务活跃</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_20' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_20_我的我的服务</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_21' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_21_我的我的收藏</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_22' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_22_我的我的发布</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_23' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_23_我的我的订单</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='et10_24' class='none'>
+    <td class='errorCase' style="vertical-align: middle"><div class='testcase'>test_24_我的我的草稿</div></td>
+    <td style="vertical-align: middle"></td>
+    <td colspan='5' align='center'>
+    
+    <!--默认收起错误信息 -Findyou-->
+    <button id='btn_et10_24' type="button"  class="btn btn-xs collapsed" data-toggle="collapse" data-target='#div_et10_24'>错误</button>
+    <div id='div_et10_24' class="collapse">  
+
+    <!-- 默认展开错误信息 -Findyou /  修复失败按钮的颜色 -- Gelomen 
+    <button id='btn_et10_24' type="button"  class="btn btn-xs" data-toggle="collapse" data-target='#div_et10_24,#div_et10_24_screenshot'>错误</button>
+    <div id='div_et10_24' class="collapse in"> -->
+    
+    <pre style="text-align:left">
+    
+et10_24: Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 83, in wrapper
+    ret = func(*args, **kwargs)
+  File "E:\python\ATX-Test-master\TestCase\AppCase7\test_10_我的固定元素检查.py", line 127, in test_24_我的我的草稿
+    a.cha_T('我的草稿')
+  File "E:\python\ATX-Test-master\Public\AppAtxLibrary.py", line 177, in cha_T
+    assert T == True,"出错咯"
+AssertionError: 出错咯
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 159, in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw)
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 80, in create_connection
+    raise err
+  File "C:\python36\lib\site-packages\urllib3\util\connection.py", line 70, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 600, in urlopen
+    chunked=chunked)
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "C:\python36\lib\http\client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\python36\lib\http\client.py", line 1026, in _send_output
+    self.send(msg)
+  File "C:\python36\lib\http\client.py", line 964, in send
+    self.connect()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 181, in connect
+    conn = self._new_conn()
+  File "C:\python36\lib\site-packages\urllib3\connection.py", line 168, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: &lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4FE80&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 449, in send
+    timeout=timeout
+  File "C:\python36\lib\site-packages\urllib3\connectionpool.py", line 638, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "C:\python36\lib\site-packages\urllib3\util\retry.py", line 398, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4FE80&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 93, in wrapper
+    raise AssertionError(flag + _screenshot(func.__qualname__))
+  File "E:\python\ATX-Test-master\Public\Decorator.py", line 19, in _screenshot
+    driver.screenshot(path)
+  File "&lt;C:\python36\lib\site-packages\decorator.py:decorator-gen-2&gt;", line 2, in screenshot
+  File "C:\python36\lib\site-packages\retry\api.py", line 74, in retry_decorator
+    logger)
+  File "C:\python36\lib\site-packages\retry\api.py", line 33, in __retry_internal
+    return f()
+  File "C:\python36\lib\site-packages\uiautomator2\session.py", line 434, in screenshot
+    r = requests.get(self.server.screenshot_uri, timeout=10)
+  File "C:\python36\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\python36\lib\site-packages\requests\api.py", line 60, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 533, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\python36\lib\site-packages\requests\sessions.py", line 646, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\python36\lib\site-packages\requests\adapters.py", line 516, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=58865): Max retries exceeded with url: /screenshot/0 (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x0000026CCAB4FE80&gt;: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。',))
+
+
+    </pre>
+    </div>
+    <td class="text-center" style="vertical-align: middle">
+    <div </div></td>
+</tr>
+
+<tr id='pt10_25' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_25_我的好友的帖子</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_26' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_26_我的二手车</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_27' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_27_我的配件商城</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_28' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_28_我的卡路里商城</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_29' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_29_我的车速计算器</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_30' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_30_我的挂车计算器</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_31' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_31_我的车速计算器</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_32' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_32_我的违章查询</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_33' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_33_我的赚钱指数</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_34' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_34_我的其他工具</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='pt10_35' class='hiddenRow'>
+    <td class='passCase' style="vertical-align: middle"><div class='testcase'>test_35_我的设置</div></td>
+    <td style="vertical-align: left"></td>
+    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
+    <td class='passCase' style="vertical-align: middle"></td>
+</tr>
+
+<tr id='total_row' class="text-center active">
+    <td colspan='2'>总计</td>
+    <td>283</td>
+    <td>245</td>
+    <td>31</td>
+    <td>7</td>
+    <td>3533.45秒</td>
+    <td>通过率：86.57%</td>
+</tr>
+</table>
+
+<div id='ending'>&nbsp;</div>
+    <div id="toTop" style=" position:fixed;right:50px; bottom:30px; width:20px; height:20px;cursor:pointer; display: none">
+    <a><span class="glyphicon glyphicon-eject" style = "font-size:30px;" aria-hidden="true">
+    </span></a></div>
+    
+
+</body>
+</html>
