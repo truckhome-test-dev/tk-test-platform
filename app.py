@@ -4,12 +4,8 @@
 
 from flask import Flask, request,render_template,redirect,jsonify
 from test_code import *
-<<<<<<< HEAD
-
-=======
 from test_code.mantis_bug import *
 from test_code.appreport import *
->>>>>>> zuixin
 import settings
 import json
 
