@@ -1,13 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json,time
-
+import json
+import time
+import configparser
 from test_code.sqlop import * 
-# from sqlop import * 
+ 
 
 class Device_Manag(SqlOperate):
 	#资源管理Resou_Manag
+
+	def __init__(self):
+		conf = configparser.ConfigParser()
+		conf.read("static/conf/config.ini")
+		self.host = conf.get('qa','host')
+		self.user = conf.get('qa','user')
+		self.passwd = conf.get('qa','passwd')
+		self.database = conf.get('qa','database')
 
 
 	#插入数据

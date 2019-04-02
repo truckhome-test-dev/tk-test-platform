@@ -6,7 +6,7 @@ pymysql.install_as_MySQLdb
 class  SqlOperate():
 	"""数据库的基本操作"""
 
-	def __init__(self, host='192.168.0.20', user='test', passwd='jghAeuXL0x7npvSS', database='qa'):
+	def __init__(self):
 
 		self.host = host
 		self.user = user
