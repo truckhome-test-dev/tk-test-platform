@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pymysql
+import configparser
 pymysql.install_as_MySQLdb
 
 
@@ -7,11 +8,12 @@ class  SqlOperate():
 	"""数据库的基本操作"""
 
 	def __init__(self):
-
-		self.host = host
-		self.user = user
-		self.passwd = passwd
-		self.database = database
+		conf = configparser.ConfigParser()
+		conf.read("static/conf/config.ini")
+		self.host = conf.get('qa','host')
+		self.user = conf.get('qa','user')
+		self.passwd = conf.get('qa','passwd')
+		self.database = conf.get('qa','database')
 
 
 	#连接数据库，创建游标

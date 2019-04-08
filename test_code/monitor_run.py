@@ -1,6 +1,7 @@
 from test_code.sqlop import *
 import configparser
 import requests
+import time
 
 #执行脚本类
 class run(SqlOperate):
@@ -40,15 +41,39 @@ class run(SqlOperate):
 
 #请求接口
     def run_api(self,url,method,params):
-        if method=="GET":
-            r = requests.get(url, params)
-        elif method=="POST":
-            r = requests.post(url, params)
-        else:
-            print("请求类型错误，目前只支持POST/GET")
-        return r.text
+        try:
+            if method=="GET":
+                r = requests.get(url, params,timeout=(10,10))
+            elif method=="POST":
+                r = requests.post(url, params,timeout=(10,10))
+            else:
+                print("请求类型错误，目前只支持POST/GET")
+            return r.status_code,r.elapsed.total_seconds()
+        except requests.exceptions.ReadTimeout as e:
+            return 504,"超时"
 
+    def api_result(self,api_id,pro_id,task_id,resq_code,res_time,err_info=None):
+        create_time = int(time.time())
+        self.dbcur()
+        sql=self.sqlInsert("apirun_result",
+                           {"api_id":api_id,"pro_id":pro_id,"task_id":task_id,"resq_code":resq_code,"res_time":res_time,"err_info":err_info,"create_time":create_time})
+
+
+
+    def main(self):
+        api_list=self.get_taskinfo()[2].split(",")
+        for i in api_list:
+            url=self.get_apiinfo(i)[3]
+            method=self.get_apiinfo(i)[5]
+            params=self.get_apiinfo(i)[7]
+            a=self.run_api(url,method,params)
+            print(a)
+        else:
+            print("执行完成")
+
+# if __name__=="__main__":
+#     run.main()
 
 
 a=run(1)
-print(a.get_apiinfo(1))
+print(a.api_result())
