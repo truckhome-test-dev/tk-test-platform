@@ -38,36 +38,46 @@ class run(SqlOperate):
         data = self.cur.fetchone()
         return data
 
-
 #请求接口
     def run_api(self,url,method,params):
         try:
             if method=="GET":
-                r = requests.get(url, params,timeout=(10,10))
+                r = requests.get(url, params,timeout=(0.1,0.1))
             elif method=="POST":
-                r = requests.post(url, params,timeout=(10,10))
+                r = requests.post(url, params,timeout=(0.1,0.1))
             else:
                 print("请求类型错误，目前只支持POST/GET")
-            return r.status_code,r.elapsed.total_seconds()
+            return r.status_code,r.elapsed.total_seconds()*1000,r.text
+        except requests.exceptions.ConnectTimeout as e:
+            return 9001,0,("链接超时----%s"%e).replace("'","\\'")
         except requests.exceptions.ReadTimeout as e:
-            return 504,"超时"
+            return 9002,0,("连接、读取超时----%s"%e).replace("'","\\'")
+        except requests.exceptions.ConnectionError as e:
+            return 9003,0,("未知的服务器----%s"%e).replace("'","\\'")
 
-    def api_result(self,api_id,pro_id,task_id,resq_code,res_time,err_info=None):
+#结果入库
+    def write_result(self,api_id,pro_id,task_id,resq_code,res_time,response):
         create_time = int(time.time())
         self.dbcur()
         sql=self.sqlInsert("apirun_result",
-                           {"api_id":api_id,"pro_id":pro_id,"task_id":task_id,"resq_code":resq_code,"res_time":res_time,"err_info":err_info,"create_time":create_time})
+                           {"api_id":api_id,"pro_id":pro_id,"task_id":task_id,"resq_code":resq_code,"res_time":res_time,"response":response,"create_time":create_time})
+        print(sql)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
 
-
-
+#主方法
     def main(self):
         api_list=self.get_taskinfo()[2].split(",")
         for i in api_list:
             url=self.get_apiinfo(i)[3]
             method=self.get_apiinfo(i)[5]
             params=self.get_apiinfo(i)[7]
-            a=self.run_api(url,method,params)
-            print(a)
+            resq_code,res_time,response=self.run_api(url,method,params)
+            api_id=self.get_apiinfo(i)[0]
+            pro_id=self.get_apiinfo(i)[1]
+            task_id=self.task_id
+            self.write_result(api_id,pro_id,task_id,resq_code,res_time,response)
         else:
             print("执行完成")
 
@@ -76,4 +86,4 @@ class run(SqlOperate):
 
 
 a=run(1)
-print(a.api_result())
+print(a.main())
