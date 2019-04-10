@@ -89,7 +89,7 @@ class Mantis_Bug(SqlOperate):
               "from mantis_user_table,mantis_bug_table " \
               "where mantis_bug_table.handler_id= mantis_user_table.id and mantis_user_table.access_level='40'" \
               "group by mantis_bug_table.handler_id " \
-              "order by count(mantis_bug_table.id) asc "
+              "order by count(mantis_bug_table.id) desc "
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -106,6 +106,9 @@ class Mantis_Bug(SqlOperate):
         sql = "select mantis_user_table.realname,count(mantis_bug_table.id) " \
               "from mantis_user_table,mantis_bug_table " \
               "where mantis_bug_table.reporter_id= mantis_user_table.id " \
+              "and mantis_user_table.access_level='70'" \
+              "and mantis_user_table.enabled='1' " \
+              "and mantis_user_table.id not in (8,48)"\
               "group by mantis_bug_table.reporter_id " \
               "order by count(mantis_bug_table.id) desc "
         self.sqlExe(sql)

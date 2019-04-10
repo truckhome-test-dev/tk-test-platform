@@ -336,6 +336,7 @@
                         var c = JSON.parse(xmlhttp.responseText)
                             if (c.code == 1000){
                                 document.getElementById('t1').style.display = '';
+                                document.getElementById('add1').style.display = '';
                                 var t2List = document.querySelectorAll('.t2');
                                 for (var i = 0; i < t2List.length; i++) {
                                     t2List[i].style.display = 'inline-block';
