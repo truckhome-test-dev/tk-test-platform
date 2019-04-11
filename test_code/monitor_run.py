@@ -1,7 +1,10 @@
-from test_code.sqlop import *
+# from test_code.sqlop import *
+from sqlop import *
 import configparser
 import requests
 import time
+import sys
+import os
 
 #执行脚本类
 class run(SqlOperate):
@@ -12,7 +15,8 @@ class run(SqlOperate):
     def __init__(self,task_id):
         self.task_id=task_id
         conf = configparser.ConfigParser()
-        conf.read("../static/conf/config.ini")
+        conf.read("/home/jinyue/tk-test-platform/static/conf/config.ini")
+        # conf.read("../static/conf/config.ini")
         self.host = conf.get('monitor_db','host')
         self.user = conf.get('monitor_db','user')
         self.passwd = conf.get('monitor_db','passwd')
@@ -21,7 +25,7 @@ class run(SqlOperate):
 #获取任务信息
     def get_taskinfo(self):
         self.dbcur()
-        sql = "select * from task_list where id=%s" % self.task_id
+        sql = "select * from task_list where id='%s'" % self.task_id
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -38,16 +42,16 @@ class run(SqlOperate):
         data = self.cur.fetchone()
         return data
 
-#请求接口
+# 请求接口
     def run_api(self,url,method,params):
         try:
             if method=="GET":
-                r = requests.get(url, params,timeout=(0.1,0.1))
+                r = requests.get(url, params,timeout=(10,10))
             elif method=="POST":
-                r = requests.post(url, params,timeout=(0.1,0.1))
+                r = requests.post(url, params,timeout=(10,10))
             else:
                 print("请求类型错误，目前只支持POST/GET")
-            return r.status_code,r.elapsed.total_seconds()*1000,r.text
+            return r.status_code,r.elapsed.total_seconds()*1000,r.text.replace("'","\\'")
         except requests.exceptions.ConnectTimeout as e:
             return 9001,0,("链接超时----%s"%e).replace("'","\\'")
         except requests.exceptions.ReadTimeout as e:
@@ -61,14 +65,13 @@ class run(SqlOperate):
         self.dbcur()
         sql=self.sqlInsert("apirun_result",
                            {"api_id":api_id,"pro_id":pro_id,"task_id":task_id,"resq_code":resq_code,"res_time":res_time,"response":response,"create_time":create_time})
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
 
 #主方法
     def main(self):
-        api_list=self.get_taskinfo()[2].split(",")
+        api_list=self.get_taskinfo()[2][1:-1].split(",")
         for i in api_list:
             url=self.get_apiinfo(i)[3]
             method=self.get_apiinfo(i)[5]
@@ -81,9 +84,7 @@ class run(SqlOperate):
         else:
             print("执行完成")
 
-# if __name__=="__main__":
-#     run.main()
-
-
-a=run(1)
-print(a.main())
+if __name__=="__main__":
+    task_id=sys.argv[1]
+    run=run(task_id)
+    run.main()
