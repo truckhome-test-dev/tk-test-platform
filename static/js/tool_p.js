@@ -1,3 +1,63 @@
+
+//前端渲染方法，暂时弃用
+function aa(){
+    end_time = (new Date()).getTime();
+    var cars = {
+        '解析dom树耗时' : window.performance.timing.domComplete - window.performance.timing.domInteractive,
+        'request请求耗时' : window.performance.timing.responseEnd - window.performance.timing.responseStart,
+        '白屏时间' : window.performance.timing.domLoading - window.performance.timing.fetchStart,
+        'domready时间' : window.performance.timing.domContentLoadedEventEnd - window.performance.timing.fetchStart,
+        'onload时间' : window.performance.timing.loadEventEnd - window.performance.timing.fetchStart
+    };
+    // clearInterval(t);
+    let content=''
+    for(let a in cars){
+        content += a + ': ' +cars[a] + 'ms' + '<br>'
+    }
+    console.log(content)
+}
+
+//响应时间测试方法
+function retime()
+{
+    var url = document.getElementById("test_url").value
+    if (url != ""){
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        var data = '{"url": "' + url +'"}';
+        xmlhttp.open("POST", "time_test_rt", true);
+        xmlhttp.send(data);
+        if (sleep(1000)){}
+        document.getElementById("myrame").src = url
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var a = document.getElementById("time")
+                let content=''
+                var d = JSON.parse(xmlhttp.responseText)
+                for(let v in d){
+                    content += '<b>' + v + '</b>' + ': ' + d[v] + '<br>'
+                }
+                a.innerHTML=content
+                // aa()
+            }
+        }
+    }else{
+        alert('请输入url');
+    }
+}
+
+//休眠、等待执行
+function sleep(numberMillis) {
+    var now = new Date();
+    var exitTime = now.getTime() + numberMillis;
+    while (true) {
+        now = new Date();
+        if (now.getTime() > exitTime)
+            return true;
+    }
+}
+
+
     //
     function loadXMLDoc(e){
         var td = e.parentNode.previousElementSibling;
