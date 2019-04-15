@@ -28,15 +28,15 @@
         <li>严重程度统计</li>
         <li>类别统计</li>
     </ul>
-    <div class="layui-tab-content" style="height: 1000px;">
+    <div class="layui-tab-content" style="height: 630px;">
         <div class="layui-tab-item layui-show">
-            <div id="prover" style="display: block;width: 800px;height:600px;float:left"></div>
+            <div id="prover" style="display: block;width: 1024px;height:600px;float:left"></div>
         </div>
         <div class="layui-tab-item">
-            <div id="trend" style="display: block;width: 800px;height:600px;float:left"></div>
+            <div id="trend" style="display: block;width: 1024px;height:600px;float:left"></div>
         </div>
         <div class="layui-tab-item">
-            <div id="handler" style="display: block;width: 800px;height:2000px;float:left"></div>
+            <div id="handler" style="display: block;width: 1024px;height:600px;float:left"></div>
         </div>
         <div class="layui-tab-item">
             <div id="reporter" style="width: 800px;height:600px;float:left"></div>
@@ -85,16 +85,17 @@
                     bottom: '3%',
                     containLabel: true
                 },
-                yAxis : [
+                xAxis : [
                     {
                         type : 'category',
                         data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                         axisTick: {
                             alignWithLabel: true
-                        }
+                        },
+
                     }
                 ],
-                xAxis : [
+                yAxis : [
                     {
                         type : 'value'
                     }
@@ -209,16 +210,21 @@
                     bottom: '3%',
                     containLabel: true
                 },
-                yAxis : [
+                xAxis : [
                     {
                         type : 'category',
                         data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                         axisTick: {
                             alignWithLabel: true
-                        }
+                        },
+                        axisLabel: {
+                           interval:0,
+                           rotate:50
+                        },
                     }
                 ],
-                xAxis : [
+
+                yAxis : [
                     {
                         type : 'value'
                     }
@@ -448,7 +454,7 @@
                 {#alert(c.code)#}
                 if (c.code == 1000){
 
-                    optionprover.yAxis[0].data= Object.keys(c['prover'])
+                    optionprover.xAxis[0].data= Object.keys(c['prover'])
                     optionprover.series[0].data=Object.values(c['prover'])
                     myCharprover.setOption(optionprover);
 
@@ -456,7 +462,7 @@
                     optiontrend.series[0].data=Object.values(c['trend'])
                     myChartrend.setOption(optiontrend);
 
-                    optionhandler.yAxis[0].data= Object.keys(c['handler'])
+                    optionhandler.xAxis[0].data= Object.keys(c['handler'])
                     optionhandler.series[0].data=Object.values(c['handler'])
                     myCharhandler.setOption(optionhandler);
 
