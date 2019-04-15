@@ -15,20 +15,20 @@
 	<!-- 页面私有部分 -->
 	<body>
 		<div >
-			<form style="float:left;" class="layui-form" action="" width="5000">
+			<div style="float:left;" class="layui-form" action="" width="5000">
 				<div class="layui-form-item">
 					<label class="layui-form-label">验证链接</label>
 					<div class="layui-input-inline">
-			 			<input type="tel" name="url" lay-verify="url" autocomplete="off" class="layui-input">
+			 			<input id="test_url" autocomplete="off" class="layui-input">
 					</div>
 					<div class="layui-input-inline">
-		      				<button class="layui-btn" lay-submit="" lay-filter="demo1">测试</button>
+		      				<button class="layui-btn" lay-filter="demo1" onclick=retime()>测试</button>
 		  			</div>
 		  		</div>
 		  		<div class="layui-form-item" style="margin:50px 20px 0px 20px">
 		  			<div class="layui-col-md6" style="width:300px;">
 						<div class="layui-card">
-							<div class="layui-card-header">结果</div>
+							<div class="layui-card-header" style="font-weight:bold;font-size:20px">结果</div>
 							<div class="layui-card-body" id="time">
 							
 							
@@ -36,41 +36,84 @@
 						</div>
 					</div>
 				</div>
-			</form>
+			</div>
 			<div style="float:right;">
 	  			<iframe name="myiframe" id="myrame" src={{url}} style="zoom:100%;margin-right:10px"  frameborder="0" align="right"  scrolling="" width="1024" height="680" ></iframe>
 	 		</div>
 		</div>
 		<script>
-			var start_time = (new Date()).getTime();
-			console.log('开始时间',start_time)
-			var end_time = "" ;
+			function retime()
+			{
+				var url = document.getElementById("test_url").value
+				if (url != ""){
+					var xmlhttp;
+		            xmlhttp = new XMLHttpRequest();
+		            var data = '{"url": "' + url +'"}';
+		            xmlhttp.open("POST", "time_test_rt", true);
+		            xmlhttp.send(data);
+		            if (sleep(1000)){}
+		            document.getElementById("myrame").src = url
+		            xmlhttp.onreadystatechange = function () {
+		                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		                	var a = document.getElementById("time")
+		                	let content=''
+		                	var d = JSON.parse(xmlhttp.responseText)
+							for(let v in d){
+								content += '<b>' + v + '</b>' + ': ' + d[v] + '<br>'
+							}
+							a.innerHTML=content
+		                	aa()
 
-			var t = setInterval(function(){
-			if(document.readyState=="complete"){aa();}
-			},1)
-			function aa(){
-			end_time = (new Date()).getTime();
-			var cars = {
-			'解析dom树耗时' : window.performance.timing.domComplete - window.performance.timing.domInteractive,
-			'request请求耗时' : window.performance.timing.responseEnd - window.performance.timing.responseStart,
-			'白屏时间' : window.performance.timing.domLoading - window.performance.timing.fetchStart,
-			'domready时间' : window.performance.timing.domContentLoadedEventEnd - window.performance.timing.fetchStart,
-			'onload时间' : window.performance.timing.loadEventEnd - window.performance.timing.fetchStart
-			};
-			// alert(cars);
-			clearInterval(t);
-			let content=''
-			for(let a in cars){
-				content += a + ': ' +cars[a] + 'ms' + '<br>'
+	                	}
+		            }
+				}else{
+		            alert('请输入url');
+				}
 			}
-			document.getElementById("time").innerHTML=content
+
+			// var start_time = (new Date()).getTime();
+			// console.log('开始时间',start_time)
+			// var end_time = "" ;
+			// var t = setInterval(function(){
+			// if(document.readyState=="complete"){aa();}
+			// },1)
+			function sleep(numberMillis) {
+			    var now = new Date();
+			    var exitTime = now.getTime() + numberMillis;
+			    while (true) {
+			        now = new Date();
+			        if (now.getTime() > exitTime)
+			            return true;
+			    }
+			}
+
+			function aa(){
+				end_time = (new Date()).getTime();
+				var cars = {
+					'解析dom树耗时' : window.performance.timing.domComplete - window.performance.timing.domInteractive,
+					'request请求耗时' : window.performance.timing.responseEnd - window.performance.timing.responseStart,
+					'白屏时间' : window.performance.timing.domLoading - window.performance.timing.fetchStart,
+					'domready时间' : window.performance.timing.domContentLoadedEventEnd - window.performance.timing.fetchStart,
+					'onload时间' : window.performance.timing.loadEventEnd - window.performance.timing.fetchStart
+				};
+				// clearInterval(t);
+				let content=''
+				for(let a in cars){
+					content += a + ': ' +cars[a] + 'ms' + '<br>'
+				}
+				console.log(content)
 			}
 
 		</script>
 	</body>
 
-
+<!-- 	                	console.log('首屏图片加载完成 : ',window.lastImgLoadTime - window.performance.timing.navigationStart); //在最后一张图出来的时候打时间点
+						console.log('HTML加载完成 : ',window.loadHtmlTime - window.performance.timing.navigationStart);//在HTML后打时间点
+						console.log('首屏接口完成加载完成 : ',Report.SPEED.MAINCGI - window.performance.timing.navigationStart);//在首屏的接口打时间点
+						console.log('接口完成加载完成 : ',Report.SPEED.LASTCGI - window.performance.timing.navigationStart);//在所有接口打时间点
+	                	var t = setInterval(function(){
+						if(document.readyState=="complete"){aa();}
+						},1) -->
 
 
 {% endblock right %}

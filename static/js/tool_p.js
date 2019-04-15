@@ -74,7 +74,7 @@
         }
     }
     
-    //test
+    //test  
     function loadXMLDoc1()
         {
         var xmlhttp;
