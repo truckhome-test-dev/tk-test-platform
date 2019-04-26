@@ -2,19 +2,25 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-from flask import Flask, request,render_template,redirect,jsonify
+from flask import Flask, request,render_template,redirect
 from test_code import *
 from test_code.mantis_bug import *
 from test_code.appreport import *
-import settings
+from route import *
 import json
 
 app = Flask(__name__)
 re = Device_Manag()
 pt = APP_Report()
-# bug = Mantis_Bug(host='117.50.17.66',user='qa',passwd = 'k04d8gAvDJ8PkvrL',database="bugtracker")
 bug=Mantis_Bug()
 app.config.from_object('settings.DevConfig')
+
+'''
+这里是注册蓝图
+参数url_prefix='/xxx'的意思是设置request.url中的url前缀，
+即当request.url是以/monitor的情况下才会通过注册的蓝图的视图方法处理请求并返回
+'''
+app.register_blueprint(monitor, url_prefix='/monitor')
 
 
 @app.route('/',methods=['get'])
@@ -141,7 +147,6 @@ def usestatus():
             return "no"
 
 
-
 @app.route('/time_test',methods=['post','get'])
 def test(): 
     if request.args.get('url'):
@@ -216,7 +221,7 @@ def token_check():
 
 @app.route('/test1',methods=['post','get'])
 def test2():
-    data = {"code":1000,"sex": sex, "Province": Province}
+    data = {"code":1000,"sex": 1, "Province": 1}
     return json.dumps(data)
 
 #admin页面

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block head %}
+<head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <script src="../static/layui/layui.js"></script>
+    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+        <script type="text/javascript" src="../static/js/tool_p.js"></script>
+    </head>
+{% endblock head %}
+{% block left %}
+{{ super() }}
+{% endblock left %}
+{% block right %}
+{{ super() }}
+<!-- 修改name（页面名称） -->
+{% set name = '编辑接口' %}
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>{{name}}</legend>
+</fieldset>
+<!-- 页面私有部分 -->
+
+<form class="layui-form" action="/api" method="POST">
+
+    <div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口ID：</label>
+        <div class="layui-input-inline"><input type="text" name="apiid" lay-verify="required" autocomplete="off"
+                                               value="{{data[0][4]}}" class="layui-input" readonly="readonly"></div>
+    </div>
+
+    <div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口名称：</label>
+        <div class="layui-input-inline"><input type="text" name="urlname" lay-verify="required" autocomplete="off"
+                                               value="{{data[0][0]}}" class="layui-input"></div>
+    </div>
+
+    <div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口地址：</label>
+        <div class="layui-input-inline"><input type="text" name="url" lay-verify="required" autocomplete="off"
+                                               value="{{data[0][1]}}" class="layui-input"></div>
+    </div>
+
+    <div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">归属项目：</label>
+        <div class="layui-input-inline"><input type="text" name="proid" lay-verify="required" autocomplete="off"
+                                               value="{{pro[0]}}" class="layui-input"></div>
+    </div>
+
+    <div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">请求方式：</label>
+        <div class="layui-input-inline"><input type="text" name="method" lay-verify="required" autocomplete="off"
+                                               value="{{data[0][2]}}" class="layui-input"></div>
+    </div>
+
+    <label class="layui-form-label">接口参数：</label>
+    <div class="layui-input-inline"><textarea name="parameters_json"
+                                              class="layui-textarea">{{data[0][3]}}</textarea></div>
+
+    <div>
+        <input class="layui-btn layui-btn-danger" style="margin-left:300px;margin-top:20px" type="submit" value="保存">
+    </div>
+</form>
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

@@ -164,7 +164,7 @@ def get_nickname():
             if RemarkName=='':
                 RemarkName=friend['NickName']
             text += (RemarkName+" ")
-        RemarkName = pwd.replace('\\', '/') + "/static/conf/RemarkName.txt"
+        RemarkName = pwd.replace('\\', '/') + "/conf/RemarkName.txt"
         # print(text)
         f=open(RemarkName,"wt",encoding='utf-8')
         f.write(text)
@@ -180,14 +180,14 @@ def wc():
         d = path.dirname(__file__)
         # print(d)
         # print(os.getcwd())
-        RemarkName = pwd.replace('\\', '/') + "/static/conf/RemarkName.txt"
+        RemarkName = pwd.replace('\\', '/') + "/conf/RemarkName.txt"
 
         # 用于生成词云的文本
         text = open(RemarkName,encoding='utf-8').read()
 
         # 图片模板
         test_mask = np.array(Image.open(pwd.replace('\\', '/') + "/static/pic/test_mask.png"))
-        simfang = pwd.replace('\\', '/') + "/static/conf/simfang.ttf"
+        simfang = pwd.replace('\\', '/') + "/conf/simfang.ttf"
         stopwords = set(STOPWORDS)
         stopwords.add("said")
 

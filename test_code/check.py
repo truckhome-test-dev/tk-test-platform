@@ -6,7 +6,7 @@ import configparser
 
 def token_check1(token):
     conf = configparser.ConfigParser()
-    conf.read("static/conf/config.ini")
+    conf.read("conf/config.ini")
     token_key = conf.get('token', 'key')
     # token_key="123"
     if token == token_key:

@@ -1,10 +1,9 @@
-# from test_code.sqlop import *
 from sqlop import *
 import configparser
 import requests
 import time
 import sys
-import os
+import json
 
 #执行脚本类
 class run(SqlOperate):
@@ -15,7 +14,7 @@ class run(SqlOperate):
     def __init__(self,task_id):
         self.task_id=task_id
         conf = configparser.ConfigParser()
-        conf.read("/home/jinyue/tk-test-platform/static/conf/config.ini")
+        conf.read("/home/jinyue/test/conf/config.ini")
         # conf.read("../static/conf/config.ini")
         self.host = conf.get('monitor_db','host')
         self.user = conf.get('monitor_db','user')
@@ -29,7 +28,7 @@ class run(SqlOperate):
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
-        data = self.cur.fetchone()
+        data = list(self.cur.fetchone())
         return data
 
 #获取api信息
@@ -69,6 +68,69 @@ class run(SqlOperate):
         self.sqlCom()
         self.sqlclo()
 
+# 获取api执行结果信息
+    def get_apire(self, api_id):
+        self.dbcur()
+        sql = "select * from apirun_result where api_id=%s order by create_time desc" % api_id
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchone()
+        return data
+
+#查询钉钉发送次数
+    def dingcount(self,api_id,status=None):
+        if status is None:
+            self.dbcur()
+            sql="select status from api_list where id=%s"%api_id
+            self.sqlExe(sql)
+            self.sqlCom()
+            self.sqlclo()
+            data = self.cur.fetchone()
+            return data
+        else:
+            self.dbcur()
+            sql="update api_list set status=status+1 where id=%s"%api_id
+            self.sqlExe(sql)
+            self.sqlCom()
+            self.sqlclo()
+            return 'ok'
+
+#发钉钉
+    def ding(self,api_id):
+        data=self.get_apire(api_id)
+        print(data)
+        content='''
+任务id：%s
+接口id：%s
+响应码：%s
+备注：详细信息请登录测试平台查看：http://192.168.2.92:5001/monitor/task_list
+        '''%(data[3],data[1],data[4])
+        data={
+            "msgtype": "text",
+            "text": {
+                "content": content
+            },
+            "at": {
+                "atMobiles": [
+                ],
+                "isAtAll": "false"
+            }
+        }
+        data = json.dumps(data)
+        url="https://oapi.dingtalk.com/robot/send?access_token=a0b3d4c7641ac2b7b4a16ce557331095fe1d9656ae9a5b6e7c86467ab0140410"
+        HEADERS = {"Content-Type": "application/json ;charset=utf-8 "}
+        count=int(self.dingcount(api_id)[0])
+        if count<=5 and count!=0:
+            res = requests.post(url, data=data, headers=HEADERS)
+            ret="发钉钉结果：%s"%res.text
+            self.dingcount(api_id,status=1)
+        elif count==0:
+            ret="未开启发送钉钉功能"
+        else:
+            ret = "发送超过5次"
+        print(ret)
+
 #主方法
     def main(self):
         api_list=self.get_taskinfo()[2][1:-1].split(",")
@@ -76,13 +138,16 @@ class run(SqlOperate):
             url=self.get_apiinfo(i)[3]
             method=self.get_apiinfo(i)[5]
             params=self.get_apiinfo(i)[7]
-            resq_code,res_time,response=self.run_api(url,method,params)
             api_id=self.get_apiinfo(i)[0]
             pro_id=self.get_apiinfo(i)[1]
             task_id=self.task_id
-            self.write_result(api_id,pro_id,task_id,resq_code,res_time,response)
+            resq_code,res_time,response=self.run_api(url,method,params)
+            self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
+            if resq_code!=200:
+                self.ding(api_id)
         else:
             print("执行完成")
+
 
 if __name__=="__main__":
     task_id=sys.argv[1]

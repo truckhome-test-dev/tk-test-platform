@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block head %}
+<head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <script src="../static/layui/layui.js"></script>
+    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+        <script type="text/javascript" src="../static/js/tool_p.js"></script>
+    </head>
+{% endblock head %}
+{% block left %}
+{{ super() }}
+{% endblock left %}
+{% block right %}
+{{ super() }}
+<!-- 修改name（页面名称） -->
+{% set name = '接口列表' %}
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>{{name}}</legend>
+</fieldset>
+<!-- 页面私有部分 -->'
+
+
+<div style="width:60%">
+		<span class="site-demo-button" id="apiadd">
+			<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal"
+                    style="margin-left:30px;font-size:20px">新增接口
+            </button>
+		</span>
+</div>
+
+
+<table id='111' class="layui-table" style="margin-top:20px;margin-left:30px">
+    <colgroup>
+        <col width=100px>
+        <col width=100px>
+        <col width=100px>
+        <col width=100px>
+        <col width=100px>
+        <col width=100px>
+        <col width=100px>
+        <col width=100px>
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">接口ID</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">接口名称</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">接口地址</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">归属项目</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">请求方式</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">参数</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">通知</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">编辑</th>
+        <th style="text-align: center; font-weight: bold ;font-size:18px">删除</th>
+    </thead>
+    <tbody>
+    {% for i in apidata2.items() %}
+    <tr class="table-item">
+        <td style="text-align: center">{{i[0][0]}}</td>
+        <td style="text-align: center">{{i[0][1]}}</td>
+        <td style="text-align: center">{{i[0][2]}}</td>
+        <td style="text-align: center">{{i[1]}}</td>
+        <td style="text-align: center">{{i[0][3]}}</td>
+        <td style="text-align: center">{{i[0][4]}}</td>
+        <td>
+            {% if i[0][5] == 0 %}
+            <span data-id={{i[0][0]}} class="layui-btn " onclick="apistatus(this)">启用</span>
+            {% else %}
+            <span data-id={{i[0][0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
+            {% endif %}
+        </td>
+        <td>
+            <span data-id={{i[0][0]}} id="apiedit" class="layui-btn " onclick="editapi(this)">编辑</span>
+        </td>
+        <td>
+            <span data-id={{i[0][0]}} class="layui-btn " onclick="delapi(this)">删除</span>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+
+ 	layui.use(['form', 'layedit', 'laydate'], function(){
+  		var form = layui.form
+
+	layui.use('layer', function(){ //独立版的layer无需执行这一句
+		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+		//接口新增弹窗触发
+		var addapi = {
+			offset: function(othis){
+				var type = othis.data('type')
+				,text = othis.text();
+                var apiid = othis.data('id');
+				layer.open({
+				type: 1
+				,area: ['350px', '450px']
+				,title:"新增接口"
+				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+				,id: 'apiadd '+ apiid //防止重复弹出
+				,content:'<form class="layui-form">\
+<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口名称：</label><div class="layui-input-inline"><input type="text" name="urlname" lay-verify="required" autocomplete="off" placeholder="请输入接口名称" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口地址：</label><div class="layui-input-inline"><input type="text" name="url" lay-verify="required" autocomplete="off" placeholder="请输入接口地址" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">归属项目：</label><div class="layui-input-inline"><input type="text" name="proid" lay-verify="required" autocomplete="off" placeholder="请选择归属项目" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">请求方式：</label><div class="layui-input-inline"><input type="text" name="method" lay-verify="required" autocomplete="off" placeholder="请输入请求方式" class="layui-input"></div></div>\
+<label class="layui-form-label">接口参数：</label><div class="layui-input-inline"><textarea name="parameters_json" placeholder="请输入接口参数" class="layui-textarea"></textarea></div></form>'
+				,btn: '保存'
+				,btnAlign: 'c' //按钮居中
+				,shade: 0 //不显示遮罩
+				,yes: function(index,layero){
+					var urlname = layero.find('input')[0].value;
+					var url = layero.find('input')[1].value;
+					var product = layero.find('input')[2].value;
+					var method = layero.find('input')[3].value;
+					var parameters_json = layero.find('textarea')[0].value;
+
+					var xmlhttp;
+			        xmlhttp = new XMLHttpRequest();
+			        var data ='{ "urlname":"' + urlname + '","url" : "'+ url +'", "product" : "' + product + '","method" : "' + method + '", "parameters_json" : "' + parameters_json + '"}';
+			        xmlhttp.open("POST","newapi",true);
+			        xmlhttp.send(data);
+				 	layer.close(index);
+					xmlhttp.onreadystatechange = function()
+					{
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+				            {
+					            if (xmlhttp.responseText == 'ok')
+					            {
+					              location.reload();
+					              alert ("新增成功")
+					            }
+					            else
+					            {
+					              alert('请求出错，请重试')
+					            }
+				          	}
+					    }
+
+					}
+				});
+			}
+		};
+
+		$('#apiadd').on('click', 'button', function(){
+			var othis = $(this), method = othis.data('method');
+			addapi[method] ? addapi[method].call(this, othis) : '';
+		})
+
+
+
+
+	});
+	})
+
+
+
+</script>
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

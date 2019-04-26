@@ -9,7 +9,7 @@ class  SqlOperate():
 
 	def __init__(self):
 		conf = configparser.ConfigParser()
-		conf.read("static/conf/config.ini")
+		conf.read("conf/config.ini")
 		self.host = conf.get('qa','host')
 		self.user = conf.get('qa','user')
 		self.passwd = conf.get('qa','passwd')
@@ -85,7 +85,7 @@ class  SqlOperate():
 		if repeat == 0:
 			sesql += ' group by devname'		
 		return sesql
- 
+
 
 	def sqlUpdate(self,tablename,field_item,condition):
 		"""修改数据

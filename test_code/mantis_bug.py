@@ -9,7 +9,7 @@ class Mantis_Bug(SqlOperate):
 
     def __init__(self):
         conf = configparser.ConfigParser()
-        conf.read("static/conf/config.ini")
+        conf.read("conf/config.ini")
         self.host = conf.get('mantis_bug_db','host')
         self.user = conf.get('mantis_bug_db','user')
         self.passwd = conf.get('mantis_bug_db','passwd')

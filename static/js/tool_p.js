@@ -34,14 +34,13 @@
         }
     }
 
-    function del(e) {
+    function task_del(e) {
         if (window.confirm("确定要删除吗")) {
-            var td = e.parentNode.previousElementSibling;
-            var url_id = td.querySelector('div').getAttribute('value');
+           var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
             var xmlhttp;
             xmlhttp = new XMLHttpRequest();
-            var data = '{ "status" : ' + 2 + ', "url_id" : ' + url_id + '}';
-            xmlhttp.open("POST", "test_ajax", true);
+            var data = '{  "task_id" : ' + task_id + '}';
+            xmlhttp.open("POST", "task_del", true);
             xmlhttp.send(data);
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -56,22 +55,9 @@
         }
     }
 
-    function edit1(e) {
-        var td = e.parentNode.previousElementSibling;
-        var url_id = td.querySelector('div').getAttribute('value');
-        window.location.href="http://127.0.0.1:5000/editapi?url_id="+url_id
-        var xmlhttp;
-        xmlhttp = new XMLHttpRequest();
-        var data ='{  "url_id" :' + url_id + '}';
-        xmlhttp.open("GET","editapi",true);
-        xmlhttp.send(data);
-        xmlhttp.onreadystatechange = function()
-        {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
-            {
-            alert(h)
-            }
-        }
+    function task_edit(e) {
+        var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
+        window.location.href="http://192.168.2.92:5001/monitor/task_edit?task_id="+task_id
     }
     
     //test
@@ -93,6 +79,31 @@
         x = document.getElementById("abc").innerHTML;
         var v
         xmlhttp.send("v="+x)
+    }
+
+    function task_status(e){
+        var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML;
+        // console.log(value)
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        var data ='{  "task_id" : ' + task_id + '}';
+        xmlhttp.open("POST","task_status",true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            {
+            if (xmlhttp.responseText == 'ok')
+            {
+              location.reload();
+            }
+            else
+            {
+              alert('请求出错，请重试')
+            }
+          // document.getElementById("test_button").innerHTML = xmlhttp.responseText
+          }
+        }
     }
     
     //生成左侧已有项目列表
@@ -376,7 +387,7 @@
                 if (c.code == 1000){
                     var token=form1.token.value;//获取表单form1的token值
                     setCookie("token",token);
-                    window.location.href="http://127.0.0.1:5000"
+                    window.location.href="http://192.168.2.92:5001"
                     }else {
                     alert("token校验失败")
                 }
@@ -403,3 +414,58 @@
         }
     }
 
+    //启用停用接口
+    function apistatus(e){
+        var apiid = e.dataset.id;
+        // console.log(value)
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        var data ='{ "apiid" : ' + apiid + '}';
+        xmlhttp.open("POST","editstatus",true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function()
+        {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+                {
+                if (xmlhttp.responseText == 'ok')
+                {
+                    location.reload()
+                }
+                else
+                {
+                    alert('请求出错，请重试')
+                }
+            }
+        }
+    }
+
+    //删除接口
+    function delapi(e) {
+        if(window.confirm("删除之后接口将不再显示，确定要删除吗？"))
+        {
+            var apiid = e.dataset.id;
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            var data = '{ "apiid" : ' + apiid + '}';
+            xmlhttp.open("POST", "apishow", true);
+            xmlhttp.send(data);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.responseText == 'ok') {
+                        location.reload();
+                    } else {
+                        alert('请求出错，请重试')
+                    }
+                    }
+                }
+            }
+        }
+
+    /*编辑接口*/
+    function editapi(e){
+        window.location.href="http://192.168.2.92:5001/monitor/api?apiid="+e.dataset.id
+    }
+    /*编辑接口*/
+    function ret(e){
+        alert("暂不支持此功能，接口异常会在钉钉群发通知，请注意查收！")
+    }
