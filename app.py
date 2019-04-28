@@ -9,6 +9,7 @@ from test_code.appreport import *
 from route import *
 import json
 
+
 app = Flask(__name__)
 re = Device_Manag()
 pt = APP_Report()
@@ -28,6 +29,7 @@ app.register_blueprint(monitor, url_prefix='/monitor')
 def index():
     return render_template('index.html')
 
+
 #微信小工具首页
 @app.route('/wxtools',methods=['get','post'])
 def wxtools():
@@ -36,12 +38,14 @@ def wxtools():
         if login_status==0:
             itinit()
         return render_template('wxtools.html')
-        
+
+
 #查询登录状态
 @app.route('/status',methods=['get','post'])
 def status():
     data=lc_status()
     return json.dumps(data)
+
 
 #登录
 @app.route('/login',methods=['post'])
@@ -54,11 +58,13 @@ def login():
         data={"code":1001}
         return json.dumps(data)
 
+
 #退出登录
 @app.route('/exit',methods=['post'])
 def exit():
     ec()
     return 'ok'
+
 
 #统计接口
 @app.route('/statistic',methods=['post'])
@@ -97,6 +103,7 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html')
+
 
 #设备管理展示与新增
 @app.route('/device',methods=['get','post'])
@@ -148,12 +155,26 @@ def usestatus():
 
 
 @app.route('/time_test',methods=['post','get'])
-def test(): 
+def time_test(): 
     if request.args.get('url'):
         url = request.args.get('url')
     else:
-        url = 'http://127.0.0.1:5000/test_1'
+        url = 'http://127.0.0.1:5000/time_test_hello'
     return render_template('time_test.html', url=url)       
+
+
+#响应时间测试
+@app.route('/time_test_rt',methods=['post','get'])
+def time_test_rt():
+    retest = Time_Test()
+    res = retest.response_time(json.loads(request.get_data().decode("utf-8"))['url'])
+    return json.dumps(res)
+
+
+#响应时间测试加载页
+@app.route('/time_test_hello',methods=['post','get'])
+def time_test_hello():
+    return render_template('hello.html')  
 
 
 #mantis_bug统计
@@ -183,11 +204,6 @@ def statistical_details():
         return json.dumps(data)
 
 
-@app.route('/test_1',methods=['post','get'])
-def test_1():
-    return render_template('hello.html') 
-
-
 # 查询手机类型
 @app.route('/typedev',methods=['post','get'])
 def devtype():
@@ -198,12 +214,13 @@ def devtype():
         alldata = re.appga(devtype)
         return render_template('devtype.html',alldata=alldata)
 
+
 #验证token
 @app.route('/token_check',methods=['post','get'])
 def token_check():
     if request.method == 'POST':
         token = request.get_data()
-        if token ==b'':
+        if token == b'':
             token = request.cookies.get('token')
         else:
             token = json.loads(token.decode("utf-8"))
@@ -212,6 +229,7 @@ def token_check():
         return json.dumps(data)
     else:
         return render_template('admin.html')
+
 
 # @app.route('/test2',methods=['post','get'])
 # def test1():
@@ -224,16 +242,12 @@ def test2():
     data = {"code":1000,"sex": 1, "Province": 1}
     return json.dumps(data)
 
+
 #admin页面
 @app.route('/admin',methods=['get','post'])
 def admin():
     return render_template('admin.html')
 
-#flask动态路由测试
-@app.route('/1/<url>',methods=['post','get'])
-def test1(url):
-    data="1/%s.html"% url
-    return render_template(data)
 
 #app自动化测试报告
 @app.route('/appreport',methods=['post','get'])
@@ -242,11 +256,27 @@ def appreport():
     reportlist = pt.title_url()
     return render_template('appreport.html',newreport=newreport,reportlist=reportlist) 
 
+
 #更多报告列表
 @app.route('/TestReport/<rpttime>/<dev>/TestReport',methods=['post','get'])
 def morerpt(rpttime,dev):
     url = "TestReport/%s/%s/TestReport.html" % (rpttime,dev)
     return render_template(url) 
+
+
+@app.route('/test1',methods=['post','get'])
+def test1():
+    data = {"code":1000,"sex": '1', "Province": '44231'}
+    return json.dumps(data)
+
+
+#flask动态路由测试
+@app.route('/1/<url>',methods=['post','get'])
+def test_1(url):
+    data="1/%s.html"% url
+    return render_template(data)
+
+
 
 
 
