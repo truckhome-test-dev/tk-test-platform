@@ -21,19 +21,19 @@
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
     <legend>{{name}}</legend>
 </fieldset>
-<!-- 页面私有部分 -->'
+<!-- 页面私有部分 -->
 
 
 <div style="width:60%">
 		<span class="site-demo-button" id="apiadd">
 			<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal"
-                    style="margin-left:30px;font-size:20px">新增接口
+                    style="margin-left:0px;font-size:20px">新增接口
             </button>
 		</span>
 </div>
 
 
-<table id='111' class="layui-table" style="margin-top:20px;margin-left:30px">
+<table id='111' class="layui-table" style="margin-top:20px;margin-left:0px">
     <colgroup>
         <col width=100px>
         <col width=100px>
@@ -68,7 +68,7 @@
         <td style="text-align: center">{{i[0][4]}}</td>
         <td>
             {% if i[0][5] == 0 %}
-            <span data-id={{i[0][0]}} class="layui-btn " onclick="apistatus(this)">启用</span>
+            <span data-id={{i[0][0]}} class="layui-btn" onclick="apistatus(this)">启用</span>
             {% else %}
             <span data-id={{i[0][0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
             {% endif %}
@@ -77,7 +77,7 @@
             <span data-id={{i[0][0]}} id="apiedit" class="layui-btn " onclick="editapi(this)">编辑</span>
         </td>
         <td>
-            <span data-id={{i[0][0]}} class="layui-btn " onclick="delapi(this)">删除</span>
+            <span data-id={{i[0][0]}} class="layui-btn" onclick="delapi(this)">删除</span>
         </td>
     </tr>
     {% endfor %}
