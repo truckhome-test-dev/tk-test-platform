@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block head %}
+    <head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <script src="../static/layui/layui.js"></script>
+    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+        <script type="text/javascript" src="../static/js/tool_p.js"></script>
+{#<style>#}
+{#    div{#}
+{#        display: inline;#}
+{#    }#}
+{#</style>#}
+    </head>
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = "结果查询" %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+    <form class="layui-form" lay-filter="exam" action="{{ api }}" method="POST"   style="width: 600px" >
+<div style="width: 1000px">
+        <div class="layui-form-item" style="display:inline-block;">
+        <label class="layui-form-label">时间范围</label>
+        <div class="layui-input-block">
+            <input type="text" name="time" class="layui-input" id="test10" placeholder=" 请选择时间范围 " style="width: 300px">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="display:inline-block;">
+        <label class="layui-form-label">编号</label>
+        <div class="layui-input-block">
+            <input type="text" name="api_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入日志编号 " class="layui-input" style="width: 150px" value="" >
+        </div>
+    </div>
+
+    <div style="display:inline-block;">
+        <input class="layui-btn layui-btn-danger" type="submit" value="查询" style="margin-left:50px;margin-top:0px"></input>
+    </div>
+
+</div>
+
+    </form>
+        <!--以下是数据展示-->
+  <table class="layui-table" style="width: 100% " >
+    <colgroup>
+        <col width=5%>
+        <col width=10%>
+        <col width=10%>
+        <col width=20%>
+        <col width=5%>
+        <col width=20%>
+        <col width=5%>
+        <col width=5%>
+
+    </colgroup>
+    <thead>
+      <tr>
+          <th><div align="center">编号</div></th>
+        <th><div align="center">任务名称</div></th>
+        <th><div align="center" >接口名称</div></th>
+        <th><div align="center">接口地址</div></th>
+        <th><div align="center">请求方式</div></th>
+          <th><div align="center">参数</div></th>
+          <th><div align="center">结果</div></th>
+          <th><div align="center">详细信息</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in report_list %}
+        <tr>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    <script>
+function task_add(e){
+ window.location.href="http://192.168.2.92:5001/monitor/task_add";
+}
+
+        function showClassDetail(detail_id, hiddenRow_id, class_type) {
+            console.log(document.getElementById(hiddenRow_id).className)
+    
+            if ('详细' ==  document.getElementById(detail_id).innerText) {
+                    if ('all' == class_type) {
+                        document.getElementById(hiddenRow_id).className = 'all';
+                    }
+                    else if ('success' == class_type) {
+                        document.getElementById(hiddenRow_id).className = 'success';
+                    }
+                    else if ('error' == class_type) {
+                        document.getElementById(hiddenRow_id).className = 'error';
+                    }
+                    else{
+                        document.getElementById(hiddenRow_id).className = 'untreaded';
+                    }
+                    document.getElementById(detail_id).innerText = "收起"
+                    document.getElementById(hiddenRow_id).style.display = 'table-row';
+            }
+            else {
+                    document.getElementById(detail_id).innerText = "详细"
+                    document.getElementById(hiddenRow_id).style.display = 'none';
+            }
+        }
+
+layui.use('laydate', function(){
+  var laydate = layui.laydate;
+
+  //日期时间选择器
+  laydate.render({
+    elem: '#test10'
+    ,type: 'datetime'
+    ,range: true
+  });
+});
+</script>
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

@@ -135,7 +135,12 @@ class run(SqlOperate):
     def main(self):
         api_list=self.get_taskinfo()[2][1:-1].split(",")
         for i in api_list:
-            url=self.get_apiinfo(i)[3]
+            url=self.get_apiinfo(i)
+            if not url:
+                print("接口id：%s 不存在，跳过"%i)
+                continue
+            else:
+                url=self.get_apiinfo(i)[3]
             method=self.get_apiinfo(i)[5]
             params=self.get_apiinfo(i)[7]
             api_id=self.get_apiinfo(i)[0]
