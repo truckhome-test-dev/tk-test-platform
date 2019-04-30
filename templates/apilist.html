@@ -1,15 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-<head>
-        <meta charset="UTF-8">
-        <title>测试管理系统</title>
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <link rel="stylesheet" href="../static/layui/css/layui.css">
-        <script src="../static/layui/layui.js"></script>
-    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
-        <script type="text/javascript" src="../static/js/tool_p.js"></script>
-    </head>
+{{ super() }}
 {% endblock head %}
 {% block left %}
 {{ super() }}
@@ -27,22 +18,22 @@
 <div style="width:60%">
 		<span class="site-demo-button" id="apiadd">
 			<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal"
-                    style="margin-left:0px;font-size:20px">新增接口
+                    style="margin-left:30px;font-size:20px">新增接口
             </button>
 		</span>
 </div>
 
 
-<table id='111' class="layui-table" style="margin-top:20px;margin-left:0px">
+<table id='111' class="layui-table" style="margin-top:20px">
     <colgroup>
-        <col width=100px>
-        <col width=100px>
-        <col width=100px>
-        <col width=100px>
-        <col width=100px>
-        <col width=100px>
-        <col width=100px>
-        <col width=100px>
+        <col width=5%>
+        <col width=10%>
+        <col width=15px>
+        <col width=10%>
+        <col width=10%>
+        <col width=15%>
+        <col width=10%>
+        <col width=10%>
         <col>
     </colgroup>
     <thead>
@@ -58,26 +49,26 @@
         <th style="text-align: center; font-weight: bold ;font-size:18px">删除</th>
     </thead>
     <tbody>
-    {% for i in apidata2.items() %}
+    {% for i in apidata2 %}
     <tr class="table-item">
-        <td style="text-align: center">{{i[0][0]}}</td>
-        <td style="text-align: center">{{i[0][1]}}</td>
-        <td style="text-align: center">{{i[0][2]}}</td>
+        <td style="text-align: center">{{i[0]}}</td>
         <td style="text-align: center">{{i[1]}}</td>
-        <td style="text-align: center">{{i[0][3]}}</td>
-        <td style="text-align: center">{{i[0][4]}}</td>
-        <td>
-            {% if i[0][5] == 0 %}
-            <span data-id={{i[0][0]}} class="layui-btn" onclick="apistatus(this)">启用</span>
+        <td style="text-align: center">{{i[2]}}</td>
+        <td style="text-align: center">{{i[3]}}</td>
+        <td style="text-align: center">{{i[4]}}</td>
+        <td style="text-align: center">{{i[5]}}</td>
+        <td style="text-align: center">
+            {% if i[6] == 0 %}
+            <span data-id={{i[0]}} class="layui-btn" onclick="apistatus(this)">启用</span>
             {% else %}
-            <span data-id={{i[0][0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
+            <span data-id={{i[0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
             {% endif %}
         </td>
-        <td>
-            <span data-id={{i[0][0]}} id="apiedit" class="layui-btn " onclick="editapi(this)">编辑</span>
+        <td style="text-align: center">
+            <span data-id={{i[0]}} id="apiedit" class="layui-btn " onclick="editapi(this)">编辑</span>
         </td>
-        <td>
-            <span data-id={{i[0][0]}} class="layui-btn" onclick="delapi(this)">删除</span>
+        <td style="text-align: center">
+            <span data-id={{i[0]}} class="layui-btn" onclick="delapi(this)">删除</span>
         </td>
     </tr>
     {% endfor %}
@@ -93,6 +84,7 @@
 	layui.use('layer', function(){ //独立版的layer无需执行这一句
 		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
 
+
 		//接口新增弹窗触发
 		var addapi = {
 			offset: function(othis){
@@ -105,20 +97,26 @@
 				,title:"新增接口"
 				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
 				,id: 'apiadd '+ apiid //防止重复弹出
-				,content:'<form class="layui-form">\
+				,content:'<form class="layui-form" lay-filter="addDialog">\
 <div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口名称：</label><div class="layui-input-inline"><input type="text" name="urlname" lay-verify="required" autocomplete="off" placeholder="请输入接口名称" class="layui-input"></div></div>\
 <div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">接口地址：</label><div class="layui-input-inline"><input type="text" name="url" lay-verify="required" autocomplete="off" placeholder="请输入接口地址" class="layui-input"></div></div>\
-<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">归属项目：</label><div class="layui-input-inline"><input type="text" name="proid" lay-verify="required" autocomplete="off" placeholder="请选择归属项目" class="layui-input"></div></div>\
-<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">请求方式：</label><div class="layui-input-inline"><input type="text" name="method" lay-verify="required" autocomplete="off" placeholder="请输入请求方式" class="layui-input"></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">所属项目：</label><div class="layui-input-inline">\
+<span><select name="proid" ><option value="">请选择所属项目</option><option value="1">产品库</option><option value="2">APP</option><option value="3">论坛</option><option value="4">资讯</option>\
+<option value="5">二手车</option><option value="6">卡友圈</option><option value="7">经销商</option></select></span></div></div>\
+<div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">请求方式：</label><div class="layui-input-inline">\
+<span><select name="method" ><option value="">请选择请求方式</option><option value="GET">GET</option><option value="POST">POST</option></select></span></div></div>\
 <label class="layui-form-label">接口参数：</label><div class="layui-input-inline"><textarea name="parameters_json" placeholder="请输入接口参数" class="layui-textarea"></textarea></div></form>'
 				,btn: '保存'
 				,btnAlign: 'c' //按钮居中
 				,shade: 0 //不显示遮罩
+				,success: function(layero, index){
+                    form.render("select","addDialog");
+                  }
 				,yes: function(index,layero){
 					var urlname = layero.find('input')[0].value;
 					var url = layero.find('input')[1].value;
-					var product = layero.find('input')[2].value;
-					var method = layero.find('input')[3].value;
+					var product = layero.find('select')[0].value;
+					var method = layero.find('select')[1].value;
 					var parameters_json = layero.find('textarea')[0].value;
 
 					var xmlhttp;
@@ -152,9 +150,6 @@
 			var othis = $(this), method = othis.data('method');
 			addapi[method] ? addapi[method].call(this, othis) : '';
 		})
-
-
-
 
 	});
 	})

@@ -85,7 +85,7 @@ def newapi():
         parm = data['parameters_json']
         # check_point = data['check_point']
         api.addapi(product,urlname,url,method,parm,check_point=0)
-        return  "ok"
+        return "ok"
     else:
         prolist = api.prolist()
         return render_template('apilist.html',prolist=prolist)
@@ -136,3 +136,10 @@ def editapi3():
     apiid = data['apiid']
     api.apishows(apiid)
     return "ok"
+
+# 查询结果
+@monitor.route('/report', methods=['get', 'post'])
+def report():
+    if request.method == "GET":
+        task_id = request.args.to_dict().get('task_id', "")
+        return render_template('report.html')
