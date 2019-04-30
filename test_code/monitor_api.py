@@ -8,14 +8,10 @@ from test_code.sqlop import *
 class Api_Monitor(SqlOperate):
     #接口相关函数
 
-    global proll,idpro
-
-    proll = {"APP":1,"产品库":2,"论坛":3,"资讯":4,"二手车":5,"经销商":6,"其他":7}
-    idpro = {v : k for k, v in proll.items()}
 
     def __init__(self):
         conf = configparser.ConfigParser()
-        conf.read("conf/config.ini")
+        conf.read("/home/jinyue/test/conf/config.ini")
         self.host = conf.get('monitor_db','host')
         self.user = conf.get('monitor_db','user')
         self.passwd = conf.get('monitor_db','passwd')
@@ -44,7 +40,6 @@ class Api_Monitor(SqlOperate):
             sql = self.sqlSelect(tablename,fields,condition,repeat=1)
         else:
             sql = self.sqlSelect(tablename,fields,repeat=1)
-        sql += ' order by id desc'
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
         self.sqlclo()
@@ -52,29 +47,25 @@ class Api_Monitor(SqlOperate):
 
     #app中新增接口的方法（post请求)
     def addapi(self,product,urlname,url,method,parm=0,check_point=0):
-        proid = proll[product]
-        self.insdata('api_list',{'urlname':urlname,'pro_id':proid,'url':url,'method':method,'check_point':check_point,'parameters_json':parm})
+        self.insdata('api_list',{'urlname':urlname,'pro_id':product,'url':url,'method':method,'check_point':check_point,'parameters_json':parm})
 
-    #app中获取接口数据
+    # #app中获取接口数据
     def getapi(self,apiid="all"):
+        self.dbcur()
         if apiid == "all":
-            proname = self.seldata("api_list",['pro_id'])
-            data = self.seldata("api_list",['id','urlname','url','method','parameters_json','status'],condition={'is_delete':0})
+            sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.status from api_list as a,product as p where a.pro_id = p.ID and a.is_delete = 0 order by id desc"
         else:
-            proname = self.seldata("api_list",['pro_id'],condition={'id':apiid})
-            data = self.seldata("api_list",['urlname','url','method','parameters_json','id'],condition={'id':apiid})
-        prolist = []
-        for i in proname:
-            k = i[0]
-            product = idpro[k]
-            prolist.append(product)
-        apidata = dict(zip(data,prolist))
-        return apidata
+            sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json from api_list as a,product as p where a.pro_id = p.ID and a.id = %s and a.is_delete = 0" %(apiid)
+        self.sqlExe(sql)
+        data = list(self.cur.fetchall())
+        self.sqlclo()
+        return data
 
     #app中修改接口内容(post请求)
     def editapi(self,url,urlname,product,method,apiid,parm=0):
-        proid = proll[product]
-        self.updata("api_list",{'urlname':urlname,'url':url,'parameters_json':parm,'pro_id':proid},condition={'id':apiid})
+        proid = self.seldata("product",['id'],condition={'name':product})[0][0]
+        self.updata("api_list",{'urlname':urlname,'url':url,'method':method,'parameters_json':parm,'pro_id':proid},condition={'id':apiid})
+        return id
 
     #app中修改接口停用启用状态
     def apist(self,apiid):
@@ -91,14 +82,13 @@ class Api_Monitor(SqlOperate):
 
     #获取项目下拉框内容
     def prolist(self):
-        ll = list(idpro.values())
-        return ll
+        data = self.seldata("product",['name'])
+        return data
 
 
 
 # a = Api_Monitor()
-# s = list(a.getapi(32).keys())
-# print (s[0][3])
+# print (a.getapi())
 
 
 

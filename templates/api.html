@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block head %}
-{{ super() }}
+    <head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <script src="../static/layui/layui.js"></script>
+    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+        <script type="text/javascript" src="../static/js/tool_p.js"></script>
+    </head>
 {% endblock head %}
 {% block left %}
 {{ super() }}
