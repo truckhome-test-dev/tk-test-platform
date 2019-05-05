@@ -119,7 +119,10 @@ function sleep(numberMillis) {
         var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
         window.location.href="http://192.168.2.92:5001/monitor/task_edit?task_id="+task_id
     }
-    
+    function task_res(e) {
+    var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
+    window.location.href="http://192.168.2.92:5001/monitor/report?task_id="+task_id
+    }
     //test  
     function loadXMLDoc1()
         {

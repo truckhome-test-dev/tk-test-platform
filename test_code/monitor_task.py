@@ -2,6 +2,7 @@ from test_code.sqlop import *
 # from sqlop import *
 import configparser
 import time
+import datetime
 
 
 class Monitor_Task(SqlOperate):
@@ -195,7 +196,42 @@ class Monitor_Task(SqlOperate):
             self.timingtask_add(task_id)
         return "ok"
 
+    #执行结果查询
+    def get_rest(self,time_frame=None,task_id=None,api_id=None,res_id=None,page=0):
+        self.dbcur()
+        sql="select res.id,task.task_name,api.urlname,api.url,api.method,api.parameters_data,res.resq_code,res.res_time,res.response,res.create_time " \
+            "from apirun_result as res,api_list as api,task_list as task " \
+            "where res.api_id = api.id and res.task_id = task.id"
+        if time_frame!=None and time_frame!="":
+            data=time_frame.split(" - ")
+            start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
+            end_time = int(time.mktime(time.strptime(data[1], '%Y-%m-%d %H:%M:%S')))
+            sql+=" and res.create_time between %s and %s"%(str(start_time),str(end_time))
+            print(start_time,end_time)
+        if task_id!=None and task_id!="":
+            sql+=" and res.task_id=%s"%task_id
+        if api_id!=None and api_id!="":
+            sql+=" and res.api_id=%s"%api_id
+        if res_id!=None and res_id!="":
+            sql+=" and res.id=%s"%res_id
+        sql+=" order by res.id desc"
+        if page==0 and page!="":
+            sql+=" limit 100"
+        else:
+            sql+=" limit %s,20"%str((int(page)*20))
+        print(sql)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        data=list(data)
+        data1=[]
+        for i in data:
+            i=list(i)
+            i[9]=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(i[9]))
+            data1.append(i)
+        return data1
 
-# if __name__ == "__main__":
-#     a = Monitor_Task()
-#     print(a.run(1))
+if __name__ == "__main__":
+    a = Monitor_Task()
+    print(a.get_rest(page=1))

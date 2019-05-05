@@ -104,7 +104,7 @@ def editapi():
         prolist = api.prolist()
         apiid = request.args.to_dict().get('apiid', "")
         apidata = api.getapi(apiid)
-        return render_template('api.html',prolist=prolist,apidata=apidata)
+        return render_template('apiedit.html', prolist=prolist, apidata=apidata)
     else:
         urlname = request.form.get('urlname')
         url = request.form.get('url')
@@ -140,4 +140,12 @@ def editapi3():
 def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
-        return render_template('report.html')
+        res = task.get_rest(task_id=task_id)
+        return render_template('report.html', res=res, time_frame="", task_id=task_id, api_id="", res_id="")
+    if request.method == "POST":
+        time_frame=request.form.get('time_frame')
+        task_id = request.form.get('task_id')
+        api_id = request.form.get('api_id')
+        res_id = request.form.get('res_id')
+        res = task.get_rest(time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id)
+        return render_template('report.html',res=res,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id)

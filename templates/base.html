@@ -30,7 +30,7 @@
                         <!-- 左侧栏目配置 -->
 
 
-                        {% set left_list = {'资源管理':{'测试设备': 'http://192.168.2.92:5001/device','排期': 'http://192.168.2.92:5001/scheduling','bug统计': 'http://192.168.2.92:5001/bug_statistics','APP自动化报告': 'http://192.168.2.92:5001/appreport'},'测试工具':{'响应时间测试':'http://192.168.2.92:5001/time_test'},'接口监控':{'接口管理':'http://192.168.2.92:5001/monitor/apilist','任务管理':'http://192.168.2.92:5001/monitor/task_list'}} %}
+                        {% set left_list = {'资源管理':{'测试设备': 'http://192.168.2.92:5001/device','排期': 'http://192.168.2.92:5001/scheduling','bug统计': 'http://192.168.2.92:5001/bug_statistics','APP自动化报告': 'http://192.168.2.92:5001/appreport'},'测试工具':{'响应时间测试':'http://192.168.2.92:5001/time_test'},'接口监控':{'接口管理':'http://192.168.2.92:5001/monitor/apilist','任务管理':'http://192.168.2.92:5001/monitor/task_list','结果查询':'http://192.168.2.92:5001/monitor/report'}} %}
 
                         {% for name,n_list in left_list.items() %}
                         <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>

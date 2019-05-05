@@ -11,7 +11,7 @@ class Api_Monitor(SqlOperate):
 
     def __init__(self):
         conf = configparser.ConfigParser()
-        conf.read("/home/jinyue/test/conf/config.ini")
+        conf.read("conf/config.ini")
         self.host = conf.get('monitor_db','host')
         self.user = conf.get('monitor_db','user')
         self.passwd = conf.get('monitor_db','passwd')
