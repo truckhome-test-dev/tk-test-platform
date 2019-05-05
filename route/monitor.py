@@ -114,7 +114,7 @@ def editapi():
         # check_point = data['check_point']
         apiid = request.form.get('apiid')
         api.editapi(url,urlname,product,method,apiid,parm)
-        return redirect("http://127.0.0.1:5000/apilist")
+        return redirect("http://192.168.2.92:5001/monitor/apilist")
 
 
 #监控平台修改接口使用状态
