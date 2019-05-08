@@ -152,7 +152,8 @@ class run(SqlOperate):
             if resq_code!=200:
                 self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
                 self.ding(api_id)
-            self.write_result(api_id, pro_id, task_id, resq_code, res_time, "ok")
+            else:
+                self.write_result(api_id, pro_id, task_id, resq_code, res_time, "ok")
         else:
             print("执行完成")
 
