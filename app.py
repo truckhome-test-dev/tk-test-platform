@@ -14,6 +14,7 @@ app = Flask(__name__)
 re = Device_Manag()
 pt = APP_Report()
 bug=Mantis_Bug()
+pp=pp = Cha_Project()
 app.config.from_object('settings.DevConfig')
 
 '''
@@ -276,6 +277,12 @@ def test_1(url):
     data="1/%s.html"% url
     return render_template(data)
 
+#卡车之家业务信息表
+@app.route('/project_information',methods=['post','get'])
+def Project_information():
+    pp_rturn = request.args.get('firstname')
+    data = pp.cha(pp_rturn)
+    return render_template('project_information.html',u=data)
 
 
 

@@ -197,7 +197,7 @@ class Monitor_Task(SqlOperate):
         return "ok"
 
     #执行结果查询
-    def get_rest(self,time_frame=None,task_id=None,api_id=None,res_id=None,page=0):
+    def get_rest(self,time_frame=None,task_id=None,api_id=None,res_id=None,resq_code=None,page=0):
         self.dbcur()
         sql="select res.id,task.task_name,api.urlname,api.url,api.method,api.parameters_data,res.resq_code,res.res_time,res.response,res.create_time " \
             "from apirun_result as res,api_list as api,task_list as task " \
@@ -214,6 +214,8 @@ class Monitor_Task(SqlOperate):
             sql+=" and res.api_id=%s"%api_id
         if res_id!=None and res_id!="":
             sql+=" and res.id=%s"%res_id
+        if resq_code!=None and resq_code!="":
+            sql+=" and resq_code=%s"%resq_code
         sql+=" order by res.id desc"
         if page==0 and page!="":
             sql+=" limit 100"

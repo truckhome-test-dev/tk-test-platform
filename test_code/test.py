@@ -1,12 +1,23 @@
-# counts=['a','b','c','a']
-# a = list()
-# [a.append(i) for i in counts if a.count(i)==0]
-# print(a)
-import time
-data="2019-05-10 00:00:00 - 2019-06-10 00:00:00"
-data=data.split(" - ")
-print(data[0],type(data[0]))
+import re
+# s='"url": "https://api.360che.com/comment/submit.aspx"'
+# pattern = r'"http\S+"'
+#
+# l = re.findall(pattern,s)
+# print(len(l))
+# if len(l)>=1:
+#     l=l[0][1:-1]
+#     print(l)
 
-
-start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
-print(start_time)
+with open("url.txt", "r", encoding="utf-8") as f_w:
+    while True:
+        line=f_w.readline()
+        if not line:
+            break
+        # print(line)
+        pattern = r'"url": "http\S+"'
+        # pattern = r'"name": "\S+"'
+        # line='"url": "https://api.360che.com/comment/submit.aspx"'
+        l = re.findall(pattern, line)
+        if len(l)>=1:
+            l = l[0][8:-1]
+            print(l)

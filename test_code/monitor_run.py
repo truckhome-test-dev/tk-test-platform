@@ -4,6 +4,7 @@ import requests
 import time
 import sys
 import json
+import pymysql
 
 #执行脚本类
 class run(SqlOperate):
@@ -50,16 +51,17 @@ class run(SqlOperate):
                 r = requests.post(url, params,timeout=(10,10))
             else:
                 print("请求类型错误，目前只支持POST/GET")
-            return r.status_code,r.elapsed.total_seconds()*1000,r.text.replace("'","\\'")
+            return r.status_code,r.elapsed.total_seconds()*1000,r.text
         except requests.exceptions.ConnectTimeout as e:
-            return 9001,0,("链接超时----%s"%e).replace("'","\\'")
+            return 9001,0,("链接超时----%s"%e)
         except requests.exceptions.ReadTimeout as e:
-            return 9002,0,("连接、读取超时----%s"%e).replace("'","\\'")
+            return 9002,0,("连接、读取超时----%s"%e)
         except requests.exceptions.ConnectionError as e:
-            return 9003,0,("未知的服务器----%s"%e).replace("'","\\'")
+            return 9003,0,("未知的服务器----%s"%e)
 
 #结果入库
     def write_result(self,api_id,pro_id,task_id,resq_code,res_time,response):
+        response=pymysql.escape_string(response)
         create_time = int(time.time())
         self.dbcur()
         sql=self.sqlInsert("apirun_result",
@@ -147,9 +149,10 @@ class run(SqlOperate):
             pro_id=self.get_apiinfo(i)[1]
             task_id=self.task_id
             resq_code,res_time,response=self.run_api(url,method,params)
-            self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
             if resq_code!=200:
+                self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
                 self.ding(api_id)
+            self.write_result(api_id, pro_id, task_id, resq_code, res_time, "ok")
         else:
             print("执行完成")
 

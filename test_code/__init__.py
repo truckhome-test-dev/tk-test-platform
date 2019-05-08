@@ -9,3 +9,4 @@ from .check import *
 from .monitor_task import *
 from .monitor_api import *
 from .time_test import *
+from .project_information import *

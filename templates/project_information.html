@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '卡车之家业务信息表' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+
+	
+	<form>
+{#	<input type="search" name="firstname"  maxlength="10" size="10" autofocus style="margin-left:30px"> <input type="submit" value="搜一下">#}
+{#	<br>#}
+
+
+<div class="layui-form-item" style="display:inline-block;">
+        <div class="layui-input-block">
+            <input type="search" name="firstname" lay-verify="required" autocomplete="off"   placeholder=" 请输入关键字 " class="layui-input" style="width: 150px;margin-left:-90px"  >
+
+        </div>
+</div>
+
+    <div class="layui-form-item" style="display:inline-block;">
+        <div class="layui-input-block">
+
+{#            <input type="submit" value="搜一下">#}
+                <div style="display:inline-block;">
+        <input class="layui-btn layui-btn-danger" type="submit" value="搜一下" style="margin-left:-80px;margin-top:0px"></input>
+    </div>
+        </div>
+</div>
+
+	</form> 
+
+	<table id='123' class="layui-table" style="margin-top:10px;margin-left:0px;width:100%";word-wrap: normal|break-word;>
+    <!-- <table class="table table-bordered"> -->
+    <tr>
+        <th>ID</th>
+        <th>业务</th>
+        <th>产品线</th>
+        <th>产品经理</th>
+        <th>设计师</th>
+        <th>前端开发</th>
+        <th>后端开发</th>
+        <th>开发经理</th>
+        <th>测试人员</th>
+        <th>涉及业务端</th>
+    </tr>
+        {% for i in u %}
+            <tr>
+                <td>{{ i[0] }}</td>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}</td>
+                <td>{{ i[3] }}</td>
+                <td>{{ i[4] }}</td>
+                <td>{{ i[5] }}</td>
+                <td>{{ i[6] }}</td>
+                <td>{{ i[7] }}</td>
+                <td>{{ i[8] }}</td>
+                <td>{{ i[9] }}</td>           
+            </tr>
+    {% endfor %}
+    </table>
+
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
