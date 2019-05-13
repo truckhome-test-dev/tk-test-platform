@@ -29,7 +29,7 @@ def task_edit():
         frequency = request.form.get('frequency')
         api_id = "[" + request.form.get('api_id') + "]"
         task.task_edit(task_id,task_name, api_id, frequency)
-        return redirect("http://192.168.2.92:5001/monitor/task_list")
+        return redirect("http://127.0.0.1:5000/monitor/task_list")
 
 
 # 添加任务
@@ -46,7 +46,7 @@ def task_add():
         api_id = "[" + request.form.get('api_id') + "]"
         task.task_add(task_name, api_id, frequency)
         # task_list = task.task_list()
-        return redirect("http://192.168.2.92:5001/monitor/task_list")
+        return redirect("http://127.0.0.1:5000/monitor/task_list")
 
 # 删除任务
 @monitor.route('/task_del', methods=['get', 'post'])
@@ -114,7 +114,7 @@ def editapi():
         # check_point = data['check_point']
         apiid = request.form.get('apiid')
         api.editapi(url,urlname,product,method,apiid,parm)
-        return redirect("http://192.168.2.92:5001/monitor/apilist")
+        return redirect("http://127.0.0.1:5000/monitor/apilist")
 
 
 #监控平台修改接口使用状态
