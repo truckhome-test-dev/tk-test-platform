@@ -149,7 +149,7 @@ class run(SqlOperate):
             pro_id=self.get_apiinfo(i)[1]
             task_id=self.task_id
             resq_code,res_time,response=self.run_api(url,method,params)
-            if resq_code!=200:
+            if resq_code!=200 and resq_code!=9001 and resq_code!=9002 and resq_code!=9003:
                 self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
                 self.ding(api_id)
             else:
