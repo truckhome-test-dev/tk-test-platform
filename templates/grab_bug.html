@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '排行榜' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+  <table class="layui-table" style="width: 30% " >
+    <colgroup>
+        <col width=10%>
+        <col width=10%>
+        <col width=10%>
+        <col width=10%>
+
+    </colgroup>
+    <thead>
+      <tr>
+          <th><div align="center">名次</div></th>
+        <th><div align="center">姓名</div></th>
+        <th><div align="center" >bug数</div></th>
+        <th><div align="center">得分</div></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in data %}
+          <tr>
+        <td><div align="center" >{{i[3]}}</div></td>
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[1]}}</div></td>
+        <td><div align="center" >{{i[2]}}</div></td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

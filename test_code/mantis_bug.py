@@ -234,3 +234,93 @@ class Mantis_Bug(SqlOperate):
         self.sqlclo()
         data = self.cur.fetchone()[0]
         return data
+
+    #查看每个人对应的严重程度bug数
+    def get_severity_count(self,start_time=None,end_time=None):
+        """
+        :param start_time:
+        :param end_time:
+        :return: (('邢猛', 10, 1), ('邢猛', 50, 1), ('邢猛', 60, 208), ('邢猛', 70, 10).....)
+        """
+        self.dbcur()
+        if start_time==None and end_time==None:
+            sql = "select mantis_user_table.realname,mantis_bug_table.severity,count(mantis_bug_table.id) " \
+                  "from mantis_user_table,mantis_bug_table " \
+                  "where mantis_bug_table.reporter_id= mantis_user_table.id " \
+                  "and mantis_user_table.access_level='70' " \
+                  "and mantis_user_table.enabled='1' " \
+                  "and mantis_user_table.id not in (8,48) " \
+                  "group by mantis_bug_table.reporter_id,mantis_bug_table.severity"
+        else:
+            sql="select mantis_user_table.realname,mantis_bug_table.severity,count(mantis_bug_table.id) " \
+                  "from mantis_user_table,mantis_bug_table " \
+                  "where mantis_bug_table.reporter_id= mantis_user_table.id " \
+                  "and mantis_user_table.access_level='70' " \
+                  "and mantis_user_table.enabled='1' " \
+                  "and mantis_user_table.id not in (8,48) " \
+                  "and (date_submitted between %s and %s)" \
+                  "group by mantis_bug_table.reporter_id,mantis_bug_table.severity"%(start_time,end_time)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        return data
+
+    #获取所有产品线
+    def get_pro(self):
+        """
+        :return: [' 产品库 ', 'App', 'IT系统', '互动', '其他', '商业配合', '支持', '独立', '经销商', '资讯', '遗留/线上bug']
+        """
+        self.dbcur()
+        sql="select p.name " \
+            "from mantis_project_table as p,mantis_project_hierarchy_table as h " \
+            "where p.id = h.parent_id " \
+            "group by p.name"
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        l=[]
+        for i in data:
+            l.append(i[0])
+        return l
+
+    #获取产品线下所有项目
+    def get_pro_chi(self,pro):
+        """
+        :param pro: 项目名称
+        :return: ['Android', 'iOS']
+        """
+        d={'产品库':9,'App':23,'IT系统':21,'互动':3,'其他':38,'商业配合':13,'支持':1,'独立':17, '经销商':11, '资讯':8, '遗留/线上bug':45}
+        self.dbcur()
+        sql="select p.name " \
+            "from mantis_project_table as p,mantis_project_hierarchy_table as h " \
+            "where p.id = h.child_id and h.parent_id=%s"%(d[pro])
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        l=[]
+        for i in data:
+            l.append(i[0])
+        return l
+
+    #获取项目下所有版本
+    def get_version(self,pro_chi):
+        """
+        :param pro_chi: 项目名称
+        :return: ['v6.3.4', 'v7.0.2', 'v7.0.3', 'v7.0.4', 'v7.0.5', 'v7.0.6', 'v7.0.7', 'v7.0.8', 'v7.0.9', 'v7.1.0', 'v7.1.1']
+        """
+        self.dbcur()
+        sql="select v.version " \
+            "from mantis_project_table as p,mantis_project_version_table as v " \
+            "where p.id = v.project_id and p.name='%s' " \
+            "group by v.version"%pro_chi
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        l=[]
+        for i in data:
+            l.append(i[0])
+        return l

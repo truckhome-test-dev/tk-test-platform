@@ -284,6 +284,13 @@ def Project_information():
     data = pp.cha(pp_rturn)
     return render_template('project_information.html',u=data)
 
+#抓虫节排行榜
+@app.route('/grab_bug',methods=['post','get'])
+def grab_bug():
+    grab = Grab_Bug()
+    data = grab.get_bug_score()
+    return render_template('grab_bug.html',data=data)
+
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=5000)
