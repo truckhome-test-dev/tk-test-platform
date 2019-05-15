@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-from flask import Flask, request,render_template,redirect
+from flask import Flask, request,render_template,redirect,send_from_directory,abort
 from test_code import *
 from test_code.mantis_bug import *
 from test_code.appreport import *
@@ -265,14 +265,14 @@ def morerpt(rpttime,dev):
     return render_template(url) 
 
 
-@app.route('/test1',methods=['post','get'])
-def test1():
-    data = {"code":1000,"sex": '1', "Province": '44231'}
-    return json.dumps(data)
+@app.route('/test',methods=['post','get'])
+def test():
+    # data = {"code":1000,"sex": '1', "Province": '44231'}
+    return render_template('index_test.html')
 
 
 #flask动态路由测试
-@app.route('/1/<url>',methods=['post','get'])
+@app.route('/1/<url>',methods=['post','get'])  
 def test_1(url):
     data="1/%s.html"% url
     return render_template(data)
@@ -284,6 +284,22 @@ def Project_information():
     data = pp.cha(pp_rturn)
     return render_template('project_information.html',u=data)
 
+
+#yapi页
+@app.route('/yapi',methods=['get'])
+def yapi():
+    return render_template('yapi.html')
+
+
+@app.route('/download',methods=['get'])
+def download():
+    import os
+    if request.method=="GET":
+        # if os.path.isfile("C:/Users/zhoujian/Desktop/3.0_0.crx"):
+            # return send_from_directory("C:/Users/zhoujian/Desktop","3.0_0.crx",as_attachment=True)
+        if os.path.isfile("/home/YApi/3.0_0.crx"):
+            return send_from_directory("/home/YApi/","3.0_0.crx",as_attachment=True)
+        abort(404)
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=5000)

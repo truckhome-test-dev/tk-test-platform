@@ -3,7 +3,7 @@
 <html lang="zh-CN">
     <head>
         <meta charset="UTF-8">
-        <title>测试管理系统</title>
+        <title >测试管理系统</title>
         <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <link rel="stylesheet" href="static/layui/css/layui.css">
@@ -19,7 +19,7 @@
         <div class="layui-layout-admin">
             <!-- 顶部 -->
             <div class="layui-header">
-                <div class="layui-logo" style="font-weight:bold;color:#FFFFFF">卡家测试管理平台</div>
+                <a href="/"  class="layui-logo" style="font-weight:bold;color:#FFFFFF">卡家测试管理平台</a>
             </div>
 
             <!-- 左侧 -->
@@ -30,7 +30,7 @@
                         <!-- 左侧栏目配置 -->
 
 
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics','APP自动化报告': 'http://127.0.0.1:5000/appreport','卡车之家业务信息表': 'http://127.0.0.1:5000/project_information'},'测试工具':{'响应时间测试':'http://127.0.0.1:5000/time_test'},'接口监控':{'接口管理':'http://127.0.0.1:5000/monitor/apilist','任务管理':'http://127.0.0.1:5000/monitor/task_list','结果查询':'http://127.0.0.1:5000/monitor/report'}} %}
+                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics','APP自动化报告': 'http://127.0.0.1:5000/appreport','卡车之家业务信息表': 'http://127.0.0.1:5000/project_information'},'测试工具':{'YApi':'http://127.0.0.1:5000/yapi','响应时间测试':'http://127.0.0.1:5000/time_test'},'接口监控':{'接口管理':'http://127.0.0.1:5000/monitor/apilist','任务管理':'http://127.0.0.1:5000/monitor/task_list','结果查询':'http://127.0.0.1:5000/monitor/report'}} %}
 
                         {% for name,n_list in left_list.items() %}
                         <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>
