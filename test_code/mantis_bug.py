@@ -256,7 +256,7 @@ class Mantis_Bug(SqlOperate):
                   "from mantis_user_table,mantis_bug_table " \
                   "where mantis_bug_table.reporter_id= mantis_user_table.id " \
                   "and mantis_user_table.enabled='1' " \
-                  "and mantis_user_table.id not in (8,48) " \
+                  "and mantis_bug_table.`status` !=90 " \
                   "and mantis_bug_table.project_id=58 " \
                   "and (mantis_bug_table.date_submitted between %s and %s)" \
                   "group by mantis_bug_table.reporter_id,mantis_bug_table.severity"%(start_time,end_time)
