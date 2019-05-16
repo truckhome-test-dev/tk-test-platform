@@ -113,16 +113,16 @@ def device():
         data = request.get_data()
         data = json.loads(data)
         devtype = data['devtype']
+        devsystem = data['devsystem']
         devname = data['devname']
         name = data['name']
         version = data['version']
         devnotes = data['notes']
-        re.appinsp(devname,devtype,name,devnotes,version)
+        re.appinsp(devname,name,devnotes,version,devtype,devsystem)
         return "ok"
     else:
         alldata = re.appga()
         return render_template('device.html',alldata=alldata)
-
 
 #设备编辑后保存
 @app.route('/savedev',methods=['post','get'])
@@ -296,7 +296,6 @@ def grab_bug():
 @app.route('/yapi',methods=['get'])
 def yapi():
     return render_template('yapi.html')
-
 
 @app.route('/download',methods=['get'])
 def download():

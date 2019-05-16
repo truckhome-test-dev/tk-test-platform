@@ -1,49 +1,60 @@
+<colgroup>
+    <col width=20%>
+    <col width=15%>
+    <col width=15%>
+    <col width=15%>
+    <col width=15%>
+    <col width=25%>
+    <col>
+</colgroup>
 
-	<colgroup>
-		<col width=20%>
-		<col width=15%>
-		<col width=15%>
-		<col width=15%>
-		<col width=30%>		    
-		<col>
-	</colgroup>
+<thead>
+<tr>
+    <th style="text-align: center; font-weight: bold ;font-size:18px">设备名称</th>
+    <th style="text-align: center; font-weight: bold ;font-size:18px">设备状态</th>
+    <th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
+    <th style="text-align: center; font-weight: bold ;font-size:18px">设备系统</th>
+    <th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
+    <th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
+    <th id="t1" style="text-align: center; font-weight: bold ;font-size:18px;display: none">操作</th>
+</tr>
+</thead>
 
-	<thead>
-		<tr>
-			<th style="text-align: center; font-weight: bold ;font-size:18px">设备名称</th>
-			<th style="text-align: center; font-weight: bold ;font-size:18px">设备状态</th>
-			<th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
-			<th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
-			<th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
-			<th id="t1" style="text-align: center; font-weight: bold ;font-size:18px;display: none">操作</th>
-		</tr> 
-	</thead>
+<tbody>
+{% for i in alldata %}
+<tr class="table-item">
+    <td style="text-align: center">{{i[1]}}</td>
+    <td style="text-align: center">
+        {% if i[2] == 0 %}
+        组内
+        {% else %}
+        出借
+        {% endif %}
+    </td>
+    <td style="text-align: center">{{i[3]}}</td>
+    <td style="text-align: center">
+        {% if i[7] == 0 %}
+        iOS
+        {% elif i[7] == 1 %}
+        Android
+        {% else %}
+        无
+        {% endif %}
+    </td>
+    <td style="text-align: center">{{i[4]}}</td>
+    <td style="text-align: center">{{i[5]}}</td>
+    <td class="t2" style="text-align: center;display:none">
+        <div class="site-demo-button" style="margin-bottom: 0;">
+            {% if i[2] == 0 %}
+            <button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
+            {% else %}
+            <button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-danger">归还
+            </button>
+            {% endif %}
+        </div>
+    </td>
+</tr>
+{% endfor %}
 
-	<tbody>
-	{% for i in alldata %}
-		<tr class="table-item">
-			<td style="text-align: center">{{i[1]}}</td>
-			<td style="text-align: center">
-				{% if i[2] == 0 %}
-					组内
-				{% else %}
-					出借
-				{% endif %}
-			</td>
-			<td style="text-align: center">{{i[3]}}</td>
-			<td style="text-align: center">{{i[4]}}</td>
-			<td style="text-align: center">{{i[5]}}</td>
-			<td class="t2" style="text-align: center;display:none">
-				<div class="site-demo-button" style="margin-bottom: 0;">
-			  	{% if i[2] == 0 %}
-					<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
-				{% else %}
-			  		<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn layui-btn-danger">归还</button>
-			  	{% endif %}
-				 </div>
-			</td>
-		</tr>
-	{% endfor %}     
-
-	</tbody>
+</tbody>
 

@@ -97,7 +97,8 @@ def newapi():
 def showapi():
     if request.method == 'GET':
         apidatas = api.getapi()
-        return render_template('apilist.html',apidata2=apidatas)
+        prolist = api.prolist()
+        return render_template('apilist.html',apidata2=apidatas,prolist=prolist)
 
 #监控平台修改接口内容
 @monitor.route('/api',methods=['post','get'])
@@ -118,6 +119,15 @@ def editapi():
         api.editapi(url,urlname,product,method,apiid,parm)
         return redirect("http://127.0.0.1:5000/monitor/apilist")
 
+#监控平台筛选项目接口
+@monitor.route('/selapi',methods=['post','get'])
+def selapi():
+    if request.method == 'POST':
+        proid = request.form.get('proid')
+        product = api.proname(proid)
+        prolist = api.prolist()
+        apidatas = api.proapi(proid)
+        return render_template('apilist.html',apidata2=apidatas,prolist=prolist,product=product)
 
 #监控平台修改接口使用状态
 @monitor.route('/editstatus',methods=['post','get'])
