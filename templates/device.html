@@ -15,9 +15,9 @@
 	<!-- 页面私有部分 -->
 
 	<div style="margin-top:40px;margin-left:50px;width:60%">
-		<span data-id = 2 class="layui-btn" style="font-size:20px" onclick="devtype(this)">全部</span>	
-		<span data-id = 0  class="layui-btn " style="margin-left:50px;font-size:20px" onclick="devtype(this)">手机</span>
-		<span data-id = 1 class="layui-btn " style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
+		<span data-id = 2 class="layui-btn layui-btn-normal" style="font-size:20px" onclick="devtype(this)">全部</span>
+		<span data-id = 0  class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px" onclick="devtype(this)">手机</span>
+		<span data-id = 1 class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
 
 		<span class="site-demo-button" id="add">
 			<button id="add1" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px;display: none">新增设备</button>
@@ -31,8 +31,9 @@
 			<col width=20%>
 			<col width=15%>
 			<col width=15%>
+            <col width=15%>
 			<col width=15%>
-			<col width=30%>		    
+			<col width=25%>
 			<col>
 		</colgroup>
 		<thead>
@@ -40,6 +41,7 @@
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备名称</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备状态</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">借用者姓名</th>
+            <th style="text-align: center; font-weight: bold ;font-size:18px">设备系统</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
 			<th id = 't1' style="text-align: center; font-weight: bold ;font-size:18px;display: none">操作</th>
@@ -57,6 +59,15 @@
 					{% endif %}
 					</td>
 					<td style="text-align: center">{{i[3]}}</td>
+                    <td style="text-align: center">
+                    {% if i[7] == 0 %}
+					iOS
+					{% elif i[7] == 1 %}
+                    Android
+                    {% else %}
+                    无
+					{% endif %}
+                    </td>
 					<td style="text-align: center">{{i[4]}}</td>
 					<td style="text-align: center">{{i[5]}}</td>
                     <td class="t2" style="text-align: center;display: none">
@@ -155,12 +166,15 @@
 				var devid = othis.data('id');
 				layer.open({
 				type: 1
-				,area: ['350px', '450px']
+				,area: ['350px', '500px']
 				,title:"新增设备"
 				,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
 				,id: 'add '+devid //防止重复弹出
-				,content:'<form class="layui-form">\
-<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备类型：</label><div class="layui-input-inline"><input type="text" name="devtype" lay-verify="required" autocomplete="off" placeholder="手机或者其他" class="layui-input"></div></div>\
+				,content:'<form class="layui-form" lay-filter="adddev">\
+<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备类型：</label><div class="layui-input-inline">\
+<span><select name="devtype" ><option value="">请选择设备类型</option><option value="0">手机</option><option value="1">其他</option></select></span></div></div>\
+<div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备系统：</label><div class="layui-input-inline">\
+<span><select name="devsystem" ><option value="">请选择设备系统</option><option value="1">安卓</option><option value="0">iOS</option><option value="2">其他</option></select></span></div></div>\
 <div class="layui-form-item" style="line-height:30px;margin-top: 20px"><label class="layui-form-label">设备名称：</label><div class="layui-input-inline"><input type="text" name="devname" lay-verify="required" autocomplete="off" placeholder="请输入设备名称" class="layui-input"></div></div>\
 <div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">设备归属：</label><div class="layui-input-inline"><input type="text" name="peoname" lay-verify="required" autocomplete="off" placeholder="请输入设备归属人" class="layui-input"></div></div>\
 <div class="layui-form-item" style="line-height:30px"><label class="layui-form-label">设备版本：</label><div class="layui-input-inline"><input type="text" name="deversion" lay-verify="required" autocomplete="off" placeholder="请输入设备版本" class="layui-input"></div></div>\
@@ -168,18 +182,22 @@
 				,btn: '提交'
 				,btnAlign: 'c' //按钮居中
 				,shade: 0 //不显示遮罩
+				,success: function(layero, index){
+                    form.render("select","adddev");
+                  }
 				,yes: function(index,layero){
-					var devtype = layero.find('input')[0].value;
-					var devname = layero.find('input')[1].value;
-					var peoname = layero.find('input')[2].value;
-					var deversion = layero.find('input')[3].value;
+					var devtype = layero.find('select')[0].value;
+					var devsystem = layero.find('select')[1].value;
+					var devname = layero.find('input')[2].value;
+					var peoname = layero.find('input')[3].value;
+					var deversion = layero.find('input')[4].value;
 					var devnote = layero.find('textarea')[0].value;
-
 
 					var xmlhttp;
 			        xmlhttp = new XMLHttpRequest();
  
-			        var data ='{ "devtype":"' + devtype + '","devname" : "'+ devname +'", "name" : "' + peoname + '","version" : "' + deversion + '", "notes" : "' + devnote + '"}';
+			        var data ='{ "devtype":"' + devtype + '","devsystem" : "'+ devsystem + '","devname" : "'+ devname +'", "name" : "' + peoname + '","version" : "' + deversion + '", "notes" : "' + devnote + '"}';
+
 			        xmlhttp.open("POST","device",true);
 			        xmlhttp.send(data);
 				 	layer.close(index);

@@ -428,9 +428,23 @@ function sleep(numberMillis) {
         xmlhttp.send(data);
         xmlhttp.onreadystatechange = function()
         {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
             {
-            document.getElementById("123").innerHTML=xmlhttp.responseText
+//            var html = ""
+//            xmlhttp.responseText.forEach(function(item){
+//              html ='<tr class="table-item">
+//					<td style="text-align: center">'+item.+'</td>
+//					<td style="text-align: center">组内</td>
+//					<td style="text-align: center">无</td>
+//                    <td style="text-align: center">iOS </td>
+//                    <td style="text-align: center">12.1.4</td>
+//                    <td style="text-align: center">总存储：64GB运行内存：3GB</td>
+//                    <td class="t2" style="text-align: center; display: inline-block;">
+//						<div class="site-demo-button" style="margin-bottom: 0;"><button data-id="4" data-method="offset" data-type="auto" class="layui-btn">外借</button></div>
+//					</td>
+//				</tr>'
+//            })
+            document.getElementById("123").innerHTML = xmlhttp.responseText
                         isShowTd()
             }
         }

@@ -4,7 +4,8 @@
 import json
 import time
 import configparser
-from test_code.sqlop import * 
+from test_code.sqlop import *
+#from sqlop import*
  
 
 class Device_Manag(SqlOperate):
@@ -59,21 +60,18 @@ class Device_Manag(SqlOperate):
 		return ll
 
 	#插入数据路由
-	def appinsp(self,devname,devtype,name=0,devnotes=0,deversion=0):
-		if devtype == "手机":
-			devtype = 0
-		else :
-			devtype = 1
-		self.insData('devices',{'devname':devname,'devtype':devtype,'name':name,'notes':devnotes,'version':deversion})
+	def appinsp(self,devname,name=0,devnotes=0,deversion=0,devtype=0,devsystem=0):
+		self.insData('devices',{'devname':devname,'devtype':devtype,'name':name,'notes':devnotes,'version':deversion,'devsystem':devsystem})
 		return "pass"
 
 
 	#查询数据路由所有
 	def appga(self,devtype=2):
 		if devtype != 0 and devtype != 1:
-			data = self.selData('devices',['ID','devname','status','username','version','notes','devtype'])
+			data = self.selData('devices',['ID','devname','status','username','version','notes','devtype','devsystem'])
 		else:
-			data = self.selData('devices',['ID','devname','status','username','version','notes','devtype'],condition={'devtype':devtype})
+			data = self.selData('devices',['ID','devname','status','username','version','notes','devtype','devsystem'],condition={'devtype':devtype})
+		data.sort(key=lambda x:x[7])
 		return data
 
 
@@ -100,6 +98,7 @@ class Device_Manag(SqlOperate):
 			self.upData('devuse',{'retime':timeq,'backer':name,'status':0},{'devid':devid,'status':1})
 
 
-
 # a = Device_Manag()
-# print (len(a.appga(devtype=8)))
+# list = a.appga()
+# print (list)
+
