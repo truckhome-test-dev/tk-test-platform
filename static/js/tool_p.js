@@ -117,11 +117,11 @@ function sleep(numberMillis) {
 
     function task_edit(e) {
         var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
-        window.location.href="http://192.168.2.92:5001/monitor/task_edit?task_id="+task_id
+        window.location.href="http://127.0.0.1:5000/monitor/task_edit?task_id="+task_id
     }
     function task_res(e) {
     var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
-    window.location.href="http://192.168.2.92:5001/monitor/report?task_id="+task_id
+    window.location.href="http://127.0.0.1:5000/monitor/report?task_id="+task_id
     }
     //test  
     function loadXMLDoc1()
@@ -450,7 +450,7 @@ function sleep(numberMillis) {
                 if (c.code == 1000){
                     var token=form1.token.value;//获取表单form1的token值
                     setCookie("token",token);
-                    window.location.href="http://192.168.2.92:5001"
+                    window.location.href="http://127.0.0.1:5000"
                     }else {
                     alert("token校验失败")
                 }
@@ -526,7 +526,7 @@ function sleep(numberMillis) {
 
     /*编辑接口*/
     function editapi(e){
-        window.location.href="http://192.168.2.92:5001/monitor/api?apiid="+e.dataset.id
+        window.location.href="http://127.0.0.1:5000/monitor/api?apiid="+e.dataset.id
     }
     /*编辑接口*/
     function ret(e){
