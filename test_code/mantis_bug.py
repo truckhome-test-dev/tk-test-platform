@@ -255,7 +255,6 @@ class Mantis_Bug(SqlOperate):
             sql="select mantis_user_table.realname,mantis_bug_table.severity,count(mantis_bug_table.id) " \
                   "from mantis_user_table,mantis_bug_table " \
                   "where mantis_bug_table.reporter_id= mantis_user_table.id " \
-                  "and mantis_user_table.access_level='70' " \
                   "and mantis_user_table.enabled='1' " \
                   "and mantis_user_table.id not in (8,48) " \
                   "and mantis_bug_table.project_id=58 " \
