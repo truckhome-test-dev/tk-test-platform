@@ -258,7 +258,8 @@ class Mantis_Bug(SqlOperate):
                   "and mantis_user_table.access_level='70' " \
                   "and mantis_user_table.enabled='1' " \
                   "and mantis_user_table.id not in (8,48) " \
-                  "and (date_submitted between %s and %s)" \
+                  "and mantis_bug_table.project_id=58 " \
+                  "and (mantis_bug_table.date_submitted between %s and %s)" \
                   "group by mantis_bug_table.reporter_id,mantis_bug_table.severity"%(start_time,end_time)
         self.sqlExe(sql)
         self.sqlCom()

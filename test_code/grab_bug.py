@@ -29,7 +29,7 @@ class Grab_Bug(SqlOperate):
     #计算bug积分
     def get_bug_score(self):
         bug=Mantis_Bug()
-        data=bug.get_severity_count()
+        data=bug.get_severity_count('1557997200','1558000800')
         d={}
         d1={}
         for i in data:
