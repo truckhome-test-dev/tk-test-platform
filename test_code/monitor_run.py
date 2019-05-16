@@ -106,7 +106,7 @@ class run(SqlOperate):
 任务id：%s
 接口id：%s
 响应码：%s
-备注：详细信息请登录测试平台查看：http://192.168.2.92:5001/monitor/task_list
+备注：详细信息请登录测试平台查看：http://127.0.0.1:5000/monitor/task_list
         '''%(data[3],data[1],data[4])
         data={
             "msgtype": "text",

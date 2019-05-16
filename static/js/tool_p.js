@@ -253,7 +253,7 @@ function sleep(numberMillis) {
 
     /*编辑设备*/
     function editdev(e){
-        window.location.href="http://192.168.1.59:5000/editdev?devid="+e.dataset.id
+        window.location.href="http://127.0.0.1:5000/editdev?devid="+e.dataset.id
     }
 
     //删除设备
