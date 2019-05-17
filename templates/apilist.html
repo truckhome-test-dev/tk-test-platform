@@ -38,7 +38,7 @@
             <label class="layui-form-label">归属项目</label>
             <div class="layui-input-inline">
                 <select name="proid" lay-verify="required" lay-search="">
-                    <option value={{product}}>{{product}}</option>
+                    <option value=></option>
                     {% for i in prolist %}
                         <option value={{i[1]}}>{{i[0]}}</option>
                     {% endfor %}
@@ -107,8 +107,14 @@
   		var form = layui.form
   		,layer = layui.layer
 
+    form.val('pro', {
+      proid: "{{proid}}"
+    })
+
 	layui.use('layer', function(){ //独立版的layer无需执行这一句
 		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+
 
 
 		//接口新增弹窗触发
