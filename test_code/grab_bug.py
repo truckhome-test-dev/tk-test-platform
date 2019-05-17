@@ -54,8 +54,7 @@ class Grab_Bug(SqlOperate):
             L1.append(count[i])
             L1.append(score[i])
             L.append(L1)
-        L.sort(key=lambda x:int(x[2]))
-        L.reverse()
+        L.sort(key=lambda x:float(x[2]),reverse=True)
         for i in range(len(L)):
             L[i].append(i+1)
         return L

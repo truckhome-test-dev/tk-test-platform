@@ -58,7 +58,7 @@ class Mantis_Bug(SqlOperate):
             L.append(data)
             a = list()
             [a.append(i) for i in L if a.count(i) == 0]
-        s=str(a).replace("\'","")
+        s=str(a).replace("\'","").replace(",", "丶")[1:-1]
         return s
 
 
@@ -181,7 +181,8 @@ class Mantis_Bug(SqlOperate):
         sql="select mantis_category_table.name,count(*) " \
             "from mantis_category_table,mantis_bug_table " \
             "where mantis_bug_table.category_id= mantis_category_table.id " \
-            "group by mantis_bug_table.category_id"
+            "group by mantis_bug_table.category_id " \
+            "order by count(*) desc"
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
