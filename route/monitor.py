@@ -127,7 +127,7 @@ def selapi():
         product = api.proname(proid)
         prolist = api.prolist()
         apidatas = api.proapi(proid)
-        return render_template('apilist.html',apidata2=apidatas,prolist=prolist,product=product)
+        return render_template('apilist.html',apidata2=apidatas,prolist=prolist,product=product,proid=proid)
 
 #监控平台修改接口使用状态
 @monitor.route('/editstatus',methods=['post','get'])
