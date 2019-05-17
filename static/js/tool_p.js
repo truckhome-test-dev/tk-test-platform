@@ -419,6 +419,17 @@ function sleep(numberMillis) {
                         }
                     }
     }
+    
+    function pro_bug30(e) {
+        document.getElementById("prover7").style.display = "none";
+        document.getElementById("prover30").style.display = "block";
+    }
+
+        function pro_bug7(e) {
+        document.getElementById("prover7").style.display = "block";
+        document.getElementById("prover30").style.display = "none"
+    }
+    
     function devtype(e){
         var devtype = e.dataset.id;
         var xmlhttp;

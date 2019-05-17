@@ -63,8 +63,8 @@ class Mantis_Bug(SqlOperate):
 
 
     #近7天创建项目的bug数
-    def bug_prover_statistics(self):
-        last_7days_time = self.get_time_today()-86400*7
+    def bug_prover_statistics(self,day):
+        last_7days_time = self.get_time_today()-86400*day
         self.dbcur()
         sql="select p.name,v.version,count(b.id) " \
             "from mantis_project_table p,mantis_bug_table b,mantis_project_version_table v " \

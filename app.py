@@ -193,7 +193,8 @@ def bug_statistics():
 @app.route('/statistical_details',methods=['post'])
 def statistical_details():
     if request.method == "POST":
-        prover=bug.bug_prover_statistics()
+        prover7=bug.bug_prover_statistics(7)
+        prover30 = bug.bug_prover_statistics(30)
         trend = bug.bug_trend()
         handler=bug.bug_handler_statistics()
         reporter=bug.bug_reporter_statistics()
@@ -201,7 +202,7 @@ def statistical_details():
         resolution=bug.bug_resolution()
         severity=bug.bug_severity()
         category=bug.bug_category()
-        data = {"code":1000,"prover":prover,"trend":trend,"handler":handler,"reporter":reporter,"status":status,"resolution":resolution,"severity":severity,"category":category}
+        data = {"code":1000,"prover7":prover7,"prover30":prover30,"trend":trend,"handler":handler,"reporter":reporter,"status":status,"resolution":resolution,"severity":severity,"category":category}
         return json.dumps(data)
 
 
