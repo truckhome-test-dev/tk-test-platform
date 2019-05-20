@@ -207,7 +207,8 @@ class Mantis_Bug(SqlOperate):
         self.sqlCom()
         self.sqlclo()
         data = list(self.cur.fetchall())
-        for i in range(-4,1):
+        today = datetime.datetime.now().weekday() #判断当时是周几
+        for i in range(-today,1):
             now = datetime.datetime.now()
             delta = datetime.timedelta(days=i)
             n_days = now + delta
