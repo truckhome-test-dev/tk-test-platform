@@ -4,6 +4,7 @@
 import json
 import configparser
 
+
 def token_check1(token):
     conf = configparser.ConfigParser()
     conf.read("conf/config.ini")

@@ -67,8 +67,8 @@ class Monitor_Task(SqlOperate):
         self.sqlCom()
         self.sqlclo()
         data = self.cur.fetchone()
-        data=list(data)
-        data[2]=data[2][1:-1]
+        data = list(data)
+        data[2] = data[2][1:-1]
         return data
 
     # 编辑任务
@@ -80,12 +80,13 @@ class Monitor_Task(SqlOperate):
         :param frequency:
         :return:
         '''
-        update_time=int(time.time())
+        update_time = int(time.time())
         data = self.task_info(task_id)
         if data is None:
             return "任务id不存在"
         self.dbcur()
-        sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,"update_time":update_time},
+        sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
+                                           "update_time": update_time},
                              {"id": task_id})
         try:
             self.sqlExe(sql)
@@ -162,10 +163,11 @@ class Monitor_Task(SqlOperate):
         #* * * * * /root/.pyenv/shims/python /home/jinyue/tk-test-platform/test_code/monitor_run.py 1 >> /home/jinyue/tk-test-platform/test_code/load.log
         '''
         frequency = int(self.task_info(task_id)[3])
-        if frequency==1:
+        if frequency == 1:
             data = "* * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % task_id
         else:
-            data = "*/%d * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % (frequency, task_id)
+            data = "*/%d * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % (
+            frequency, task_id)
         data_task = "monitor_run.py %d" % task_id
         with open("/var/spool/cron/root", "r", encoding="utf-8") as f:
             lines = f.readlines()
@@ -196,43 +198,44 @@ class Monitor_Task(SqlOperate):
             self.timingtask_add(task_id)
         return "ok"
 
-    #执行结果查询
-    def get_rest(self,time_frame=None,task_id=None,api_id=None,res_id=None,resq_code=None,page=0):
+    # 执行结果查询
+    def get_rest(self, time_frame=None, task_id=None, api_id=None, res_id=None, resq_code=None, page=0):
         self.dbcur()
-        sql="select res.id,task.task_name,api.urlname,api.url,api.method,api.parameters_data,res.resq_code,res.res_time,res.response,res.create_time " \
-            "from apirun_result as res,api_list as api,task_list as task " \
-            "where res.api_id = api.id and res.task_id = task.id"
-        if time_frame!=None and time_frame!="":
-            data=time_frame.split(" - ")
+        sql = "select res.id,task.task_name,api.urlname,api.url,api.method,api.parameters_data,res.resq_code,res.res_time,res.response,res.create_time " \
+              "from apirun_result as res,api_list as api,task_list as task " \
+              "where res.api_id = api.id and res.task_id = task.id"
+        if time_frame != None and time_frame != "":
+            data = time_frame.split(" - ")
             start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
             end_time = int(time.mktime(time.strptime(data[1], '%Y-%m-%d %H:%M:%S')))
-            sql+=" and res.create_time between %s and %s"%(str(start_time),str(end_time))
-            print(start_time,end_time)
-        if task_id!=None and task_id!="":
-            sql+=" and res.task_id=%s"%task_id
-        if api_id!=None and api_id!="":
-            sql+=" and res.api_id=%s"%api_id
-        if res_id!=None and res_id!="":
-            sql+=" and res.id=%s"%res_id
-        if resq_code!=None and resq_code!="":
-            sql+=" and resq_code=%s"%resq_code
-        sql+=" order by res.id desc"
-        if page==0 and page!="":
-            sql+=" limit 100"
+            sql += " and res.create_time between %s and %s" % (str(start_time), str(end_time))
+            print(start_time, end_time)
+        if task_id != None and task_id != "":
+            sql += " and res.task_id=%s" % task_id
+        if api_id != None and api_id != "":
+            sql += " and res.api_id=%s" % api_id
+        if res_id != None and res_id != "":
+            sql += " and res.id=%s" % res_id
+        if resq_code != None and resq_code != "":
+            sql += " and resq_code=%s" % resq_code
+        sql += " order by res.id desc"
+        if page == 0 and page != "":
+            sql += " limit 100"
         else:
-            sql+=" limit %s,20"%str((int(page)*20))
+            sql += " limit %s,20" % str((int(page) * 20))
         print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
         data = self.cur.fetchall()
-        data=list(data)
-        data1=[]
+        data = list(data)
+        data1 = []
         for i in data:
-            i=list(i)
-            i[9]=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(i[9]))
+            i = list(i)
+            i[9] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[9]))
             data1.append(i)
         return data1
+
 
 if __name__ == "__main__":
     a = Monitor_Task()
