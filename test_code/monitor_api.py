@@ -55,12 +55,16 @@ class Api_Monitor(SqlOperate):
     # #app中获取接口数据
     def getapi(self, apiid="all", page=0):
         self.dbcur()
+        print("apiid:",apiid)
         if apiid == "all":
             sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.status from api_list as a,product as p where a.pro_id = p.ID and a.is_delete = 0 order by id desc"
         else:
             sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json from api_list as a,product as p where a.pro_id = p.ID and a.id = %s and a.is_delete = 0" % (
                 apiid)
-        sql += " limit %s,50" % str(int(page) * 50)
+        sql += " limit %s,20" % str(int(page) * 20)
+        print(sql)
+        if page==-1:
+            sql="select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.status from api_list as a,product as p where a.pro_id = p.ID and a.is_delete = 0 order by id desc"
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
         self.sqlclo()
@@ -93,10 +97,15 @@ class Api_Monitor(SqlOperate):
         return data
 
     # 查询单个项目接口
-    def proapi(self, proid):
+    def proapi(self, proid,page=0):
         self.dbcur()
-        sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
-            proid)
+        if page==-1:
+            sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
+                proid)
+        else:
+            sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
+                proid)
+            sql += " limit %s,20" % str(int(page) * 20)
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
         self.sqlclo()

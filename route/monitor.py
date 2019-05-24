@@ -15,6 +15,18 @@ def task_list():
         task_list = task.task_list()
         return render_template('task.html', task_list=task_list)
 
+def check_token(func):
+    def inner(*args,**kwargs):
+        conf = configparser.ConfigParser()
+        conf.read("conf/config.ini")
+        token_key = conf.get('token', 'key')
+        token = request.cookies.get('token')
+        if token == token_key:
+            return func(*args, **kwargs)
+        else:
+            data = json.dumps({"code": 1001})
+            return data
+    return inner
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
@@ -98,7 +110,31 @@ def showapi():
     if request.method == 'GET':
         apidatas = api.getapi()
         prolist = api.prolist()
-        return render_template('apilist.html',apidata2=apidatas,prolist=prolist)
+        count=len(api.getapi(page=-1))
+        return render_template('apilist.html',apidata2=apidatas,prolist=prolist,count=count)
+    else:
+        proid = request.form.get('proid')
+        if proid != None:
+            page = request.get_data()
+            if page == b'':
+                page=0
+            else:
+                page = json.loads(page.decode("utf-8"))
+                page = page['page']
+            product = api.proname(proid)
+            prolist = api.prolist()
+            apidatas = api.proapi(proid,page=page)
+            count = len(api.proapi(proid,page=-1))
+            print(count)
+            return render_template('apilist.html',apidata2=apidatas,prolist=prolist,product=product,proid=proid,count=count)
+        else:
+            page = request.get_data()
+            page = json.loads(page.decode("utf-8"))
+            page = page['page']
+            apidatas = api.getapi(page=page)
+            prolist = api.prolist()
+            count = len(api.getapi(page=-1))
+            return render_template('apipage.html', apidata2=apidatas, prolist=prolist, count=count)
 
 #监控平台修改接口内容
 @monitor.route('/api',methods=['post','get'])
@@ -127,7 +163,8 @@ def selapi():
         product = api.proname(proid)
         prolist = api.prolist()
         apidatas = api.proapi(proid)
-        return render_template('apilist.html',apidata2=apidatas,prolist=prolist,product=product,proid=proid)
+        count = len(apidatas)
+        return render_template('apilist.html',apidata2=apidatas,prolist=prolist,product=product,proid=proid,count=count)
 
 #监控平台修改接口使用状态
 @monitor.route('/editstatus',methods=['post','get'])

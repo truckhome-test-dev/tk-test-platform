@@ -13,6 +13,7 @@ pt = APP_Report()
 bug = Mantis_Bug()
 pp = Cha_Project()
 app.config.from_object('settings.DevConfig')
+# token = request.cookies.get('token')
 
 '''
 这里是注册蓝图
@@ -27,6 +28,18 @@ app.register_blueprint(monitor, url_prefix='/monitor')
 def index():
     return render_template('index.html')
 
+def check_token(func):
+    def inner(*args,**kwargs):
+        conf = configparser.ConfigParser()
+        conf.read("conf/config.ini")
+        token_key = conf.get('token', 'key')
+        token = request.cookies.get('token')
+        if token == token_key:
+            return func(*args, **kwargs)
+        else:
+            data = json.dumps({"code": 1001})
+            return data
+    return inner
 
 # 微信小工具首页
 @app.route('/wxtools', methods=['get', 'post'])
@@ -208,6 +221,7 @@ def statistical_details():
 
 # 查询手机类型
 @app.route('/typedev', methods=['post', 'get'])
+@check_token
 def devtype():
     if request.method == 'POST':
         devtype = request.get_data()
@@ -221,6 +235,7 @@ def devtype():
 @app.route('/token_check', methods=['post', 'get'])
 def token_check():
     if request.method == 'POST':
+        global token
         token = request.get_data()
         if token == b'':
             token = request.cookies.get('token')

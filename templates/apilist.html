@@ -32,7 +32,7 @@
 		</span>
 </div>
 
-<form class="layui-form" lay-filter="pro" action="/monitor/selapi" method="POST" style="margin-top: 20px;">
+<form class="layui-form" lay-filter="pro" action="/monitor/apilist" method="POST" style="margin-top: 20px;">
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">归属项目</label>
@@ -98,8 +98,9 @@
     </tr>
     {% endfor %}
     </tbody>
-</table>
 
+</table>
+<div id="test1"></div>
 
 <script>
 
@@ -185,6 +186,49 @@
 	});
 	})
 
+layui.use('laypage', function(){
+  var laypage = layui.laypage;
+
+  //执行一个laypage实例
+  laypage.render({
+  elem: 'test1'
+      ,limit:20
+  ,count: {{ count }} //数据总数，从服务端得到
+  ,jump: function(obj, first){
+    //obj包含了当前分页的所有参数，比如：
+    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+    console.log(obj.limit); //得到每页显示的条数
+
+    //首次不执行
+    if(!first){
+      //do something
+                  var page=obj.curr
+        {#location.href='http://127.0.0.1:5000/monitor/apilist?page='+ page#}
+                    var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            var data ='{  "page" :' + page + '}';
+            xmlhttp.open("POST","apilist",true);
+            xmlhttp.send(data);
+            xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            {
+            {#var c = JSON.parse(xmlhttp.responseText)#}
+                {#alert(c.code)#}
+            {#    if (c.code == 1000){#}
+            {#       btn[2].classList.remove('disabled');#}
+                   {#btn[3].classList.remove('disabled');#}
+            {#       btn[4].classList.remove('disabled');#}
+            {#       btn[0].classList.add('disabled')#}
+            {#    }#}
+document.getElementById("111").innerHTML = xmlhttp.responseText
+            }
+        }
+
+    }
+  }
+});
+});
 
 
 
