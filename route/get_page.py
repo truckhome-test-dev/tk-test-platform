@@ -5,9 +5,6 @@
 # 文件     ：get_page.py
 # IDE      : PyCharm
 
-from urllib import urlencode
-
-
 class Pagination(object):
     """
     自定义分页
@@ -79,15 +76,14 @@ class Pagination(object):
         # {source:[2,], status:[2], gender:[2],consultant:[1],page:[1]}
         # 首页
         self.params['page'] = 1
-        first_page = '<li><a href="%s?%s">首页</a></li>'.decode("utf-8") % (self.base_url, urlencode(self.params),)
+        first_page = '<li><a href="%s?%s">首页</a></li>'% (self.base_url, urlencode(self.params),)
         page_html_list.append(first_page)
         # 上一页
         self.params["page"] = self.current_page - 1
         if self.params["page"] < 1:
-            pervious_page = '<li class="disabled"><a href="%s?%s" aria-label="Previous">上一页</span></a></li>'.decode(
-                "utf-8") % (self.base_url, urlencode(self.params))
+            pervious_page = '<li class="disabled"><a href="%s?%s" aria-label="Previous">上一页</span></a></li>'% (self.base_url, urlencode(self.params))
         else:
-            pervious_page = '<li><a href = "%s?%s" aria-label = "Previous" >上一页</span></a></li>'.decode("utf-8") % (
+            pervious_page = '<li><a href = "%s?%s" aria-label = "Previous" >上一页</span></a></li>'% (
             self.base_url, urlencode(self.params))
         page_html_list.append(pervious_page)
         # 中间页码
@@ -103,16 +99,15 @@ class Pagination(object):
         self.params["page"] = self.current_page + 1
         if self.params["page"] > self.max_page_num:
             self.params["page"] = self.current_page
-            next_page = '<li class="disabled"><a href = "%s?%s" aria-label = "Next">下一页</span></a></li >'.decode(
-                "utf-8") % (self.base_url, urlencode(self.params))
+            next_page = '<li class="disabled"><a href = "%s?%s" aria-label = "Next">下一页</span></a></li >'% (self.base_url, urlencode(self.params))
         else:
-            next_page = '<li><a href = "%s?%s" aria-label = "Next">下一页</span></a></li>'.decode("utf-8") % (
+            next_page = '<li><a href = "%s?%s" aria-label = "Next">下一页</span></a></li>' % (
             self.base_url, urlencode(self.params))
         page_html_list.append(next_page)
 
         # 尾页
         self.params['page'] = self.max_page_num
-        last_page = '<li><a href="%s?%s">尾页</a></li>'.decode("utf-8") % (self.base_url, urlencode(self.params),)
+        last_page = '<li><a href="%s?%s">尾页</a></li>' % (self.base_url, urlencode(self.params),)
         page_html_list.append(last_page)
 
         return ''.join(page_html_list)
