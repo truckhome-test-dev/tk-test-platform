@@ -11,4 +11,8 @@ from .monitor_api import *
 from .time_test import *
 from .project_information import *
 from .grab_bug import *
+<<<<<<< HEAD
 from .appreport import *
+=======
+from .appreport import *
+>>>>>>> zhangleilei

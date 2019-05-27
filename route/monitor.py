@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect
 from test_code import *
+import json
 
 # 创建蓝图对象
 monitor = Blueprint('monitor', __name__)
@@ -215,3 +216,4 @@ def report():
         res = task.get_rest(time_frame=time_frame, task_id=task_id, api_id=api_id, res_id=res_id, resq_code=resq_code)
         return render_template('report.html', res=res, time_frame=time_frame, task_id=task_id, api_id=api_id,
                                res_id=res_id, resq_code=resq_code)
+
