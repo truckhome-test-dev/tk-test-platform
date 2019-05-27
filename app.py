@@ -23,11 +23,7 @@ app.config.from_object('settings.DevConfig')
 app.register_blueprint(monitor, url_prefix='/monitor')
 
 
-@app.route('/', methods=['get'])
-@app.route('/index', methods=['get'])
-def index():
-    return render_template('index.html')
-
+#判断登录装饰器方法
 def check_token(func):
     def inner(*args,**kwargs):
         conf = configparser.ConfigParser()
@@ -40,6 +36,13 @@ def check_token(func):
             data = json.dumps({"code": 1001})
             return data
     return inner
+
+
+@app.route('/', methods=['get'])
+@app.route('/index', methods=['get'])
+def index():
+    return render_template('index.html')
+
 
 # 微信小工具首页
 @app.route('/wxtools', methods=['get', 'post'])
