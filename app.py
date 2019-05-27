@@ -4,8 +4,6 @@
 
 from flask import Flask, request,render_template,redirect,send_from_directory,abort
 from test_code import *
-from test_code.mantis_bug import *
-from test_code.appreport import *
 from route import *
 import json
 
@@ -13,8 +11,8 @@ import json
 app = Flask(__name__)
 re = Device_Manag()
 pt = APP_Report()
-bug=Mantis_Bug()
-pp=pp = Cha_Project()
+bug = Mantis_Bug()
+pp = Cha_Project()
 app.config.from_object('settings.DevConfig')
 
 '''
@@ -143,7 +141,7 @@ def savedev():
 def usestatus():
     if request.method == 'POST':
         token = request.cookies.get('token')
-        data=token_check1(token)
+        data = token_check1(token)
         if data['code']==1000:
             devuser = request.get_data()
             devuser = json.loads(devuser.decode("utf-8"))

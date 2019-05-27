@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect
 from test_code import *
+import json
 
 # 创建蓝图对象
 monitor = Blueprint('monitor', __name__)
@@ -162,3 +163,19 @@ def report():
         resq_code = request.form.get('resq_code')
         res = task.get_rest(time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
         return render_template('report.html',res=res,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
+
+
+#验证token
+@monitor.route('/token_check',methods=['post','get'])
+def token_check():
+    if request.method == 'POST':
+        token = request.get_data()
+        if token == b'':
+            token = request.cookies.get('token')
+        else:
+            token = json.loads(token.decode("utf-8"))
+            token = str(token['token'])
+        data = token_check1(token)
+        return json.dumps(data)
+    else:
+        return render_template('admin.html')

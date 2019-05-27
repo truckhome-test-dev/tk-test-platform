@@ -70,8 +70,8 @@
                     </td>
 					<td style="text-align: center">{{i[4]}}</td>
 					<td style="text-align: center">{{i[5]}}</td>
-                    <td class="t2" style="text-align: center;display: none">
-						<div  class="site-demo-button" style="margin-bottom: 0;">
+                    <td class="t2"  style="text-align: center;display: none">
+						<div  class="site-demo-button" id="devop" style="margin-bottom: 0;">
 							{% if i[2] == 0 %}
 								<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
 							{% else %}
@@ -80,7 +80,7 @@
 						 </div>
 					</td>
 				</tr>
-			{% endfor %}     
+			{% endfor %}
 		</tbody>
 	</table>
 
@@ -128,14 +128,14 @@
 					var user = layero.find('input')[0].value;
 					var xmlhttp;
 			        xmlhttp = new XMLHttpRequest();
- 
+
 			        var data ='{ "devid" : '+ devid +', "user" : "' + user + '"}';
 			        xmlhttp.open("POST","usestatus",true);
 			        xmlhttp.send(data);
 				 	layer.close(index);
 					xmlhttp.onreadystatechange = function()
 					{
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
 				            {
 					            if (xmlhttp.responseText == 'ok')
 					            {
@@ -195,7 +195,7 @@
 
 					var xmlhttp;
 			        xmlhttp = new XMLHttpRequest();
- 
+
 			        var data ='{ "devtype":"' + devtype + '","devsystem" : "'+ devsystem + '","devname" : "'+ devname +'", "name" : "' + peoname + '","version" : "' + deversion + '", "notes" : "' + devnote + '"}';
 
 			        xmlhttp.open("POST","device",true);
@@ -203,7 +203,7 @@
 				 	layer.close(index);
 					xmlhttp.onreadystatechange = function()
 					{
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ) 
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
 				            {
 					            if (xmlhttp.responseText == 'ok')
 					            {
