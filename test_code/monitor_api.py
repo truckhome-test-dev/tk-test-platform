@@ -60,6 +60,8 @@ class Api_Monitor(SqlOperate):
         else:
             sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json from api_list as a,product as p where a.pro_id = p.ID and a.id = %s and a.is_delete = 0" % (
                 apiid)
+        if page > 0:
+            page = page - 1
         sql += " limit %s,20" % str(int(page) * 20)
         if page == -1:
             sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.status from api_list as a,product as p where a.pro_id = p.ID and a.is_delete = 0 order by id desc"
@@ -95,14 +97,21 @@ class Api_Monitor(SqlOperate):
         return data
 
     # 查询单个项目接口
-    def proapi(self, proid, page=0):
+    def proapi(self, proid, page=0,count=0):
         self.dbcur()
-        if page == -1:
-            sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
-                proid)
+        if count == 1:
+            if proid=="0":
+                sql="select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.status from api_list as a,product as p where a.pro_id = p.ID and a.is_delete = 0 order by id desc"
+            else:
+                sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (proid)
         else:
-            sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
-                proid)
+            if proid==0 or proid=="0":
+                sql="select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.status from api_list as a,product as p where a.pro_id = p.ID and a.is_delete = 0 order by id desc"
+            else:
+                sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
+                    proid)
+            if page>0:
+                page=page-1
             sql += " limit %s,20" % str(int(page) * 20)
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
