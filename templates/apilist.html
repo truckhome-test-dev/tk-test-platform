@@ -86,7 +86,7 @@
             {% if i[6] == 0 %}
             <span data-id={{i[0]}} class="layui-btn" onclick="apistatus(this)">启用</span>
             {% else %}
-            <span data-id={{i[0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
+            <span data-id={{i[0]}} class="layui-btn"layui-btn-danger" onclick="apistatus(this)">停用</span>
             {% endif %}
         </td>
         <td style="text-align: center">
@@ -186,13 +186,14 @@
 	});
 	})
 
+//分页功能
 layui.use('laypage', function(){
   var laypage = layui.laypage;
 
   //执行一个laypage实例
   laypage.render({
   elem: 'test1'
-      ,limit:20
+      ,limit:30 //每页多少条数据
   ,count: {{ count }} //数据总数，从服务端得到
   ,jump: function(obj, first){
     //obj包含了当前分页的所有参数，比如：

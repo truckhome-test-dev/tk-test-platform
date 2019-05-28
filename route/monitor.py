@@ -112,11 +112,12 @@ def showapi():
         prolist = api.prolist()
         count=len(api.getapi(page=-1))
         return render_template('apilist.html',apidata2=apidatas,prolist=prolist,count=count)
+    #发起请求获取页面的全部数据
     else:
         proid = request.form.get('proid')
         if proid != None:
             page = request.get_data()
-            if page == b'':
+            if page == b'':#判断page是否为空
                 page=0
             else:
                 page = json.loads(page.decode("utf-8"))
@@ -135,6 +136,7 @@ def showapi():
             prolist = api.prolist()
             count = len(api.getapi(page=-1))
             return render_template('apipage.html', apidata2=apidatas, prolist=prolist, count=count)
+
 
 #监控平台修改接口内容
 @monitor.route('/api',methods=['post','get'])

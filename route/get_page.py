@@ -4,7 +4,9 @@
 # 创建时间 ：2019/5/27 0027   19:39
 # 文件     ：get_page.py
 # IDE      : PyCharm
-
+"""
+不使用lyui情况，正在修改中
+"""
 class Pagination(object):
     """
     自定义分页

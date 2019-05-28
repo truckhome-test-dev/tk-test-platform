@@ -105,7 +105,7 @@ class Api_Monitor(SqlOperate):
         else:
             sql = "select a.id,a.urlname,a.url,p.name,a.method,a.parameters_json,a.pro_id from api_list as a,product as p where a.pro_id = p.ID and a.pro_id = %s and a.is_delete = 0" % (
                 proid)
-            sql += " limit %s,30" % str(int(page) * 30)#数据库进行分页查询，使用limit方法
+            sql += " limit %s,30" % str(int(page) * 30)#数据库进行分页查询，使用limit方法每页30条数据
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
         self.sqlclo()
