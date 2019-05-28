@@ -10,7 +10,7 @@ class Pagination(object):
     自定义分页
     """
 
-    def __init__(self, current_page, total_count, base_url, params, per_page_count=10, max_pager_count=11):
+    def __init__(self, current_page, total_count, base_url, params, per_page_count=30, max_pager_count=11):
         try:
             current_page = int(current_page)
         except Exception as e:
@@ -21,7 +21,7 @@ class Pagination(object):
         # 数据总条数
         self.total_count = total_count
 
-        # 每页显示10条数据
+        # 每页显示30条数据
         self.per_page_count = per_page_count
 
         # 页面上应该显示的最大页码
@@ -76,38 +76,38 @@ class Pagination(object):
         # {source:[2,], status:[2], gender:[2],consultant:[1],page:[1]}
         # 首页
         self.params['page'] = 1
-        first_page = '<li><a href="%s?%s">首页</a></li>'% (self.base_url, urlencode(self.params),)
+        first_page = '<li><a href="%s?%s">首页</a></li>'% (self.base_url, (self.params),)
         page_html_list.append(first_page)
         # 上一页
         self.params["page"] = self.current_page - 1
         if self.params["page"] < 1:
-            pervious_page = '<li class="disabled"><a href="%s?%s" aria-label="Previous">上一页</span></a></li>'% (self.base_url, urlencode(self.params))
+            pervious_page = '<li class="disabled"><a href="%s?%s" aria-label="Previous">上一页</span></a></li>' % (self.base_url, (self.params))
         else:
             pervious_page = '<li><a href = "%s?%s" aria-label = "Previous" >上一页</span></a></li>'% (
-            self.base_url, urlencode(self.params))
+            self.base_url, (self.params))
         page_html_list.append(pervious_page)
         # 中间页码
         for i in range(pager_start, pager_end + 1):
             self.params['page'] = i
             if i == self.current_page:
-                temp = '<li class="active"><a href="%s?%s">%s</a></li>' % (self.base_url, urlencode(self.params), i,)
+                temp = '<li class="active"><a href="%s?%s">%s</a></li>' % (self.base_url,(self.params), i,)
             else:
-                temp = '<li><a href="%s?%s">%s</a></li>' % (self.base_url, urlencode(self.params), i,)
+                temp = '<li><a href="%s?%s">%s</a></li>' % (self.base_url, (self.params), i,)
             page_html_list.append(temp)
 
         # 下一页
         self.params["page"] = self.current_page + 1
         if self.params["page"] > self.max_page_num:
             self.params["page"] = self.current_page
-            next_page = '<li class="disabled"><a href = "%s?%s" aria-label = "Next">下一页</span></a></li >'% (self.base_url, urlencode(self.params))
+            next_page = '<li class="disabled"><a href = "%s?%s" aria-label = "Next">下一页</span></a></li >'% (self.base_url, (self.params))
         else:
             next_page = '<li><a href = "%s?%s" aria-label = "Next">下一页</span></a></li>' % (
-            self.base_url, urlencode(self.params))
+            self.base_url, (self.params))
         page_html_list.append(next_page)
 
         # 尾页
         self.params['page'] = self.max_page_num
-        last_page = '<li><a href="%s?%s">尾页</a></li>' % (self.base_url, urlencode(self.params),)
+        last_page = '<li><a href="%s?%s">尾页</a></li>' % (self.base_url, (self.params),)
         page_html_list.append(last_page)
 
         return ''.join(page_html_list)

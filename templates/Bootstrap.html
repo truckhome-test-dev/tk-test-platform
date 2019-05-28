@@ -1,5 +1,5 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html>//自定义模板需要列表参数
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
         <div class="row " style="margin-top: 10px">
                 <ul>
                     {% for foo in index_list %}
-                        <li>{{ foo }}：这是列表内容~~</li>//传入列表中的内容
+                        <li>{{ foo }}：这是列表内容~~</li>//传入列表中的数据
                     {% endfor %}
                 </ul>
                 <nav aria-label="Page navigation" class="pull-right">
