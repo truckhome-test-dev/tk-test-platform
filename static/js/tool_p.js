@@ -415,9 +415,24 @@ function sleep(numberMillis) {
                                 for (var i = 0; i < t2List.length; i++) {
                                     t2List[i].style.display = 'inline-block';
                                 }
-                            }
+
+                                document.getElementById('apiadd2').style.display = '';
+                                document.getElementById('t11').style.display = '';
+                                var t111List = document.querySelectorAll('.t111');
+                                for (var i = 0; i < t111List.length; i++) {
+                                    t111List[i].style.display = 'inline-block';
+                                }
+
+                                document.getElementById('task_add').style.display = '';
+                                document.getElementById('th1').style.display = '';
+                                var td1List = document.querySelectorAll('.td1');
+                                for (var i = 0; i < td1List.length; i++) {
+                                    td1List[i].style.display = 'inline-block';
+                                }
+
                         }
                     }
+             }
     }
     
     function pro_bug30(e) {
