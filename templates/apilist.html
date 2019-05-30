@@ -25,8 +25,8 @@
 
 
 <div>
-		<span class="site-demo-button" >
-			<button id="apiadd2" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" style="width:60%;display: none">新增接口
+		<span class="site-demo-button" id="apiadd">
+			<button data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">新增接口
             </button>
 		</span>
 </div>
@@ -39,7 +39,7 @@
                 <select name="proid" lay-verify="required" lay-search="">
                     <option value=></option>
                     {% for i in prolist %}
-                        <option value={{i[1]}}>{{i[0]}}</option>
+                    <option value={{i[1]}}>{{i[0]}}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -56,7 +56,7 @@
         <col width=5%>
         <col width=5%>
         <col width=5%>
-        <col width=10%>
+        <col width=8%>
     </colgroup>
     <thead>
     <tr>
@@ -66,7 +66,7 @@
         <th style="text-align: center; font-weight: bold ;font-size:18px">归属项目</th>
         <th style="text-align: center; font-weight: bold ;font-size:18px">请求方式</th>
         <th style="text-align: center; font-weight: bold ;font-size:18px">参数</th>
-        <th id = 't11' style="text-align: center; font-weight: bold ;font-size:18px;display: none">操作</th>
+        <th id='t11' style="text-align: center; font-weight: bold ;font-size:18px">操作</th>
     </thead>
     <tbody>
     {% for i in apidata2 %}
@@ -77,37 +77,23 @@
         <td style="text-align: center">{{i[3]}}</td>
         <td style="text-align: center">{{i[4]}}</td>
         <td style="text-align: center">{{i[5]}}</td>
-        <td id = 't111' style="text-align;center;display: none">
+        <td id='t111'>
             {% if i[6] == 0 %}
             <span data-id={{i[0]}} class="layui-btn" onclick="apistatus(this)">启用</span>
             {% else %}
             <span data-id={{i[0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
             {% endif %}
             <span data-id={{i[0]}} class="layui-btn " onclick="editapi(this)">编辑</span>
-            <span data-id={{i[0]}}  class="layui-btn" onclick="delapi(this)">删除</span>
+            <span data-id={{i[0]}} class="layui-btn" onclick="delapi(this)">删除</span>
         </td>
     </tr>
     {% endfor %}
     </tbody>
 
 </table>
-<div id="test1"></div>
+
 
 <script>
-
-    function getCookie(name)
-    {
-        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
-        if(arr=document.cookie.match(reg)){
-          return unescape(arr[2]);
-        }
-        else{
-         return null;
-        }
-    }
-	window.onload=function() {
-    isShowTd()
-    }
 
  	layui.use(['form', 'layedit', 'laydate'], function(){
   		var form = layui.form
@@ -171,7 +157,7 @@
 					            }
 					            else
 					            {
-					              alert('token校验失败')
+					              alert('请登录')
 					            }
 				          	}
 					    }
@@ -232,6 +218,7 @@ document.getElementById("111").innerHTML = xmlhttp.responseText
   }
 });
 });
+
 
 
 

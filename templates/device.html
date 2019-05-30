@@ -20,7 +20,7 @@
 		<span data-id = 1 class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px" onclick="devtype(this)">其它</span>
 
 		<span class="site-demo-button" id="add">
-			<button id="add1" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px;display: none">新增设备</button>
+			<button id="add1" data-method="offset" data-type="auto" class="layui-btn layui-btn-normal" style="margin-left:50px;font-size:20px">新增设备</button>
 		</span>
 	</div>
 
@@ -44,7 +44,7 @@
             <th style="text-align: center; font-weight: bold ;font-size:18px">设备系统</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备版本</th>
 			<th style="text-align: center; font-weight: bold ;font-size:18px">设备说明</th>
-			<th id = 't1' style="text-align: center; font-weight: bold ;font-size:18px;display: none">操作</th>
+			<th id = 't1' style="text-align: center; font-weight: bold ;font-size:18px">操作</th>
 			</tr> 
 		</thead>
 		<tbody>
@@ -70,7 +70,7 @@
                     </td>
 					<td style="text-align: center">{{i[4]}}</td>
 					<td style="text-align: center">{{i[5]}}</td>
-                    <td class="t2"  style="text-align: center;display: none">
+                    <td class="t2"  style="text-align: center">
 						<div  class="site-demo-button" id="devop" style="margin-bottom: 0;">
 							{% if i[2] == 0 %}
 								<button data-id={{i[0]}} data-method="offset" data-type="auto" class="layui-btn">外借</button>
@@ -85,20 +85,6 @@
 	</table>
 
 <script>
-
-    function getCookie(name)
-    {
-        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
-        if(arr=document.cookie.match(reg)){
-          return unescape(arr[2]);
-        }
-        else{
-         return null;
-        }
-    }
-	window.onload=function() {
-    isShowTd()
-    }
 
  	layui.use(['form', 'layedit', 'laydate'], function(){
   		var form = layui.form
@@ -143,7 +129,7 @@
 					            }
 					            else
 					            {
-					              alert('token校验失败')
+					              alert('请登录')
 					            }
 				          	}
 					    }
@@ -198,7 +184,7 @@
 
 			        var data ='{ "devtype":"' + devtype + '","devsystem" : "'+ devsystem + '","devname" : "'+ devname +'", "name" : "' + peoname + '","version" : "' + deversion + '", "notes" : "' + devnote + '"}';
 
-			        xmlhttp.open("POST","device",true);
+			        xmlhttp.open("POST","adddevice",true);
 			        xmlhttp.send(data);
 				 	layer.close(index);
 					xmlhttp.onreadystatechange = function()
@@ -212,7 +198,7 @@
 					            }
 					            else
 					            {
-					              alert('请求出错，请重试')
+					              alert('请登录')
 					            }
 				          	}
 					    }

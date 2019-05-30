@@ -5,6 +5,7 @@
 from flask import Flask, request, render_template, redirect, send_from_directory, abort
 from test_code import *
 from route import *
+from functools import wraps
 import json
 
 app = Flask(__name__)
@@ -25,6 +26,7 @@ app.register_blueprint(monitor, url_prefix='/monitor')
 
 #判断登录装饰器方法
 def check_token(func):
+    @wraps(func)
     def inner(*args,**kwargs):
         conf = configparser.ConfigParser()
         conf.read("conf/config.ini")
@@ -120,8 +122,9 @@ def internal_server_error(e):
 
 
 # 设备管理展示与新增
-@app.route('/device', methods=['get', 'post'])
-def device():
+@app.route('/adddevice', methods=['get', 'post'])
+@check_token
+def addevice():
     if request.method == "POST":
         data = request.get_data()
         data = json.loads(data)
@@ -133,7 +136,10 @@ def device():
         devnotes = data['notes']
         re.appinsp(devname, name, devnotes, version, devtype, devsystem)
         return "ok"
-    else:
+
+# 设备管理展示
+@app.route('/device', methods=['get', 'post'])
+def devices():
         alldata = re.appga()
         return render_template('device.html', alldata=alldata)
 
@@ -154,19 +160,16 @@ def savedev():
 
 # 修改使用状态
 @app.route('/usestatus', methods=['post', 'get'])
+@check_token
 def usestatus():
     if request.method == 'POST':
-        token = request.cookies.get('token')
-        data = token_check1(token)
-        if data['code'] == 1000:
-            devuser = request.get_data()
-            devuser = json.loads(devuser.decode("utf-8"))
-            devid = devuser['devid']
-            user = devuser['user']
-            re.appusep(devid, user)
-            return "ok"
-        else:
-            return "no"
+        devuser = request.get_data()
+        devuser = json.loads(devuser.decode("utf-8"))
+        devid = devuser['devid']
+        user = devuser['user']
+        re.appusep(devid, user)
+        return "ok"
+
 
 
 @app.route('/time_test', methods=['post', 'get'])
@@ -224,7 +227,6 @@ def statistical_details():
 
 # 查询手机类型
 @app.route('/typedev', methods=['post', 'get'])
-@check_token
 def devtype():
     if request.method == 'POST':
         devtype = request.get_data()
@@ -240,6 +242,7 @@ def token_check():
     if request.method == 'POST':
         global token
         token = request.get_data()
+
         if token == b'':
             token = request.cookies.get('token')
         else:
