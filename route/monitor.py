@@ -127,29 +127,24 @@ def showapi():
         apidatas = api.getapi()
         prolist = api.prolist()
         count = len(api.getapi(page=-1))
-        return render_template('apilist.html', apidata2=apidatas, prolist=prolist, count=count)
+        return render_template('apilist.html', apidata2=apidatas, prolist=prolist, count=count,proid=0)
     else:
         proid = request.form.get('proid')
         if proid != None:
-            page = request.get_data()
-            if page == b'':
-                page = 0
-            else:
-                page = json.loads(page.decode("utf-8"))
-                page = page['page']
-            product = api.proname(proid)
             prolist = api.prolist()
-            apidatas = api.proapi(proid, page=page)
-            count = len(api.proapi(proid, page=-1))
-            return render_template('apilist.html', apidata2=apidatas, prolist=prolist, product=product, proid=proid,
-                                   count=count)
+            apidatas = api.proapi(proid, page=0)
+            count = len(api.proapi(proid, count=1))
+            return render_template('apilist.html', apidata2=apidatas, prolist=prolist, proid=proid,count=count)
         else:
             page = request.get_data()
             page = json.loads(page.decode("utf-8"))
             page = page['page']
-            apidatas = api.getapi(page=page)
+            proid = request.get_data()
+            proid = json.loads(proid.decode("utf-8"))
+            proid = proid['proid']
+            apidatas = api.proapi(proid,page=page)
             prolist = api.prolist()
-            count = len(api.getapi(page=-1))
+            count = len(api.proapi(proid,count=1))
             return render_template('apipage.html', apidata2=apidatas, prolist=prolist, count=count)
 
 

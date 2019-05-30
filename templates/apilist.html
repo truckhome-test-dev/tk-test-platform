@@ -36,8 +36,8 @@
         <div class="layui-inline">
             <label class="layui-form-label">归属项目</label>
             <div class="layui-input-inline">
-                <select name="proid" lay-verify="required" lay-search="">
-                    <option value=></option>
+                <select id="proid" name="proid" lay-verify="required" lay-search="">
+                    <option value="0"></option>
                     {% for i in prolist %}
                     <option value={{i[1]}}>{{i[0]}}</option>
                     {% endfor %}
@@ -194,22 +194,18 @@ layui.use('laypage', function(){
                   var page=obj.curr
         {#location.href='http://127.0.0.1:5000/monitor/apilist?page='+ page#}
                     var xmlhttp;
+                    var proid=document.getElementById('proid').value;
+                    if (proid==""){
+                        proid=0
+                    }
             xmlhttp = new XMLHttpRequest();
-            var data ='{  "page" :' + page + '}';
+            var data ='{  "page" :' + page + ',"proid" :' + proid + '}';
             xmlhttp.open("POST","apilist",true);
             xmlhttp.send(data);
             xmlhttp.onreadystatechange = function()
         {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
             {
-            {#var c = JSON.parse(xmlhttp.responseText)#}
-                {#alert(c.code)#}
-            {#    if (c.code == 1000){#}
-            {#       btn[2].classList.remove('disabled');#}
-                   {#btn[3].classList.remove('disabled');#}
-            {#       btn[4].classList.remove('disabled');#}
-            {#       btn[0].classList.add('disabled')#}
-            {#    }#}
 document.getElementById("111").innerHTML = xmlhttp.responseText
             }
         }
@@ -218,9 +214,6 @@ document.getElementById("111").innerHTML = xmlhttp.responseText
   }
 });
 });
-
-
-
 
 
 </script>
