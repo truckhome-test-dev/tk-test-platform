@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-from flask import Flask, request, render_template, redirect, send_from_directory, abort
+from flask import Flask, request, render_template, redirect, send_from_directory, abort,jsonify
 from test_code import *
 from route import *
 from functools import wraps
+from test_code.bug_calculate import *
 import json
 
 app = Flask(__name__)
@@ -13,6 +14,7 @@ re = Device_Manag()
 pt = APP_Report()
 bug = Mantis_Bug()
 pp = Cha_Project()
+bug_calculate = Bug_Calculate()
 app.config.from_object('settings.DevConfig')
 # token = request.cookies.get('token')
 
@@ -330,6 +332,101 @@ def download():
         if os.path.isfile("/home/YApi/3.0_0.crx"):
             return send_from_directory("/home/YApi/", "3.0_0.crx", as_attachment=True)
         abort(404)
+
+#bug计算率页联动
+@app.route('/selecttwo',methods=['post','get'])
+def bug_selecttwo():
+    
+    if request.method == 'POST':
+        project = request.form.get('project')
+        pr = bug.get_pro_chi(project)
+        return jsonify(pr)
+    else:
+        return null
+#bug计算率页联动
+@app.route('/selectthree',methods=['post','get'])
+def bug_selectthree():
+    
+    if request.method == 'POST':
+        proname = request.form.get('proname')
+        vr = bug.get_version(proname)
+        return jsonify(vr)
+    else:
+        return null
+
+#bug计算率
+@app.route('/bug_calculate',methods=['post','get'])
+def bug_calculate1():
+    v = bug_calculate.countbug()
+    vn = bug.get_pro()
+    if request.method == 'POST':
+        addtime = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+        vname = request.form.get('project')
+        proname = request.form.get('proname')
+        versionname = request.form.get('versionname')
+        name = request.form.get('name')
+        checknum = request.form.get('checknum')
+        fristnum = request.form.get('fristnum')
+        leaknum = request.form.get('leaknum')
+        newnum = request.form.get('newnum')
+        bugcount = request.form.get('bugcount')
+        #bug密度
+        if float(checknum) == 0:
+            bugdensity = 0
+        else:
+            bugdensity = '%.2f'%(float(bugcount)/float(checknum))
+        #首轮漏测率
+        if float(bugcount) == 0:
+            fristleak = 0
+        else:
+            fristleak = '%.2f'%(float(leaknum)/float(bugcount))
+        #引入错误率
+        if float(fristnum) == 0 and float(leaknum) == 0:
+            bringerror = 0
+        else:
+            bringerror = '%.2f'%(float(newnum)/(float(fristnum)+float(leaknum)))
+        bug_calculate.bugInsert(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)
+        data=bug_calculate.getInfor(name)
+
+        return render_template('bug_calculate.html',data=data,v=v)
+
+    else:
+        return render_template('bug_calculate.html',data=("","",""),vn=vn,v=v)
+
+# bug率统计检查点
+@app.route('/calculate',methods=['post','get'])
+def bug_calculate2():
+    if request.method == 'POST':
+        da = bug_calculate.getInfor1()
+        json_list = []
+        for i in da:
+            d = {}
+            d["proname"] = i[2]
+            d["versionname"] = i[3]
+            d["checknum"] = i[5]
+            json_list.append(d)
+        data = json.dumps(json_list)
+        return data   
+    else:
+        return render_template('calculate.html',data=("","",""))
+
+#bug率统计
+@app.route('/calcu',methods=['post','get'])
+def calcu():
+    if request.method == 'POST':
+        du = bug_calculate.bugselect()
+        json_list = []
+        for j in du:
+            a = {}
+            a["addtime"] = j[1]
+            a["density"] = j[2]
+            a["leakage"] = j[3]
+            a["lead"] = j[4]
+            json_list.append(a)
+        dataa = json.dumps(json_list)
+        return dataa  
+    else:
+        return render_template('calculate.html',data=("","",""))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+    <script type="text/javascript" src="static/js/echarts.js"></script>
+    <script type="text/javascript" src="static/js/echarts.min.js"></script>
+    <script type="text/javascript" src="static/js/china.js"></script>
+    <script src="../static/js/jquery-1.11.3.min.js"></script>
+{% endblock head %}
+{% block left %}
+  {{ super() }}
+{% endblock left %}
+{% block right %}
+  {{ super() }}
+  <!-- 修改name（页面名称） -->
+  {% set name = 'bug统计' %}
+  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>{{name}}</legend>
+  </fieldset>
+<!-- {{ data[0] }} -->
+<blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">bug率统计</blockquote>
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this">检查点数据量</li>
+        <li >bug密度</li>
+        <li >首轮漏测率</li>
+        <li >引入错误率</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 630px;width:1030">
+        <div class="layui-tab-item layui-show">
+            <div id="prover" style="display: block;width: 1500px;height:600px;float:left"></div>
+        </div>
+        <div class="layui-tab-item">
+            <div id="trend"  style="display: block;width: 1500px;height:600px;float:left"></div>
+        </div>
+        <div class="layui-tab-item">
+            <div id="handler"  style="display: block;width: 1500px;height:600px;float:left"></div>
+        </div>
+        <div class="layui-tab-item">
+            <div id="reporter"  style="display: block;width: 1500px;height:600px;float:left"></div>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例prover
+
+        var myCharprover = echarts.init(document.getElementById('prover'));
+        var myChartrend = echarts.init(document.getElementById('trend'));
+        var myCharhandler = echarts.init(document.getElementById('handler'));
+        var myCharreporter = echarts.init(document.getElementById('reporter'));
+        //指定图表的配置项和数据
+        var names = [];
+        var checknum = [];
+        var bugcount = [];
+        var bugdensity = [];
+        var fristleak = [];
+        var bringerror = [];                
+        console.log(bugdensity)      
+        // 指定图表的配置项和数据-检查点数量-
+        var option = {
+            title: {
+                text: '检查点数据量'
+            },
+            tooltip: {},
+            legend: {
+                data:['项目名称']
+            },
+            xAxis: {
+                data: names,
+                axisLabel: {
+                   interval:0,
+                   rotate:50
+                }
+            },
+            grid: {
+                // left: '40',
+                // right: '35',
+                bottom: '90',
+            },
+            yAxis: {},
+            series: [{
+                name: '检查点数据量',
+                type: 'bar',
+                data: checknum
+            }]
+        }
+
+        // bug密度
+        var bugdensityy = {
+            title: {
+                text: 'bug密度'
+            },
+            tooltip: {},
+            legend: {
+                data:['bug密度']
+            },
+            xAxis: {
+                data: bugcount,
+                axisLabel: {
+                   interval:0,
+                   rotate:50
+                }
+            },
+            yAxis: {},
+            series: [{
+                name: 'bug密度',
+                type: 'line',
+                data: bugdensity
+            }]
+        }
+        console.log(bugdensity) 
+        // bug总数
+        var fristleakk = {
+            title: {
+                text: '首轮漏测率'
+            },
+            tooltip: {},
+            legend: {
+                data:['首轮漏测率']
+            },
+            xAxis: {
+                data: bugcount,
+                axisLabel: {
+                   interval:0,
+                   rotate:50
+                }
+            },
+            yAxis: {},
+            series: [{
+                name: '首轮漏测率',
+                type: 'line',
+                data: fristleak
+            }]
+        }
+
+ // 引入错误率
+        var bringerrorr = {
+            title: {
+                text: '引入错误率'
+            },
+            tooltip: {},
+            legend: {
+                data:['引入错误率']
+            },
+            xAxis: {
+                data: bugcount,
+                axisLabel: {
+                   interval:0,
+                   rotate:50
+                }
+            },
+            yAxis: {},
+            series: [{
+                name: '引入错误率',
+                type: 'line',
+                data: bringerror
+            }]
+        }
+
+        window.onload=function () 
+        {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST","/calculate",true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function()
+            {
+                if (xmlhttp.status == 200 && xmlhttp.readyState == 4)
+                {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    for(let i=0;i<c.length;i++)
+                    {
+                        // console.log(c)
+                        names.push(c[i].proname+"-"+c[i].versionname)
+                        checknum.push(c[i].checknum)
+                    }
+                }
+                         
+                // 使用刚指定的配置项和数据显示图表。
+                myCharprover.setOption(option);
+            }
+
+        }
+
+ 
+// function selectProject() {
+//          $.ajax({                       
+//                     type:'post',
+//                     url:'/calcu',
+//                     data:{},
+//                     dataType:'json',
+//                     success:function (dataa) {   
+//                         if (dataa){
+//                             console.log(dataa)
+//                             for(i=0;i<dataa.length;i++)
+//                             {
+//                                 bugcount.push(dataa[i].addtime)
+//                                 bugdensity.push(dataa[i].density)
+//                                 fristleak.push(dataa[i].leakage)
+//                                 bringerror.push(dataa[i].lead)
+//                             }
+//                         }
+//                         else {
+//                             pass;
+//                         }
+//                     }
+        
+//                 });
+
+//                 myChartrend.setOption(bugdensityy);
+//                 myCharhandler.setOption(fristleakk);
+//                 myCharreporter.setOption(bringerrorr);
+//     }
+
+$(function(){
+    $.ajax({                       
+                type:'post',
+                url:'/calcu',
+                data:{},
+                dataType:'json',
+                success:function (dataa) {   
+                if (dataa){
+                    for(i=0;i<dataa.length;i++)
+                {
+                    bugcount.push(dataa[i].addtime)
+                    bugdensity.push(dataa[i].density)
+                    fristleak.push(dataa[i].leakage)
+                    bringerror.push(dataa[i].lead)
+                }
+                myChartrend.setOption(bugdensityy);
+                myCharhandler.setOption(fristleakk);
+                myCharreporter.setOption(bringerrorr);
+                }
+                else {
+                        pass;
+                }
+                }
+            });
+               
+        });
+
+
+</script>
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
