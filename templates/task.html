@@ -23,7 +23,7 @@
 </fieldset>
 <!-- 页面私有部分 -->
 <div class="layui-form">
-    <span class="layui-btn layui-btn-normal" style="display: none" id="task_add" name="task_add"
+    <span class="layui-btn layui-btn-normal" name="task_add"
           onclick="task_add(this)">新增任务</span>
     <table class="layui-table" style="width: 50% ">
         <colgroup>
@@ -47,7 +47,7 @@
             <th>
                 <div align="center">状态</div>
             </th>
-            <th id="th1" style="display: none">
+            <th>
                 <div style="text-align: center">操作</div>
             </th>
         </tr>
@@ -65,19 +65,19 @@
             <td style="text-align:center;word-break:break-all;">
                 <div>{{i[4]}}</div>
             </td>
-            <td id="td1" style="display: none">
+            <td>
                 {% if i[4] == 1 %}
-                <span class="layui-btn layui-btn-normal"  id="stoptask" name="status"
+                <span class="layui-btn layui-btn-normal" id="stoptask" name="status"
                       onclick="task_status(this)">停用</span>
                 {% else %}
                 <span class="layui-btn layui-btn-warm" id="starttask" name="status"
                       onclick="task_status(this)">启用</span>
                 {% endif %}
-                <span class="layui-btn" id="edittask"  name="status1"
+                <span class="layui-btn" id="edittask" name="status1"
                       onclick="task_edit(this)">编辑</span>
                 <span class="layui-btn layui-btn-normal" name="status1"
                       onclick="task_res(this)">查看结果</span>
-                <span class="layui-btn layui-btn-danger"  name="status1"
+                <span class="layui-btn layui-btn-danger" name="status1"
                       onclick="task_del(this)">删除</span>
             </td>
         </tr>
@@ -86,32 +86,6 @@
     </table>
 </div>
 
-<script>
-
-    function getCookie(name)
-    {
-        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)"); //正则匹配
-        if(arr=document.cookie.match(reg)){
-          return unescape(arr[2]);
-        }
-        else{
-         return null;
-        }
-    }
-	window.onload=function() {
-    isShowTd()
-    }
-
- 	layui.use(['form', 'layedit', 'laydate'], function(){
-  		var form = layui.form
-
-
-function task_add(e){
- window.location.href="http://127.0.0.1:5000/monitor/task_add";
-}
-
-
-</script>
 
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect
 from test_code import *
+from functools import wraps
 import json
 
 # 创建蓝图对象
@@ -11,7 +12,8 @@ api = Api_Monitor()
 
 
 # 判断登录装饰器方法
-def check_token(func):
+def check_token2(func):
+    @wraps(func)
     def inner(*args, **kwargs):
         conf = configparser.ConfigParser()
         conf.read("conf/config.ini")
@@ -36,6 +38,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
+#@check_token2
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"
@@ -54,6 +57,7 @@ def task_edit():
 
 # 添加任务
 @monitor.route('/task_add', methods=['get', 'post'])
+@check_token2
 def task_add():
     if request.method == "GET":
         title = "添加任务"
@@ -71,6 +75,7 @@ def task_add():
 
 # 删除任务
 @monitor.route('/task_del', methods=['get', 'post'])
+@check_token2
 def task_del():
     if request.method == "POST":
         data = request.get_data()
@@ -85,6 +90,7 @@ def task_del():
 
 # 启动、停止任务
 @monitor.route('/task_status', methods=['get', 'post'])
+@check_token2
 def task_status():
     if request.method == "POST":
         data = request.get_data()
@@ -96,6 +102,7 @@ def task_status():
 
 # 监控平台接口新增
 @monitor.route('/newapi', methods=['post', 'get'])
+@check_token2
 def newapi():
     if request.method == 'POST':
         data = request.get_data()
@@ -143,6 +150,7 @@ def showapi():
 
 # 监控平台修改接口内容
 @monitor.route('/api', methods=['post', 'get'])
+#@check_token2
 def editapi():
     if request.method == 'GET':
         prolist = api.prolist()
@@ -176,6 +184,7 @@ def selapi():
 
 # 监控平台修改接口使用状态
 @monitor.route('/editstatus', methods=['post', 'get'])
+@check_token2
 def editapi2():
     data = request.get_data()
     data = json.loads(data)
@@ -186,6 +195,7 @@ def editapi2():
 
 # 监控平台修改接口显示状态
 @monitor.route('/apishow', methods=['post', 'get'])
+@check_token2
 def editapi3():
     data = request.get_data()
     data = json.loads(data)
@@ -212,3 +222,20 @@ def report():
         return render_template('report.html', res=res, time_frame=time_frame, task_id=task_id, api_id=api_id,
                                res_id=res_id, resq_code=resq_code)
 
+
+# 验证token
+@monitor.route('/token_check', methods=['post', 'get'])
+def token_check():
+    if request.method == 'POST':
+        global token
+        token = request.get_data()
+
+        if token == b'':
+            token = request.cookies.get('token')
+        else:
+            token = json.loads(token.decode("utf-8"))
+            token = str(token['token'])
+        data = token_check1(token)
+        return json.dumps(data)
+    else:
+        return render_template('admin.html')

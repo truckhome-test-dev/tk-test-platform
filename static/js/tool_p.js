@@ -107,7 +107,7 @@ function sleep(numberMillis) {
                     if (xmlhttp.responseText == 'ok') {
                         location.reload();
                     } else {
-                        alert('请求出错，请重试')
+                        alert('请登录')
                     }
                     // document.getElementById("test_button").innerHTML = xmlhttp.responseText
                 }
@@ -117,8 +117,24 @@ function sleep(numberMillis) {
 
     function task_edit(e) {
         var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
-        window.location.href="http://127.0.0.1:5000/monitor/task_edit?task_id="+task_id
+        var token = getCookie("token")
+        xmlhttp = new XMLHttpRequest();
+        var data ='{  "token" :"' + token + '"}';
+        xmlhttp.open("POST","token_check",true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+            var c = JSON.parse(xmlhttp.responseText)
+                if (c.code == 1000){
+                    window.location.href="http://127.0.0.1:5000/monitor/task_edit?task_id="+task_id
+                    }else {
+                    alert("请登录")
+                   }
+                }
+        }
     }
+
     function task_res(e) {
     var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
     window.location.href="http://127.0.0.1:5000/monitor/report?task_id="+task_id
@@ -162,7 +178,7 @@ function sleep(numberMillis) {
             }
             else
             {
-              alert('请求出错，请重试')
+              alert('请登录')
             }
           // document.getElementById("test_button").innerHTML = xmlhttp.responseText
           }
@@ -399,41 +415,26 @@ function sleep(numberMillis) {
         document.getElementById('RemarkName').style.display = "block";
     }
 
-    function isShowTd() {
-            var xmlhttp;
-                    xmlhttp = new XMLHttpRequest();
-                    xmlhttp.open("POST","token_check",true);
-                    xmlhttp.send();
-                    xmlhttp.onreadystatechange = function()
-                    {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
-                        var c = JSON.parse(xmlhttp.responseText)
-                            if (c.code == 1000){
-                                document.getElementById('t1').style.display = '';
-                                document.getElementById('add1').style.display = '';
-                                var t2List = document.querySelectorAll('.t2');
-                                for (var i = 0; i < t2List.length; i++) {
-                                    t2List[i].style.display = 'inline-block';
-                                }
-
-                                document.getElementById('apiadd2').style.display = '';
-                                document.getElementById('t11').style.display = '';
-                                var t111List = document.querySelectorAll('.t111');
-                                for (var i = 0; i < t111List.length; i++) {
-                                    t111List[i].style.display = 'inline-block';
-                                }
-
-                                document.getElementById('task_add').style.display = '';
-                                document.getElementById('th1').style.display = '';
-                                var td1List = document.querySelectorAll('.td1');
-                                for (var i = 0; i < td1List.length; i++) {
-                                    td1List[i].style.display = 'inline-block';
-                                }
-
-                        }
-                    }
-             }
-    }
+//    function isShowTd() {
+//            var xmlhttp;
+//                    xmlhttp = new XMLHttpRequest();
+//                    xmlhttp.open("POST","token_check",true);
+//                    xmlhttp.send();
+//                    xmlhttp.onreadystatechange = function()
+//                    {
+//                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+//                        var c = JSON.parse(xmlhttp.responseText)
+//                            if (c.code == 1000){
+////                                document.getElementById('t1').style.display = '';
+////                                document.getElementById('add1').style.display = '';
+////                                var t2List = document.querySelectorAll('.t2');
+////                                for (var i = 0; i < t2List.length; i++) {
+////                                    t2List[i].style.display = 'inline-block';
+//                                }
+//                        }
+//                    }
+//             }
+//    }
     
     function pro_bug30(e) {
         document.getElementById("prover7").style.display = "none";
@@ -536,7 +537,7 @@ function sleep(numberMillis) {
                 }
                 else
                 {
-                    alert('请求出错，请重试')
+                    alert('请登录')
                 }
             }
         }
@@ -557,7 +558,7 @@ function sleep(numberMillis) {
                     if (xmlhttp.responseText == 'ok') {
                         location.reload();
                     } else {
-                        alert('请求出错，请重试')
+                        alert("请登录")
                     }
                     }
                 }
@@ -566,9 +567,49 @@ function sleep(numberMillis) {
 
     /*编辑接口*/
     function editapi(e){
-        window.location.href="http://127.0.0.1:5000/monitor/api?apiid="+e.dataset.id
+        var token = getCookie("token")
+        xmlhttp = new XMLHttpRequest();
+        var data ='{  "token" :"' + token + '"}';
+        xmlhttp.open("POST","token_check",true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function()
+        {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+            var c = JSON.parse(xmlhttp.responseText)
+                if (c.code == 1000){
+                    window.location.href="http://127.0.0.1:5000/monitor/api?apiid="+e.dataset.id
+                    }else {
+                    alert("请登录")
+                }
+
+                }
+        }
     }
+
+
     /*编辑接口*/
     function ret(e){
         alert("暂不支持此功能，接口异常会在钉钉群发通知，请注意查收！")
+    }
+
+
+//    新增任务
+    function task_add(e){
+        var token = getCookie("token")
+        xmlhttp = new XMLHttpRequest();
+        var data ='{  "token" :"' + token + '"}';
+        xmlhttp.open("POST","token_check",true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 ){
+            var c = JSON.parse(xmlhttp.responseText)
+                if (c.code == 1000){
+                    window.location.href="http://127.0.0.1:5000/monitor/task_add";
+                }
+                else {
+                    alert("请登录")
+                }
+
+            }
+        }
     }

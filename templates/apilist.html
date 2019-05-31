@@ -77,13 +77,13 @@
         <td style="text-align: center">{{i[3]}}</td>
         <td style="text-align: center">{{i[4]}}</td>
         <td style="text-align: center">{{i[5]}}</td>
-        <td id = 't111' style="text-align:center;display: none">
+        <td id = 't111' style="text-align;center;display: none">
             {% if i[6] == 0 %}
             <span data-id={{i[0]}} class="layui-btn" onclick="apistatus(this)">启用</span>
             {% else %}
             <span data-id={{i[0]}} class="layui-btn layui-btn-danger" onclick="apistatus(this)">停用</span>
             {% endif %}
-            <span data-id={{i[0]}} class="layui-btn" onclick="editapi(this)">编辑</span>
+            <span data-id={{i[0]}} class="layui-btn " onclick="editapi(this)">编辑</span>
             <span data-id={{i[0]}}  class="layui-btn" onclick="delapi(this)">删除</span>
         </td>
     </tr>
@@ -191,6 +191,7 @@
 
 layui.use('laypage', function(){
   var laypage = layui.laypage;
+
   //执行一个laypage实例
   laypage.render({
   elem: 'test1'
