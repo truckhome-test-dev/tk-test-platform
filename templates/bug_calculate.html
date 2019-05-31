@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock head %}
+{% block left %}
+  {{ super() }}
+{% endblock left %}
+{% block right %}
+  {{ super() }}
+  <!-- 修改name（页面名称） -->
+  {% set name = 'bug率计算' %}
+  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>{{name}}</legend>
+  </fieldset>
+  <!-- 页面私有部分 -->
+<style>
+  #divone{width:100%; height:80px; border-bottom:1px solid #999999; position:relative}
+  #table1{position:absolute; bottom:0px; padding:0px;font-size: 18px;color: forestgreen; font-weight:600;}
+  .styke1 {font-size: 16px}
+  .input1{width:50px; border:none;font-weight:600;font-size: 18px;color: forestgreen}
+  #table2{border:hidden}
+  #table2 tr{height: 60px}
+  #sure{ font-size: 18px; color:#006600; width:70px}
+  .input2{ border:none; font-size: 18px;color: forestgreen; text-align:left}
+</style>
+<script src="../static/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    function Show() {
+      if(document.getElementById("project").value == ""){
+        alert("请选择业务线")
+        return false;
+      }
+      if(document.getElementById("module").value == ""){
+        alert("请选择产品线")
+        return false;
+      }
+      if(document.getElementById("checknum").value == ""){
+        alert("请输入检查点数量")
+        return false;
+      }
+      if(document.getElementById("fristnum").value == ""){
+        alert("请输入首测bug数量")
+        return false;
+      }
+      if(document.getElementById("leaknum").value == ""){
+        alert("请输入漏测bug数量")
+        return false;
+      }
+      if(document.getElementById("newnum").value == ""){
+        alert("请输入新出现bug数量")
+        return false;
+      }    
+      if(document.getElementById("bugcount").value == ""){
+        alert("请输入bug总数")
+        return false;
+      }
+    }
+
+function selectProject() {
+        var projectName;
+        var project = document.getElementById("project");
+        var proname = document.getElementById("proname");
+        $("#module").html("");
+        $("#versionname").html("");
+        $("<option value=''>" +'--请选择--'+ "</option>").appendTo('#module');
+        // proname.options[0]=new Option("请选择",'')        //每次重新选择当前列表框，就清空下一级列表框。
+        for (i=0;i<project.length;i++){
+            if (project[i].selected == true){     //判断被选中项
+                projectName = project[i].text;
+                $.ajax({                       
+                    type:'post',
+                    url:'/selecttwo',
+                    data:{'project':projectName},
+                    dataType:'json',
+                    success:function (pr) {    //后端返回数据，是列表形式的
+                        if (pr){
+
+                            for (i=0;i<pr.length;i++){
+                                $("<option value='"+pr[i]+"'>" + pr[i] + "</option>").appendTo('#module');  //将后端返回的数据逐项插入到下一级列表框中
+                            }
+                        }
+                        else {
+                            pass;
+                        }
+                    }
+        
+                });
+
+            }
+        }
+    }
+
+function selectProject1() {
+        var pronametName;
+        var proname = document.getElementById("module");
+        $("#versionname").html("");  
+         $("<option value=''>" +'--请选择--'+ "</option>").appendTo('#versionname');      //每次重新选择当前列表框，就清空下一级列表框。
+        for (i=0;i<proname.length;i++){
+            if (proname[i].selected == true){     //判断被选中项
+                pronametName = proname[i].text;
+                data = {
+                    'proname':pronametName,
+                };
+                $.ajax({                      
+                    type:'post',
+                    url:'/selectthree',
+                    data:{'proname':pronametName},
+                    dataType:'json',
+                    // contentType:'application/json',
+                    success:function (vr) {    //后端返回数据，是列表形式的
+                        if (vr){
+                            for (i=0;i<vr.length;i++){
+                                $("<option value='"+vr[i]+"'>" + vr[i] + "</option>").appendTo('#versionname');  //将后端返回的数据逐项插入到下一级列表框中
+                            }
+                        }
+                        else {
+                            pass;
+                        }
+                    }
+        
+                });
+
+            }
+        }
+    }
+</script>
+
+  <div id="divone">
+      <table id="table1">
+        <tr>
+          <td  width="40%" align="left" >bug密度标准值:<input type="text" class="input1" value="{{v[0]}}"/>
+                                         bug引入率标准值:<input  type="text" class="input1" value="{{v[2]}}"/></td>
+        </tr>
+      </table>
+  </div>
+    <form action="bug_calculate" method="POST">
+      <table border="0px" id="table2" cellspacing="10">
+      <br/>
+      <tr>
+        <td>请选择业务线：</td>
+        <td><select  style="width:180px;"  id="project" name="project" onchange="selectProject()"  class="layui-form-label"  >
+            <option value="" >--请选择--</option>
+            {% for i in vn %}
+              <option value="{{i}}" >{{i}}</option>
+            {% endfor %}    
+            </select> </td>
+  
+        <td>&nbsp;&nbsp;&nbsp;请选择产品线：</td>
+        <td><select  style="width:180px;" id='module' name="proname" onchange="selectProject1()" class="layui-form-label">
+              <option value="" ></option>  
+            </select> </td>
+        <td>&nbsp;&nbsp;&nbsp;请选择版本号：</td>
+        <td><select  style="width:180px;" id='versionname' name="versionname" class="layui-form-label">  
+            </select> </td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：</td>
+        <td><input class="layui-input" type="text" name="name"></td>
+      </tr>
+      <br/>
+      <tr>
+        <td >&nbsp;&nbsp;&nbsp;检查点数量：</td>
+        <td ><input type="text" class="layui-input" name="checknum" id="checknum" placeholder="请输入数字" oninput="value=value.replace(/[^\d]/g,'')"></td>
+        <td >&nbsp;&nbsp;&nbsp;&nbsp;首测bug数量：</td>
+        <td ><input type="text" class="layui-input" name="fristnum" id="fristnum" placeholder="请输入数字" oninput="value=value.replace(/[^\d]/g,'')"></td>
+        <td >&nbsp;&nbsp;&nbsp;&nbsp;漏测bug数量：</td>
+        <td ><input type="text" class="layui-input" name="leaknum" id="leaknum" placeholder="请输入数字" oninput="value=value.replace(/[^\d]/g,'')"></td>
+        <td >&nbsp;&nbsp;&nbsp;新出现bug数量：</td>
+        <td ><input type="text" class="layui-input" name="newnum" id="newnum" placeholder="请输入数字" oninput="value=value.replace(/[^\d]/g,'')"></td>
+        <td >&nbsp;&nbsp;&nbsp;bug总数：</td>
+        <td ><input type="text" class="layui-input" name="bugcount" id="bugcount"  placeholder="请输入数字" oninput="value=value.replace(/[^\d]/g,'')"></td>
+      </tr>
+        <tr>
+          <td colspan="8" align="center"><b><input type="submit" id="sure" value="确定" onclick="return Show()" class="layui-btn layui-btn-primary"></b>
+          </td>
+        </tr>
+        </form>
+        <tr valign="top" class="input2">
+          <td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;<b>bug密度：</b><input type="text" value="{{data[0]}}" name="bugdensity" class="input2" ></td>
+        </tr>
+        <tr valign="top" class="input2">
+          <td colspan="8" align="left" ><b>首轮漏测率：</b><input type="text" value="{{data[1]}}" name="fristleak" class="input2"></td>
+        </tr>
+        <tr valign="top" class="input2">
+          <td colspan="8" align="left"><b>引入错误率：</b><input type="text" value="{{data[2]}}" name="bringerror" class="input2"></td>
+        </tr>        
+      </table>
+    
+
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
+
+ 
