@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% block head %}
+    <head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <script src="../static/layui/layui.js"></script>
+        <script type="text/javascript" src="../static/js/tool_p.js"></script>
+        <script type="text/javascript" src="../static/js/echarts.js"></script>
+        <script type="text/javascript" src="../static/js/echarts.min.js"></script>
+        <script type="text/javascript" src="../static/js/china.js"></script>
+    </head>
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '监控结果' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this">任务</li>
+        <li>接口</li>
+    </ul>
+ <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+        <!-- 第一个tab下内容 -->
+<div style="width: 1920px">
+        <div class="layui-form-item" style="display:inline-block;">
+        <label class="layui-form-label">时间范围</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" type="search" name="time_frame" class="layui-input" id="task_time" placeholder=" 请选择时间范围 " style="width: 300px" >
+        </div>
+    </div>
+
+        <div class="layui-form" lay-filter="exam" style="display:inline-block">
+        <label class="layui-form-label">任务id</label>
+                        <div class="layui-input-block">
+                <select id="task" name="task" lay-verify="required">
+                    <option value="0"></option>
+                    {% for i in tasklist %}
+                        <option value={{i[0]}}>{{i[1]}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+    </div>
+
+
+    <div class="layui-form-item" style="display:inline-block;">
+
+        <button class="layui-btn disabled" onclick="task_statis(this)">查询</button>
+    </div>
+
+</div>
+            <div style="display:inline-block;">
+<div id="taskstatis" style="width: 600px;height:600px;float:left"></div>
+
+                </div>
+
+    </div>
+<!-- 第一个tab内容结束 -->
+
+    <div class="layui-tab-item">
+        <!-- 第二个tab下内容 -->
+<div style="width: 1920px">
+        <div class="layui-form-item" style="display:inline-block;">
+        <label class="layui-form-label">时间范围</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" type="search" name="time_frame" class="layui-input" id="api_time" placeholder=" 请选择时间范围 " style="width: 300px" >
+        </div>
+    </div>
+
+                    <div class="layui-form-item" style="display:inline-block;">
+        <label class="layui-form-label">接口id</label>
+        <div class="layui-input-block">
+            <input id="api_id" type="search" name="api_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入接口id " class="layui-input" style="width: 150px" value="{{ api_id }}" >
+        </div>
+    </div>
+
+
+    <div class="layui-form-item" style="display:inline-block;">
+        <button class="layui-btn disabled" onclick="api_statis(this)">查询</button>
+    </div>
+
+</div>
+            <div style="display:inline-block;">
+<div id="apistatis" style="width: 1600px;height:600px;float:left"></div>
+
+                </div>
+
+
+    </div>
+
+
+        <!-- 第二个tab内容结束 -->
+    </div>
+
+  </div>
+</div>
+
+        <script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+  form.val('exam', {
+      task: "1"
+  });
+      var laydate = layui.laydate;
+  //日期时间选择器
+  laydate.render({
+    elem: '#task_time'
+    ,type: 'datetime'
+    ,range: true
+    ,value: "{{ mydate }}"
+  });
+    laydate.render({
+    elem: '#api_time'
+    ,type: 'datetime'
+    ,range: true
+    ,value: "{{ mydate }}"
+  });
+
+});
+var myChartaskstatis = echarts.init(document.getElementById('taskstatis'));
+var myCharapistatis = echarts.init(document.getElementById('apistatis'));
+
+var optiontaskstatis = {
+    title : {
+        text: '接口响应状态统计',
+        {#subtext: '纯属虚构',#}
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+    },
+    series : [
+        {
+            name: '接口响应状态',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+var optionapistatis={
+        title: {
+            text: '接口响应时间(单位：ms)'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis:{ data:[1,2,3,4]},
+
+
+        yAxis: {
+            splitLine: {
+                show: false
+            }
+        },
+        toolbox: {
+            left: 'center',
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none'
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        dataZoom: [{
+            startValue: '2014-06-01'
+        }, {
+            type: 'inside'
+        }],
+        visualMap: {
+            top: 10,
+            right: 10,
+            pieces: [{
+                gt: 0,
+                lte: 1000,
+                color: '#096'
+            }, {
+                gt: 1000,
+                lte: 2000,
+                color: '#ffde33'
+            }, {
+                gt: 2000,
+                lte: 3000,
+                color: '#ff9933'
+            }, {
+                gt: 3000,
+                lte: 5000,
+                color: '#cc0033'
+            }, {
+                gt: 5000,
+                lte: 10000,
+                color: '#660099'
+            }, {
+                gt: 10000,
+                color: '#7e0023'
+            }],
+            outOfRange: {
+                color: '#999'
+            }
+        },
+        series: {
+            name: '响应时间(单位：ms)',
+            type: 'line',
+            data: [2,4,6,8],
+            markLine: {
+                silent: true,
+                data: [{
+                    yAxis: 1000
+                }, {
+                    yAxis: 2000
+                }, {
+                    yAxis: 3000
+                }, {
+                    yAxis: 5000
+                }, {
+                    yAxis: 10000
+                }]
+            }
+        }
+    }
+//进入页面自动请求默认7天内数据
+                window.onload=function () {
+                        task_statis()
+                };
+
+                 function  task_statis(e) {
+                    var time_frame = document.getElementById("task_time").value;
+                    var task_id = document.getElementById("task").value;
+                    var xmlhttp;
+                    xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open("POST", "result", true);
+                    var data ='{ "time_frame" : "' + time_frame +  '", "task_id" : '  + task_id + '}';
+                    xmlhttp.send(data);
+                    xmlhttp.onreadystatechange = function () {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            var c = JSON.parse(xmlhttp.responseText)
+                            if (c.code == 1000) {
+                                //给图标赋值
+                                if (c.taskstatis == "") {
+                                    alert("暂无数据")
+                                } else {
+                                    optiontaskstatis.series[0].data = c.taskstatis;
+                                    myChartaskstatis.setOption(optiontaskstatis);
+                                }
+                            }
+                        }
+                    }
+    }
+
+                     function  api_statis(e) {
+                    var time_frame = document.getElementById("api_time").value;
+                    var api_id = document.getElementById("api_id").value;
+                    if (api_id == ""){
+                        alert("请输入接口id")
+                    }else {
+                    var xmlhttp;
+                    xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open("POST", "apistatis", true);
+                    var data ='{ "time_frame" : "' + time_frame +  '", "api_id" : '  + api_id + '}';
+                    xmlhttp.send(data);
+                    xmlhttp.onreadystatechange = function () {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            var c = JSON.parse(xmlhttp.responseText)
+                            if (c.code == 1000) {
+                                //给图标赋值
+                                if (c.r == "") {
+                                    alert("暂无数据")
+                                } else {
+                                    optionapistatis.xAxis.data = c.t;
+                                    optionapistatis.series.data = c.r;
+                                    myCharapistatis.setOption(optionapistatis);
+                                }
+                            }
+                        }
+                    }
+                    }
+
+
+    }
+
+</script>
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
