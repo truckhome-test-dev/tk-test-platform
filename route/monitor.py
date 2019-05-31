@@ -8,6 +8,7 @@ import json
 monitor = Blueprint('monitor', __name__)
 task = Monitor_Task()
 api = Api_Monitor()
+res = Monitor_Res()
 
 
 # 判断登录装饰器方法
@@ -211,4 +212,43 @@ def report():
         res = task.get_rest(time_frame=time_frame, task_id=task_id, api_id=api_id, res_id=res_id, resq_code=resq_code)
         return render_template('report.html', res=res, time_frame=time_frame, task_id=task_id, api_id=api_id,
                                res_id=res_id, resq_code=resq_code)
+
+
+# 报告页
+@monitor.route('/result', methods=['get', 'post'])
+def result():
+    tasklist = task.task_list()
+    if request.method == 'GET':
+        mydate=res.get_time()
+        return render_template('result.html',tasklist=tasklist,mydate=mydate)
+    else:
+        task_id = request.get_data()
+        task_id = json.loads(task_id.decode("utf-8"))
+        task_id = task_id['task_id']
+
+        time_frame= request.get_data()
+        time_frame = json.loads(time_frame.decode("utf-8"))
+        time_frame = time_frame['time_frame']
+
+        taskstatis = res.get_task_statistics(task_id,time_frame=time_frame)
+        data = {"code": 1000, "taskstatis": taskstatis}
+        return json.dumps(data)
+
+@monitor.route('/apistatis', methods=['get', 'post'])
+def apistatis():
+    if request.method == 'POST':
+        api_id = request.get_data()
+        api_id = json.loads(api_id.decode("utf-8"))
+        api_id = api_id['api_id']
+
+        time_frame = request.get_data()
+        time_frame = json.loads(time_frame.decode("utf-8"))
+        time_frame = time_frame['time_frame']
+        rt=res.api_rt(api_id,time_frame=time_frame)
+        data={"code": 1000,"t":rt[0],"r":rt[1]}
+        return json.dumps(data)
+
+
+
+
 
