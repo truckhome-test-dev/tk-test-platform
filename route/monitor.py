@@ -200,9 +200,8 @@ def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
         res = task.get_rest(task_id=task_id)
-        data = len(api.proapi(page=0))
         return render_template('report.html', res=res, time_frame="", task_id=task_id, api_id="", res_id="",
-                               resq_code="",data=data)
+                               resq_code="")
     if request.method == "POST":
         time_frame = request.form.get('time_frame')
         task_id = request.form.get('task_id')
