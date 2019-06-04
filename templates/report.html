@@ -72,7 +72,7 @@
 
     </form>
         <!--以下是数据展示-->
-  <table class="layui-table" style="width: 100% " >
+  <table id="abc" class="layui-table" style="width: 100% " >
     <colgroup>
         <col width=4%>
         <col width=10%>
@@ -268,7 +268,39 @@ layui.use('laypage', function(){
   //执行一个laypage实例
   laypage.render({
     elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-    ,count: 50//数据总数，从服务端得到
+        ,limit:20
+    ,count: {{ count }}//数据总数，从服务端得到
+    ,jump: function(obj, first){
+    //obj包含了当前分页的所有参数，比如：
+    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+    console.log(obj.limit); //得到每页显示的条数
+
+    //首次不执行
+    if(!first){
+                var page=obj.curr
+                     var xmlhttp;
+                    var test10=document.getElementById('test10').value;//获得指定ID值的对象
+                    if (test10==""){        //如果test10值为空时，从0开始
+                        test10=0
+                    }
+                    xmlhttp = new XMLHttpRequest();
+            var data ='{  "page" :' + page + ',"test10" :' + test10 + '}';
+            //每当 readyState 改变时，就会触发 onreadystatechange，事件readyState 属性存有 XMLHttpRequest 的状态信息。
+
+            xmlhttp.open("POST","report",true);
+            xmlhttp.send(data);
+            xmlhttp.onreadystatechange = function(){
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+                // 请求已完成，且响应已就绪
+            {
+                document.getElementById("abc").innerHTML = xmlhttp.responseText  //获得指定ID值的对象的内嵌内容，向id为abc的对象插入内容
+            }
+
+            }
+
+
+    }
+    }
   });
 });
 
