@@ -11,6 +11,7 @@
         <script type="text/javascript" src="../static/js/echarts.js"></script>
         <script type="text/javascript" src="../static/js/echarts.min.js"></script>
         <script type="text/javascript" src="../static/js/china.js"></script>
+        <script src="../static/js/jquery-1.11.3.min.js"></script>
     </head>
 {% endblock head %}
 {% block left %}
@@ -43,7 +44,7 @@
         <div class="layui-form" lay-filter="exam" style="display:inline-block">
         <label class="layui-form-label">任务id</label>
                         <div class="layui-input-block">
-                <select id="task" name="task" lay-verify="required">
+                <select id="task" name="task" lay-verify="required" lay-search="">
                     <option value="0"></option>
                     {% for i in tasklist %}
                         <option value={{i[0]}}>{{i[1]}}</option>
@@ -78,11 +79,33 @@
         </div>
     </div>
 
-                    <div class="layui-form-item" style="display:inline-block;">
-        <label class="layui-form-label">接口id</label>
-        <div class="layui-input-block">
-            <input id="api_id" type="search" name="api_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入接口id " class="layui-input" style="width: 150px" value="{{ api_id }}" >
-        </div>
+{#                    <div class="layui-form-item" style="display:inline-block;">#}
+{#        <label class="layui-form-label">接口id</label>#}
+{#        <div class="layui-input-block">#}
+{#            <input id="api_id" type="search" name="api_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入接口id " class="layui-input" style="width: 150px" value="{{ api_id }}" >#}
+{#        </div>#}
+{#    </div>#}
+            <div class="layui-form" lay-filter="exam1" style="display:inline-block">
+        <label class="layui-form-label">项目</label>
+                        <div class="layui-input-block">
+                <select id="pro" name="pro" lay-verify="required" lay-search="" lay-filter="pro">
+                    <option value="0"></option>
+                    {% for i in prolist %}
+                        <option value={{i[0]}}>{{i[0]}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+    </div>
+
+            <div class="layui-form" lay-filter="interface" style="display:inline-block">
+        <label class="layui-form-label">接口</label>
+                        <div class="layui-input-block">
+                <select id="api_id" name="api_name" lay-verify="required" lay-search="">
+                    <option value="0"></option>
+                </select>
+            </div>
+
     </div>
 
 
@@ -129,6 +152,9 @@ layui.use(['form', 'layedit', 'laydate'], function(){
     ,range: true
     ,value: "{{ mydate }}"
   });
+    form.on('select(pro)', function(data){
+        get_apiname(data.value)
+});
 
 });
 var myChartaskstatis = echarts.init(document.getElementById('taskstatis'));
@@ -281,7 +307,7 @@ var optionapistatis={
                     var time_frame = document.getElementById("api_time").value;
                     var api_id = document.getElementById("api_id").value;
                     if (api_id == ""){
-                        alert("请输入接口id")
+                        alert("请选择接口")
                     }else {
                     var xmlhttp;
                     xmlhttp = new XMLHttpRequest();
@@ -303,6 +329,40 @@ var optionapistatis={
                             }
                         }
                     }
+            }
+    }
+
+    function  get_apiname(pro_name) {
+                    if (pro_name == ""){
+                        alert("请选择项目")
+                    }else {
+                    var xmlhttp;
+                    xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open("POST", "get_apiname", true);
+                    var data ='{ "pro_name" : "' + pro_name +  '"}';
+                    xmlhttp.send(data);
+                    xmlhttp.onreadystatechange = function () {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            var c = JSON.parse(xmlhttp.responseText)
+                            if (c.code == 1000) {
+                                //给图标赋值
+                                if (c.api_name == "") {
+                                    alert("暂无数据")
+                                } else {
+                                    resultData = c.api_name;
+                                    var htmls = '<option value="">请选择</option>'; //全局变量
+                     for(var x in resultData){
+                                    htmls += '<option value = "' + resultData[x][0] + '">' + resultData[x][1] + '</option>'
+                                            } 
+                    $("#api_id").html(htmls); //通过select id进行赋值
+                                     layui.form.render('select','interface');//需要渲染一下
+                                }
+                            }if (c.code == 1002){
+                                alert('该项目下暂时无接口')
+                            }
+
+                        }
+                    }
                     }
 
 
@@ -311,3 +371,4 @@ var optionapistatis={
 </script>
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
+
