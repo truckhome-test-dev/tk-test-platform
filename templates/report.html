@@ -27,7 +27,7 @@
 		<legend>{{name}}</legend>
 	</fieldset>
 	<!-- 页面私有部分 -->
-    <form class="layui-form" lay-filter="exam" action="/monitor/report" method="POST"   style="width: 600px" >
+    <form id="formDemo" class="layui-form" lay-filter="exam" action="/monitor/report" method="POST"   style="width: 600px" >
 <div style="width: 1920px">
         <div class="layui-form-item" style="display:inline-block;">
         <label class="layui-form-label">时间范围</label>
@@ -64,13 +64,16 @@
         </div>
     </div>
 
-    <div style="display:inline-block;">
-        <input class="layui-btn layui-btn-danger" type="submit" value="查询" style="margin-left:50px;margin-top:0px"></input>
+    <div class="layui-form-item" style="display:inline-block;">
+        <button class="layui-btn layui-btn-danger" onclick="chaxun(this)" >查询</button>
     </div>
 
 </div>
 
+
     </form>
+
+
         <!--以下是数据展示-->
   <table id="abc" class="layui-table" style="width: 100% " >
     <colgroup>
@@ -261,14 +264,14 @@ layui.use('laydate', function(){
 });
 
 });
-
+//分页
 layui.use('laypage', function(){
   var laypage = layui.laypage;
 
   //执行一个laypage实例
   laypage.render({
     elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-        ,limit:20
+    ,limit:20
     ,count: {{ count }}//数据总数，从服务端得到
     ,jump: function(obj, first){
     //obj包含了当前分页的所有参数，比如：
@@ -278,22 +281,24 @@ layui.use('laypage', function(){
     //首次不执行
     if(!first){
                 var page=obj.curr
-                     var xmlhttp;
-                    var test10=document.getElementById('test10').value;//获得指定ID值的对象
-                    if (test10==""){        //如果test10值为空时，从0开始
-                        test10=0
-                    }
-                    xmlhttp = new XMLHttpRequest();
-            var data ='{  "page" :' + page + ',"test10" :' + test10 + '}';
-            //每当 readyState 改变时，就会触发 onreadystatechange，事件readyState 属性存有 XMLHttpRequest 的状态信息。
-
+                         var xmlhttp;
+                    var time_frame =document.getElementById('test10').value;//获得前端指定ID值的对象的value值
+                    var task_id = document.getElementsByName('task_id').value;
+                    var api_id = document.getElementsByName('api_id').value;
+                    var res_id = document.getElementsByName('res_id').value;
+                    var resq_code = document.getElementsByName('resq_code').value;
+            xmlhttp = new XMLHttpRequest();
+            var data ='{ "page" :"' + page + '","time_frame" :"' + time_frame + '","task_id":"'+ task_id +'","api_id":"'+ api_id +'","res_id":"'+res_id+'","resq_code":"'+resq_code+'"}';//把获取到的value值传递給后端
             xmlhttp.open("POST","report",true);
             xmlhttp.send(data);
-            xmlhttp.onreadystatechange = function(){
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+            //每当 readyState 改变时，就会触发 onreadystatechange，事件readyState 属性存有 XMLHttpRequest 的状态信息。
+            xmlhttp.onreadystatechange = function()
+            {
+
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
                 // 请求已完成，且响应已就绪
             {
-                document.getElementById("abc").innerHTML = xmlhttp.responseText  //获得指定ID值的对象的内嵌内容，向id为abc的对象插入内容
+document.getElementById("abc").innerHTML = xmlhttp.responseText  //获得指定ID值的对象的内嵌内容，向id为abc的对象插入内容
             }
 
             }
@@ -304,6 +309,38 @@ layui.use('laypage', function(){
   });
 });
 
+    function chaxun() {
+        var time_frame =document.getElementById('test10').value;//获得前端指定ID值的对象的value值
+        var task_id = document.getElementsByName('task_id').value;
+        var api_id = document.getElementsByName('api_id').value;
+        var res_id = document.getElementsByName('res_id').value;
+        var resq_code = document.getElementsByName('resq_code').value;
+        if (task_id == "")
+        {
+            alert("请输入任务id")
+            if (api_id == "") {
+                alert("输入接口id")
+                if (res_id == "")
+                    alert("请输入编号")
+                    if (resq_code == "")
+                        alert("请输入结果码")
+            }
+        }else{
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST","report",true)
+            var data='{ "page" :"' + page + '","time_frame" :"' + time_frame + '","task_id":"'+ task_id +'","api_id":"'+ api_id +'","res_id":"'+res_id+'","resq_code":"'+resq_code+'"}';
+            xmlhttp.send(data);
+            xmlhttp.onreadystatechange = function() {
+
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
+          {
+              document.getElementById("abc").innerHTML = xmlhttp.responseText
+          }
+            }
+         }
+    
+} 
 </script>
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

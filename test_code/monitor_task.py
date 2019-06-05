@@ -220,9 +220,10 @@ class Monitor_Task(SqlOperate):
             sql += " and resq_code=%s" % resq_code
         sql += " order by res.id desc"
         if page == 0 and page != "":
-            sql += " limit 100"
+            sql += " limit 200"
         else:
             sql += " limit %s,20" % str((int(page) * 20))
+
         print(sql)
         self.sqlExe(sql)
         self.sqlCom()

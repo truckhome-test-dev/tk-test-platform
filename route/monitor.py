@@ -205,43 +205,32 @@ def editapi3():
     return "ok"
 
 
-# 查询结果
+# 接口请求记录
 @monitor.route('/report', methods=['get', 'post'])
 def report():
     if request.method == "GET":
-        task_id = request.args.to_dict().get('task_id', "") #根据数据类型进行转换
+        task_id = request.args.to_dict().get('task_id', "")
         res = task.get_rest(task_id=task_id)
-        count = len(api.getapi(page=-1))
-        return render_template('report.html', res=res, time_frame="", task_id=task_id, api_id="", res_id="",
+        count = len(task.get_rest (page=0))
+        return render_template('report.html', res=res,  time_frame="", task_id=task_id, api_id="", res_id="",
                                resq_code="",count=count)
     else:
-        test10 = request.form.get('test10')
-        if test10 != None:
-            prolist = api.prolist()
-            apidatas = api.proapi(test10, page=0)
-            count = len(api.proapi(test10, count=1))
-            return render_template('report.html', apidata2=apidatas, prolist=prolist, test10=test10, count=count)
-        else:
-            page = request.get_data()#获取页数的编号
-            page = json.loads(page.decode("utf-8"))#json.loads函数的使用
-            page = page['page']#页面=页面的page
-            test10 = request.get_data()
-            test10 = json.loads(test10.decode("utf-8"))
-            test10 = test10['test10']
-            apidatas = api.proapi(test10, page=page)
-            prolist = api.prolist()
-            count = len(api.proapi(test10, count=1))
-            return render_template('report.html', apidata2=apidatas, prolist=prolist, count=count)
+        page = request.get_data()#获取页数的编号
+        page = json.loads(page.decode("utf-8"))#json.loads函数的使用
+        # 传入参数获取到需要的条件
+        page = page['page']#页面=页面的page
+        # time_frame = data['time_frame']#时间表
+        # task_id = data['task_id']
+        # api_id = data['api_id']
+        # res_id = data['res_id']
+        # resq_code = data['resq_code']
+        res=task.get_rest(page=page)
+        # 返回数据进行处理
+        return render_template('reportpage.html',res=res)
 
-            if request.method == "POST":
-                time_frame = request.form.get('time_frame')
-                task_id = request.form.get('task_id')
-                api_id = request.form.get('api_id')
-                res_id = request.form.get('res_id')
-                resq_code = request.form.get('resq_code')
-                res = task.get_rest(time_frame=time_frame, task_id=task_id, api_id=api_id, res_id=res_id, resq_code=resq_code)
-                return render_template('report.html', res=res, time_frame=time_frame, task_id=task_id, api_id=api_id,
-                                       res_id=res_id, resq_code=resq_code)
+
+
+
 
 # 验证token
 @monitor.route('/token_check', methods=['post', 'get'])
