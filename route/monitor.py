@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect
 from test_code import *
 from functools import wraps
 import json
+import pysnooper
 
 # 创建蓝图对象
 monitor = Blueprint('monitor', __name__)
@@ -206,29 +207,27 @@ def editapi3():
 
 
 # 接口请求记录
+
 @monitor.route('/report', methods=['get', 'post'])
+# @pysnooper.snoop(depth=2)
 def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
-        res = task.get_rest(task_id=task_id)
+        res = task.get_rest(task_id=task_id,page=1)
         count = len(task.get_rest (page=0))
-        return render_template('report.html', res=res,  time_frame="", task_id=task_id, api_id="", res_id="",
-                               resq_code="",count=count)
+        return render_template('report.html', res=res,count=count)
     else:
-        page = request.get_data()#获取页数的编号
-        page = json.loads(page.decode("utf-8"))#json.loads函数的使用
+        data = request.get_data()#获取页数的编号
+        data = json.loads(data.decode("utf-8"))#json.loads函数的使用
         # 传入参数获取到需要的条件
-        page = page['page']#页面=页面的page
-        # time_frame = data['time_frame']#时间表
-        # task_id = data['task_id']
-        # api_id = data['api_id']
-        # res_id = data['res_id']
-        # resq_code = data['resq_code']
-        res=task.get_rest(page=page)
-        # 返回数据进行处理
-        return render_template('reportpage.html',res=res)
-
-
+        time_frame = data['time_frame'] #时间表
+        task_id = data['task_id']
+        api_id = data['api_id']
+        res_id = data['res_id']
+        resq_code = data['resq_code']
+        page=data['page']#从前端获取页数
+        res = task.get_rest(page=page,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
+        return render_template('reportpage.html', res=res)# 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
 
 
 

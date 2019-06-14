@@ -27,7 +27,7 @@
 		<legend>{{name}}</legend>
 	</fieldset>
 	<!-- 页面私有部分 -->
-    <form id="formDemo" class="layui-form" lay-filter="exam" action="/monitor/report" method="POST"   style="width: 600px" >
+
 <div style="width: 1920px">
         <div class="layui-form-item" style="display:inline-block;">
         <label class="layui-form-label">时间范围</label>
@@ -70,8 +70,6 @@
 
 </div>
 
-
-    </form>
 
 
         <!--以下是数据展示-->
@@ -274,6 +272,7 @@ layui.use('laypage', function(){
     ,limit:20
     ,count: {{ count }}//数据总数，从服务端得到
     ,jump: function(obj, first){
+
     //obj包含了当前分页的所有参数，比如：
     console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
     console.log(obj.limit); //得到每页显示的条数
@@ -299,6 +298,7 @@ layui.use('laypage', function(){
                 // 请求已完成，且响应已就绪
             {
 document.getElementById("abc").innerHTML = xmlhttp.responseText  //获得指定ID值的对象的内嵌内容，向id为abc的对象插入内容
+
             }
 
             }
@@ -308,31 +308,35 @@ document.getElementById("abc").innerHTML = xmlhttp.responseText  //获得指定I
     }
   });
 });
-
+//查询
     function chaxun() {
         var time_frame =document.getElementById('test10').value;//获得前端指定ID值的对象的value值
         var task_id = document.getElementsByName('task_id').value;
         var api_id = document.getElementsByName('api_id').value;
         var res_id = document.getElementsByName('res_id').value;
         var resq_code = document.getElementsByName('resq_code').value;
-        if (task_id == "")
+        {#if (time_frame == "") {#}
+        {#    alert("请输时间范围")#}
+        {#
+        {#    if (task_id == ""){#}
+        {#        alert("请输入任务id")#}
+        {#    }#}
+        {#    if (api_id == ""){#}
+        {#        alert("请输入接口id")#}
+        {#    }#}
+        {#    if (res_id == ""){#}
+        {#        alert("请输入日志编号")#}
+        {#    }#}
+        {#    if (resq_code == ""){#}
+        {#        alert("请输入状态码")#}
         {
-            alert("请输入任务id")
-            if (api_id == "") {
-                alert("输入接口id")
-                if (res_id == "")
-                    alert("请输入编号")
-                    if (resq_code == "")
-                        alert("请输入结果码")
-            }
-        }else{
             var xmlhttp;
             xmlhttp = new XMLHttpRequest();
             xmlhttp.open("POST","report",true)
-            var data='{ "page" :"' + page + '","time_frame" :"' + time_frame + '","task_id":"'+ task_id +'","api_id":"'+ api_id +'","res_id":"'+res_id+'","resq_code":"'+resq_code+'"}';
+            var data='{ "page" :"1","time_frame" :"' + time_frame + '","task_id":"'+ task_id +'","api_id":"'+ api_id +'","res_id":"'+res_id+'","resq_code":"'+resq_code+'"}';
             xmlhttp.send(data);
-            xmlhttp.onreadystatechange = function() {
-
+            xmlhttp.onreadystatechange = function()
+            {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
           {
               document.getElementById("abc").innerHTML = xmlhttp.responseText

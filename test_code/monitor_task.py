@@ -209,22 +209,23 @@ class Monitor_Task(SqlOperate):
             start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
             end_time = int(time.mktime(time.strptime(data[1], '%Y-%m-%d %H:%M:%S')))
             sql += " and res.create_time between %s and %s" % (str(start_time), str(end_time))
-            print(start_time, end_time)
-        if task_id != None and task_id != "":
+        if task_id != None and task_id != ""and task_id !="undefined":
             sql += " and res.task_id=%s" % task_id
-        if api_id != None and api_id != "":
+        if api_id != None and api_id != ""and api_id !="undefined":
             sql += " and res.api_id=%s" % api_id
-        if res_id != None and res_id != "":
+        if res_id != None and res_id != "" and res_id !="undefined":
             sql += " and res.id=%s" % res_id
-        if resq_code != None and resq_code != "":
+        if resq_code != None and resq_code != ""and resq_code !="undefined":
             sql += " and resq_code=%s" % resq_code
         sql += " order by res.id desc"
-        if page == 0 and page != "":
+        if page == 0 and page != "" and page !="undefined":
             sql += " limit 200"
         else:
             sql += " limit %s,20" % str((int(page) * 20))
 
-        print(sql)
+       # sql = "select count (*) from apirun_result where res.api_id = api.id and res.task_id = task.id"
+
+
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -235,9 +236,10 @@ class Monitor_Task(SqlOperate):
             i = list(i)
             i[9] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[9]))
             data1.append(i)
+        # print(data1,22222222222222222)
         return data1
 
 
-if __name__ == "__main__":
-    a = Monitor_Task()
-    print(a.get_rest(page=1))
+# if __name__ == "__main__":
+#     a = Monitor_Task()
+#     print(a.get_rest(page=1))
