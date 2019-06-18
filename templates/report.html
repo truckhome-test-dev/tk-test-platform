@@ -39,28 +39,28 @@
         <div class="layui-form-item" style="display:inline-block;">
         <label class="layui-form-label">任务id</label>
         <div class="layui-input-block">
-            <input type="search" name="task_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入任务id " class="layui-input" style="width: 150px" value="{{ task_id }}" >
+            <input type="search" id="task_id1" name="task_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入任务id " class="layui-input" style="width: 150px" value="{{ task_id }}" >
         </div>
     </div>
 
             <div class="layui-form-item" style="display:inline-block;">
         <label class="layui-form-label">接口id</label>
         <div class="layui-input-block">
-            <input type="search" name="api_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入接口id " class="layui-input" style="width: 150px" value="{{ api_id }}" >
+            <input type="search" id="api_id1" name="api_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入接口id " class="layui-input" style="width: 150px" value="{{ api_id }}" >
         </div>
     </div>
 
     <div class="layui-form-item" style="display:inline-block;">
         <label class="layui-form-label">编号</label>
         <div class="layui-input-block">
-            <input type="search" name="res_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入日志编号 " class="layui-input" style="width: 150px" value="{{ res_id }}" >
+            <input type="search" id="res_id1" name="res_id" lay-verify="required" autocomplete="off"   placeholder=" 请输入日志编号 " class="layui-input" style="width: 150px" value="{{ res_id }}" >
         </div>
     </div>
 
         <div class="layui-form-item" style="display:inline-block;">
         <label class="layui-form-label">结果</label>
         <div class="layui-input-block">
-            <input type="search" name="resq_code" lay-verify="required" autocomplete="off"   placeholder=" 请输入状态码 " class="layui-input" style="width: 150px" value="{{ resq_code }}" >
+            <input type="search" id="resq_code1" name="resq_code" lay-verify="required" autocomplete="off"   placeholder=" 请输入状态码 " class="layui-input" style="width: 150px" value="{{ resq_code }}" >
         </div>
     </div>
 
@@ -282,10 +282,10 @@ layui.use('laypage', function(){
                 var page=obj.curr
                          var xmlhttp;
                     var time_frame =document.getElementById('test10').value;//获得前端指定ID值的对象的value值
-                    var task_id = document.getElementsByName('task_id').value;
-                    var api_id = document.getElementsByName('api_id').value;
-                    var res_id = document.getElementsByName('res_id').value;
-                    var resq_code = document.getElementsByName('resq_code').value;
+                    var task_id = document.getElementById('task_id1').value;
+                    var api_id = document.getElementById('api_id1').value;
+                    var res_id = document.getElementById('res_id1').value;
+                    var resq_code = document.getElementById('resq_code1').value;
             xmlhttp = new XMLHttpRequest();
             var data ='{ "page" :"' + page + '","time_frame" :"' + time_frame + '","task_id":"'+ task_id +'","api_id":"'+ api_id +'","res_id":"'+res_id+'","resq_code":"'+resq_code+'"}';//把获取到的value值传递給后端
             xmlhttp.open("POST","report",true);
@@ -311,24 +311,10 @@ document.getElementById("abc").innerHTML = xmlhttp.responseText  //获得指定I
 //查询
     function chaxun() {
         var time_frame =document.getElementById('test10').value;//获得前端指定ID值的对象的value值
-        var task_id = document.getElementsByName('task_id').value;
-        var api_id = document.getElementsByName('api_id').value;
-        var res_id = document.getElementsByName('res_id').value;
-        var resq_code = document.getElementsByName('resq_code').value;
-        {#if (time_frame == "") {#}
-        {#    alert("请输时间范围")#}
-        {#
-        {#    if (task_id == ""){#}
-        {#        alert("请输入任务id")#}
-        {#    }#}
-        {#    if (api_id == ""){#}
-        {#        alert("请输入接口id")#}
-        {#    }#}
-        {#    if (res_id == ""){#}
-        {#        alert("请输入日志编号")#}
-        {#    }#}
-        {#    if (resq_code == ""){#}
-        {#        alert("请输入状态码")#}
+        var task_id = document.getElementById('task_id1').value;
+        var api_id = document.getElementById('api_id1').value;
+        var res_id = document.getElementById('res_id1').value;
+        var resq_code = document.getElementById('resq_code1').value;
         {
             var xmlhttp;
             xmlhttp = new XMLHttpRequest();
