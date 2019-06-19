@@ -1,0 +1,49 @@
+   <table id="abc" class="layui-table" style="width: 100% " >
+    <colgroup>
+        <col width=4%>
+        <col width=10%>
+        <col width=10%>
+        <col width=20%>
+        <col width=5%>
+        <col width=20%>
+        <col width=4%>
+        <col width=5%>
+        <col width=5%>
+        <col width=10%>
+
+    </colgroup>
+    <thead>
+      <tr>
+          <th><div align="center">编号</div></th>
+        <th><div align="center">任务名称</div></th>
+        <th><div align="center" >接口名称</div></th>
+        <th><div align="center">接口地址</div></th>
+        <th><div align="center">请求方式</div></th>
+          <th><div align="center">参数</div></th>
+          <th><div align="center">结果</div></th>
+          <th><div align="center">响应时间</div></th>
+          <th><div align="center">详细信息</div></th>
+          <th><div align="center">记录时间</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in res %}
+        <tr class="table-item">
+        <td><div align="center" >{{i[0]}}</div></td>
+        <td><div align="center" >{{i[1]}}</div></td>
+        <td><div align="center" >{{i[2]}}</div></td>
+        <td><div align="center" >{{i[3]}}</div></td>
+        <td><div align="center" >{{i[4]}}</div></td>
+        <td><div align="center" >{{i[5]}}</div></td>
+        <td><div align="center" >{{i[6]}}</div></td>
+        <td><div align="center" >{{i[7]}}</div></td>
+        <td>		<span class="site-demo-button" id="layerDemo" >
+			<button  value="{{ i[8] }}"data-method="offset" data-type="auto" data-value="{{ i[8] }}" class="layui-btn layui-btn-normal"
+                    >查看详情
+            </button>
+		</span></td>
+{#          {{ i[8] }}#}
+        <td><div align="center" >{{i[9]}}</div></td>
+      {% endfor %}
+    </tbody>
+  </table>

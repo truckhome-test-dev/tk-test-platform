@@ -311,6 +311,7 @@ def Project_information():
     return render_template('project_information.html', u=data)
 
 
+
 # 抓虫节排行榜
 @app.route('/grab_bug', methods=['post', 'get'])
 def grab_bug():
