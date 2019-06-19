@@ -253,9 +253,10 @@ def token_check():
 @monitor.route('/result', methods=['get', 'post'])
 def result():
     tasklist = task.task_list()
+    prolist= res.get_pro()
     if request.method == 'GET':
         mydate=res.get_time()
-        return render_template('result.html',tasklist=tasklist,mydate=mydate)
+        return render_template('result.html',tasklist=tasklist,prolist=prolist,mydate=mydate)
     else:
         task_id = request.get_data()
         task_id = json.loads(task_id.decode("utf-8"))
@@ -281,5 +282,20 @@ def apistatis():
         rt=res.api_rt(api_id,time_frame=time_frame)
         data={"code": 1000,"t":rt[0],"r":rt[1]}
         return json.dumps(data)
+
+@monitor.route('/get_apiname', methods=['get', 'post'])
+def get_apiname():
+    if request.method == 'POST':
+        pro_name = request.get_data()
+        pro_name = json.loads(pro_name.decode("utf-8"))
+        pro_name = pro_name['pro_name']
+
+        api_name=res.get_api(pro_name)
+        if api_name:
+            data = {"code": 1000,"api_name": api_name}
+        else:
+            data = {"code": 1002,"api_name": api_name}
+        return json.dumps(data)
+
 
 
