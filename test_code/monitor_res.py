@@ -110,3 +110,28 @@ class Monitor_Res(SqlOperate):
         L.append(x)
         L.append(y)
         return L
+
+    #获取项目名称
+    def get_pro(self):
+        self.dbcur()
+        sql = "select name from product"
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = list(self.cur.fetchall())
+        return data
+
+    #通过项目名称获取所有接口名称列表
+    def get_api(self,pro_name):
+        self.dbcur()
+        sql = "select a.id,a.urlname from api_list as a,product as p where a.pro_id = p.ID and p.name='%s'"%pro_name
+        print (sql)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = list(self.cur.fetchall())
+        L=[]
+        for i in data:
+            a=list(i)
+            L.append(a)
+        return L

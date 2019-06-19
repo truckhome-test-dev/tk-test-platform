@@ -33,11 +33,11 @@
 				{% for name,task in data['task'].items() %}
 					<tr class="table-item">
 						{% for task_q, task_list in task.items() %}
-							<td style="font-weight:bold ;text-align:center;border-width: 1px" bgcolor=" #FFFCEC" rowspan={{task_q}}>{{name}}</td>
+							<td style="font-weight:bold ;text-align:center;border-width: 2px"border=30 bgcolor="#FFFCEC" rowspan={{task_q}}>{{name}}</td>
 							{% for tasks in task_list %}
 								{% for task_one in tasks[:-1] %}
 									{% if task_one == '' %}
-										<td style="font-weight:bold ;text-align:center;border-width: 1px" bgcolor="#FFFCEC">{{task_one}}</td>
+										<td style="font-weight:bold ;text-align:center;border-width: 2px" bgcolor="#FFFCEC">{{task_one}}</td>
 									{% else %}
 										<td style="font-weight:bold ;text-align:center;border-width: 1px" bgcolor={{tasks[-1][0]}}" >{{task_one}}</td>
 									{% endif %}
