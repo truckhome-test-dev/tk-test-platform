@@ -210,6 +210,7 @@ class Monitor_Task(SqlOperate):
             start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
             end_time = int(time.mktime(time.strptime(data[1], '%Y-%m-%d %H:%M:%S')))
             sql += " and res.create_time between %s and %s" % (str(start_time), str(end_time))
+
         elif task_id != None and task_id != ""and task_id !="undefined":
             sql += " and res.task_id=%s" % task_id
         elif api_id != None and api_id != ""and api_id !="undefined":
