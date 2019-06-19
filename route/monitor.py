@@ -224,7 +224,6 @@ def report():
         task_id = data['task_id']#任务
         api_id = data['api_id']#接口
         res_id = data['res_id']#编号
-       # print(res_id)
         resq_code = data['resq_code']#结果
         page = data['page']#从前端获取页数
         res = task.get_rest(page=page,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
