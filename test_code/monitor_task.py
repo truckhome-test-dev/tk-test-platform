@@ -223,7 +223,6 @@ class Monitor_Task(SqlOperate):
             sql += " limit 100"
         else:
             sql += " limit %s,20" % str((int(page) * 20))
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()

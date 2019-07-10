@@ -2,21 +2,27 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-from flask import Flask, request, render_template, redirect, send_from_directory, abort,jsonify
+from flask import Flask, request, render_template, redirect, send_from_directory, abort, jsonify, session, url_for, \
+    Response, make_response
 from test_code import *
+from base_server import *
+from sqlalchemy import null
 from route import *
 from functools import wraps
 from test_code.bug_calculate import *
 import json
+from datetime import timedelta
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)  # 设置为24位的字符,每次运行服务器都是不同的，所以服务器启动一次上次的session就清除。
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # 设置session的保存时间。
+app.config['SESSION_COOKIE_NAME'] = 'login_auth'
 re = Device_Manag()
 pt = APP_Report()
 bug = Mantis_Bug()
 pp = Cha_Project()
 bug_calculate = Bug_Calculate()
 app.config.from_object('settings.DevConfig')
-# token = request.cookies.get('token')
 
 '''
 这里是注册蓝图
@@ -26,10 +32,10 @@ app.config.from_object('settings.DevConfig')
 app.register_blueprint(monitor, url_prefix='/monitor')
 
 
-#判断登录装饰器方法
+# 判断登录装饰器方法
 def check_token(func):
     @wraps(func)
-    def inner(*args,**kwargs):
+    def inner(*args, **kwargs):
         conf = configparser.ConfigParser()
         conf.read("conf/config.ini")
         token_key = conf.get('token', 'key')
@@ -39,13 +45,65 @@ def check_token(func):
         else:
             data = json.dumps({"code": 1001})
             return data
+
     return inner
 
 
 @app.route('/', methods=['get'])
 @app.route('/index', methods=['get'])
+# @check_permissions('/index')
 def index():
     return render_template('index.html')
+
+
+# 获取菜单目录
+@app.route('/menu', methods=['GET', 'POST'])
+def menu():
+    try:
+        leven = session.get('username')[1]
+    except:
+        leven=0
+    menu = get_menu(leven)
+    ret = {"code": 1000, "menu": menu}
+    return json.dumps(ret)
+    # return render_template('base.html', menu=menu)
+
+
+# 2.登录
+@app.route('/login_new', methods=['GET', 'POST'])
+def login_new():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        login = Login(username, password)
+        data = login.valid_login()
+        if data:
+            session["username"] = data
+            ret = {"Status": "ok", "Text": "登陆成功"}
+            resp = Response(json.dumps(ret))
+            resp.set_cookie('username', data[0])
+            return resp
+        else:
+            ret = {"Status": "Erro", "Erro": "用户名密码不匹配"}
+            return json.dumps(ret)
+    else:
+        if session.get('username'):
+            return redirect('index')
+        return render_template('login.html')
+
+
+# 退出
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    data = session.get('username')
+    if data is None:
+        ret = make_response(redirect('login_new'))
+        ret.delete_cookie('username')  # 清除cookies:username
+    else:
+        session.pop('username')  # 清除session
+        ret = make_response(redirect('login_new'))
+        ret.delete_cookie('username')  # 清除cookies:username
+    return ret
 
 
 # 微信小工具首页
@@ -103,6 +161,7 @@ def statistic():
 
 # 排期展示
 @app.route('/scheduling', methods=['get', 'post'])
+# @check_permissions("/scheduling")
 def scheduling():
     name = request.args.get('name')
     if name is None:
@@ -125,7 +184,8 @@ def internal_server_error(e):
 
 # 设备管理展示与新增
 @app.route('/adddevice', methods=['get', 'post'])
-@check_token
+# @check_token
+@check_permissions("addevice")
 def addevice():
     if request.method == "POST":
         data = request.get_data()
@@ -139,11 +199,13 @@ def addevice():
         re.appinsp(devname, name, devnotes, version, devtype, devsystem)
         return "ok"
 
+
 # 设备管理展示
 @app.route('/device', methods=['get', 'post'])
+# @check_permissions("/device")
 def devices():
-        alldata = re.appga()
-        return render_template('device.html', alldata=alldata)
+    alldata = re.appga()
+    return render_template('device.html', alldata=alldata)
 
 
 # 设备编辑后保存
@@ -162,7 +224,8 @@ def savedev():
 
 # 修改使用状态
 @app.route('/usestatus', methods=['post', 'get'])
-@check_token
+# @check_token
+@check_permissions("/usestatus")
 def usestatus():
     if request.method == 'POST':
         devuser = request.get_data()
@@ -173,8 +236,8 @@ def usestatus():
         return "ok"
 
 
-
 @app.route('/time_test', methods=['post', 'get'])
+# @check_permissions("/time_test")
 def time_test():
     if request.args.get('url'):
         url = request.args.get('url')
@@ -199,6 +262,7 @@ def time_test_hello():
 
 # mantis_bug统计
 @app.route('/bug_statistics', methods=['get', 'post'])
+# @check_permissions('/bug_statistics')
 def bug_statistics():
     if request.method == "GET":
         L = []
@@ -275,6 +339,7 @@ def admin():
 
 # app自动化测试报告
 @app.route('/appreport', methods=['post', 'get'])
+# @check_permissions("/appreport")
 def appreport():
     newreport = pt.new_report()
     reportlist = pt.title_url()
@@ -303,6 +368,7 @@ def test_1(url):
 
 # 卡车之家业务信息表
 @app.route('/project_information', methods=['post', 'get'])
+# @check_permissions("/project_information")
 def Project_information():
     pp_rturn = request.args.get('firstname')
     data = pp.cha(pp_rturn)
@@ -311,6 +377,7 @@ def Project_information():
 
 # 抓虫节排行榜
 @app.route('/grab_bug', methods=['post', 'get'])
+# @check_permissions("/grab_bug")
 def grab_bug():
     grab = Grab_Bug()
     data = grab.get_bug_score()
@@ -319,6 +386,7 @@ def grab_bug():
 
 # yapi页
 @app.route('/yapi', methods=['get'])
+# @check_permissions("/yapi")
 def yapi():
     return render_template('yapi.html')
 
@@ -333,20 +401,21 @@ def download():
             return send_from_directory("/home/YApi/", "3.0_0.crx", as_attachment=True)
         abort(404)
 
-#bug计算率页联动
-@app.route('/selecttwo',methods=['post','get'])
+
+# bug计算率页联动
+@app.route('/selecttwo', methods=['post', 'get'])
 def bug_selecttwo():
-    
     if request.method == 'POST':
         project = request.form.get('project')
         pr = bug.get_pro_chi(project)
         return jsonify(pr)
     else:
         return null
-#bug计算率页联动
-@app.route('/selectthree',methods=['post','get'])
+
+
+# bug计算率页联动
+@app.route('/selectthree', methods=['post', 'get'])
 def bug_selectthree():
-    
     if request.method == 'POST':
         proname = request.form.get('proname')
         vr = bug.get_version(proname)
@@ -354,13 +423,15 @@ def bug_selectthree():
     else:
         return null
 
-#bug计算率
-@app.route('/bug_calculate',methods=['post','get'])
+
+# bug计算率
+@app.route('/bug_calculate', methods=['post', 'get'])
+# @check_permissions("/bug_calculate")
 def bug_calculate1():
     v = bug_calculate.countbug()
     vn = bug.get_pro()
     if request.method == 'POST':
-        addtime = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+        addtime = time.strftime('%Y-%m-%d', time.localtime(time.time()))
         vname = request.form.get('project')
         proname = request.form.get('proname')
         versionname = request.form.get('versionname')
@@ -370,31 +441,34 @@ def bug_calculate1():
         leaknum = request.form.get('leaknum')
         newnum = request.form.get('newnum')
         bugcount = request.form.get('bugcount')
-        #bug密度
+        # bug密度
         if float(checknum) == 0:
             bugdensity = 0
         else:
-            bugdensity = '%.2f'%(float(bugcount)/float(checknum))
-        #首轮漏测率
+            bugdensity = '%.2f' % (float(bugcount) / float(checknum))
+        # 首轮漏测率
         if float(bugcount) == 0:
             fristleak = 0
         else:
-            fristleak = '%.2f'%(float(leaknum)/float(bugcount))
-        #引入错误率
+            fristleak = '%.2f' % (float(leaknum) / float(bugcount))
+        # 引入错误率
         if float(fristnum) == 0 and float(leaknum) == 0:
             bringerror = 0
         else:
-            bringerror = '%.2f'%(float(newnum)/(float(fristnum)+float(leaknum)))
-        bug_calculate.bugInsert(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)
-        data=bug_calculate.getInfor(name)
+            bringerror = '%.2f' % (float(newnum) / (float(fristnum) + float(leaknum)))
+        bug_calculate.bugInsert(vname, proname, versionname, name, checknum, fristnum, leaknum, newnum, bugcount,
+                                bugdensity, fristleak, bringerror, addtime)
+        data = bug_calculate.getInfor(name)
 
-        return render_template('bug_calculate.html',data=data,v=v)
+        return render_template('bug_calculate.html', data=data, v=v)
 
     else:
-        return render_template('bug_calculate.html',data=("","",""),vn=vn,v=v)
+        return render_template('bug_calculate.html', data=("", "", ""), vn=vn, v=v)
+
 
 # bug率统计检查点
-@app.route('/calculate',methods=['post','get'])
+@app.route('/calculate', methods=['post', 'get'])
+# @check_permissions("/calculate")
 def bug_calculate2():
     if request.method == 'POST':
         da = bug_calculate.getInfor1()
@@ -406,12 +480,13 @@ def bug_calculate2():
             d["checknum"] = i[5]
             json_list.append(d)
         data = json.dumps(json_list)
-        return data   
+        return data
     else:
-        return render_template('calculate.html',data=("","",""))
+        return render_template('calculate.html', data=("", "", ""))
 
-#bug率统计
-@app.route('/calcu',methods=['post','get'])
+
+# bug率统计
+@app.route('/calcu', methods=['post', 'get'])
 def calcu():
     if request.method == 'POST':
         du = bug_calculate.bugselect()
@@ -424,9 +499,9 @@ def calcu():
             a["lead"] = j[4]
             json_list.append(a)
         dataa = json.dumps(json_list)
-        return dataa  
+        return dataa
     else:
-        return render_template('calculate.html',data=("","",""))
+        return render_template('calculate.html', data=("", "", ""))
 
 
 if __name__ == '__main__':

@@ -125,6 +125,11 @@
 				 	layer.close(index);
 					xmlhttp.onreadystatechange = function()
 					{
+					    {#alert(xmlhttp.status)#}
+					    {#if (xmlhttp.status == 302){#}
+					    {#    alert(xmlhttp.location)#}
+					    {#    location.href = xmlhttp.location;#}
+                        {#}#}
 				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 )
 				            {
 					            if (xmlhttp.responseText == 'ok')
@@ -134,11 +139,12 @@
 					            else
 					            {
 					              alert('请登录')
+                                    }
 					            }
 				          	}
 					    }
 
-					}
+
 				});
 			}
 		};

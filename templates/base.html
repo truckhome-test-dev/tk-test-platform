@@ -20,36 +20,47 @@
             <!-- 顶部 -->
             <div class="layui-header">
                 <a href="/"  class="layui-logo" style="font-weight:bold;color:#FFFFFF">卡家测试管理平台</a>
+                    <ul class="layui-nav" style="text-align: right">
+                      <li id="nolog" class="layui-nav-item" lay-unselect="">
+                        <a  href="javascript:;" id="username">
+                        </a>
+                        <dl id="layui-nav-child" class="layui-nav-child" style="text-align: left">
+                          <dd><a href="/logout" onclick="logout()">退出</a></dd>
+                        </dl>
+                      </li>
+                    </ul>
             </div>
 
             <!-- 左侧 -->
-            <div class="layui-side layui-bg-black">
+            <div class="layui-side layui-bg-black" id="menu1">
                 <div class="layui-side-scroll">
-                    <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                    <ul class="layui-nav layui-nav-tree"  lay-filter="test" id="menu">
 
                         <!-- 左侧栏目配置 -->
 
-
-                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics','APP自动化报告': 'http://127.0.0.1:5000/appreport','卡车之家业务信息表': 'http://127.0.0.1:5000/project_information','抓虫节排行榜': 'http://127.0.0.1:5000/grab_bug','BUG率计算': 'http://127.0.0.1:5000/bug_calculate','BUG率统计': 'http://127.0.0.1:5000/calculate'},'测试工具':{'YApi':'http://127.0.0.1:5000/yapi','响应时间测试':'http://127.0.0.1:5000/time_test'},'接口监控':{'接口管理':'http://127.0.0.1:5000/monitor/apilist','任务管理':'http://127.0.0.1:5000/monitor/task_list','监控结果':'http://127.0.0.1:5000/monitor/result','接口请求记录':'http://127.0.0.1:5000/monitor/report'}} %}
-
-
-                        {% for name,n_list in left_list.items() %}
-                        <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>
-                            <dl class="layui-nav-child">
-                                {% for i,o in n_list.items() %}
-                                <dd><a href={{o}}>{{i}}</a></dd>
-                                {% endfor %}
-                            </dl>
-                        </li>
-                        {% endfor %}
+{#                        {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics','APP自动化报告': 'http://127.0.0.1:5000/appreport','卡车之家业务信息表': 'http://127.0.0.1:5000/project_information','抓虫节排行榜': 'http://127.0.0.1:5000/grab_bug','BUG率计算': 'http://127.0.0.1:5000/bug_calculate','BUG率统计': 'http://127.0.0.1:5000/calculate'},'测试工具':{'YApi':'http://127.0.0.1:5000/yapi','响应时间测试':'http://127.0.0.1:5000/time_test'},'接口监控':{'接口管理':'http://127.0.0.1:5000/monitor/apilist','任务管理':'http://127.0.0.1:5000/monitor/task_list','监控结果':'http://127.0.0.1:5000/monitor/result','接口请求记录':'http://127.0.0.1:5000/monitor/report'}} %}#}
+{#                        {% set lsft_list = menu %}#}
+{#                        {% for name,n_list in left_list.items() %}#}
+{#                        <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">{{name}}</a>#}
+{#                            <dl class="layui-nav-child">#}
+{#                                {% for i,o in n_list.items() %}#}
+{#                                <dd><a href={{o}}>{{i}}</a></dd>#}
+{#                                {% endfor %}#}
+{#                            </dl>#}
+{#                        </li>#}
+{#                        {% endfor %}#}
 
                     </ul>
                 </div>
             </div>
         <script>
             layui.use('element', function(){
-              var element = layui.element; 
-            });
+              var element = layui.element;
+              is_menu();
+              get_menu();
+              set_username();
+              element.render();
+});
         </script>
     {% endblock left %}
 
