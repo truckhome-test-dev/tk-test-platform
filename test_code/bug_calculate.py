@@ -36,9 +36,19 @@ class Bug_Calculate(SqlOperate):
 		return "pass"
     
     #查询bug密度、首轮漏测率、引入错误率
-	def getInfor(self,name):
+	# def getInfor(self,name):
+	# 	self.dbcur()
+	# 	sql = self.sqlSelect('bugcalculate',['bugdensity','fristleak','bringerror'],condition={'name':name},repeat=1)
+	# 	self.sqlExe(sql)
+	# 	self.sqlCom()
+	# 	self.sqlclo()
+	# 	data=self.cur.fetchone()
+	# 	return data
+
+	    #查询bug密度、首轮漏测率、引入错误率
+	def getInfor(self):
 		self.dbcur()
-		sql = self.sqlSelect('bugcalculate',['bugdensity','fristleak','bringerror'],condition={'name':name},repeat=1)
+		sql = "select bugdensity,fristleak,bringerror from bugcalculate order by id desc limit 1"
 		self.sqlExe(sql)
 		self.sqlCom()
 		self.sqlclo()

@@ -2,11 +2,15 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-from flask import Flask, request, render_template, redirect, send_from_directory, abort,jsonify
+from flask import Flask, request, render_template, redirect, send_from_directory, abort,jsonify,url_for
 from test_code import *
 from route import *
 from functools import wraps
 from test_code.bug_calculate import *
+from test_code.xmindupload import *
+from test_code.to_xls import *
+from werkzeug.utils import secure_filename
+from xmindparser import xmind_to_xml
 import json
 
 app = Flask(__name__)
@@ -15,6 +19,7 @@ pt = APP_Report()
 bug = Mantis_Bug()
 pp = Cha_Project()
 bug_calculate = Bug_Calculate()
+up = Bug_Calculate()
 app.config.from_object('settings.DevConfig')
 # token = request.cookies.get('token')
 
@@ -386,7 +391,8 @@ def bug_calculate1():
         else:
             bringerror = '%.2f'%(float(newnum)/(float(fristnum)+float(leaknum)))
         bug_calculate.bugInsert(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)
-        data=bug_calculate.getInfor(name)
+        # data=bug_calculate.getInfor(name)
+        data=bug_calculate.getInfor()
 
         return render_template('bug_calculate.html',data=data,v=v)
 
@@ -427,6 +433,40 @@ def calcu():
         return dataa  
     else:
         return render_template('calculate.html',data=("","",""))
+
+
+#xmind上传下载
+@app.route('/upload',methods=['post','get'])
+def upload():
+    a = up.filelist()
+    if request.method == 'POST':
+        f = request.files['file']
+        up.fileupload(f)    
+        #将xmind转为excel
+        x_c = f.filename[0:-6]
+        x_a = xmind_to_xx('tmp/', f.filename, x_c)
+        x_a.to_excel(x_a.data_dict[0]['topic'])
+        x_a.save_xls()
+        #合并单元格
+        x_b = style_excel('tmp/xls/', x_c+'.xls', x_a.data_dict[0]['topic']['title'])
+        x_b.merge_excel(x_b.calculate())
+        x_b.save_style_excel('tmp/xls/'+x_c+'.xls')
+        # up.fileinsert(f.filename)
+        a.append(f.filename)
+        return "1"
+    else:
+        return render_template('upload.html',a = a)
+ 
+#下载  
+@app.route('/export_xls/<filename>', methods=['get'])
+def return_file(filename):
+    import os
+    if request.method == "GET":
+        file_dir = os.path.join('tmp/xls',filename)
+        if os.path.isfile(file_dir):
+            return send_from_directory("tmp/xls", filename, as_attachment=True)
+        abort(404)
+
 
 
 if __name__ == '__main__':
