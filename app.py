@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
+
 from flask import Flask, request, render_template, redirect, send_from_directory, abort, jsonify, session, url_for, \
     Response, make_response
+from sqlalchemy import null
 from test_code import *
 from base_server import *
 from sqlalchemy import null
@@ -62,7 +64,7 @@ def menu():
     try:
         leven = session.get('username')[1]
     except:
-        leven=0
+        leven = 0
     menu = get_menu(leven)
     ret = {"code": 1000, "menu": menu}
     return json.dumps(ret)
