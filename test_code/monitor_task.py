@@ -202,15 +202,16 @@ class Monitor_Task(SqlOperate):
     """这块逻辑看不懂，脑袋疼"""
     def get_rest(self, time_frame=None, task_id=None, api_id=None, res_id=None, resq_code=None, page=0):
         self.dbcur()
+        #SQL查询
         sql = "select res.id,task.task_name,api.urlname,api.url,api.method,api.parameters_data,res.resq_code,res.res_time,res.response,res.create_time " \
               "from apirun_result as res,api_list as api,task_list as task " \
               "where res.api_id = api.id and res.task_id = task.id"
+        #根据参数进行判断，拼接SQL
         if time_frame != None and time_frame != "":
             data = time_frame.split(" - ")
             start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
             end_time = int(time.mktime(time.strptime(data[1], '%Y-%m-%d %H:%M:%S')))
             sql += " and res.create_time between %s and %s" % (str(start_time), str(end_time))
-
         elif task_id != None and task_id != ""and task_id !="undefined":
             sql += " and res.task_id=%s" % task_id
         elif api_id != None and api_id != ""and api_id !="undefined":
@@ -222,15 +223,17 @@ class Monitor_Task(SqlOperate):
         else:
             sql += " order by res.id desc"
             if page == 0 and page != "" and page !="undefined":
-                sql += " limit 100"
+                sql += " limit 200"
             else:
                 sql += " limit %s,20" % str((int(page) * 20))
+        #执行SQL的查询获取数据
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
         data = self.cur.fetchall()
         data = list(data)
         data1 = []
+        #时间戳
         for i in data:
             i = list(i)
             i[9] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i[9]))
