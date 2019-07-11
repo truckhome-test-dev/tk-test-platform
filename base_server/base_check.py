@@ -94,4 +94,3 @@ def get_menu(level):
             value=d3
             d[key]=value
     return d
-get_menu(70)
