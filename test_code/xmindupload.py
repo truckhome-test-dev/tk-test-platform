@@ -42,7 +42,7 @@ class Xmind_Upload(SqlOperate):
 		if(platform.system()=='Windows'):
 			way = "C:/Users/360che/Desktop/check_point/tmp/"
 		elif(platform.system()=='Linux'):
-			way = "data/check_point/xmind"
+			way = "/data/check_point/xmind"
 		basepath = os.path.dirname(__file__)  # 当前文件所在路径
 		upload_path = os.path.join(basepath, way,f.filename)#secure_filename(f.filename)
 		upload_path = os.path.abspath(upload_path) # 将路径转换为绝对路径
@@ -53,7 +53,7 @@ class Xmind_Upload(SqlOperate):
 		if(platform.system()=='Windows'):
 			way = "C:/Users/360che/Desktop/check_point/xls/"
 		elif(platform.system()=='Linux'):
-			way = "data/check_point/xls"
+			way = "/data/check_point/xls"
 		filenames = os.listdir(way)
 		a = []
 		for filename in filenames:

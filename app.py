@@ -521,8 +521,8 @@ def upload():
             way ="C:/Users/360che/Desktop/check_point/tmp/"
             way_xls = "C:/Users/360che/Desktop/check_point/xls/"
         elif(platform.system()=='Linux'):
-            way ="data/check_point/xmind"
-            way_xls = "data/check_point/xls/"
+            way ="/data/check_point/xmind"
+            way_xls = "/data/check_point/xls/"
         #将xmind转为excel
         x_c = f.filename[0:-6]
         x_a = xmind_to_xx(way, f.filename, x_c)
