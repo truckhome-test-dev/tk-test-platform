@@ -460,7 +460,7 @@ def bug_calculate1():
             bringerror = '%.2f' % (float(newnum) / (float(fristnum) + float(leaknum)))
         bug_calculate.bugInsert(vname, proname, versionname, name, checknum, fristnum, leaknum, newnum, bugcount,
                                 bugdensity, fristleak, bringerror, addtime)
-        data = bug_calculate.getInfor(name)
+        data = bug_calculate.getInfor()
 
         return render_template('bug_calculate.html', data=data, v=v)
 
