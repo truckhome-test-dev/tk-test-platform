@@ -199,6 +199,7 @@ class Monitor_Task(SqlOperate):
         return "ok"
 
     # 执行结果查询
+    """这块逻辑看不懂，脑袋疼"""
     def get_rest(self, time_frame=None, task_id=None, api_id=None, res_id=None, resq_code=None, page=0):
         self.dbcur()
         sql = "select res.id,task.task_name,api.urlname,api.url,api.method,api.parameters_data,res.resq_code,res.res_time,res.response,res.create_time " \
@@ -209,21 +210,21 @@ class Monitor_Task(SqlOperate):
             start_time = int(time.mktime(time.strptime(data[0], '%Y-%m-%d %H:%M:%S')))
             end_time = int(time.mktime(time.strptime(data[1], '%Y-%m-%d %H:%M:%S')))
             sql += " and res.create_time between %s and %s" % (str(start_time), str(end_time))
-            print(start_time, end_time)
-        if task_id != None and task_id != "":
+
+        elif task_id != None and task_id != ""and task_id !="undefined":
             sql += " and res.task_id=%s" % task_id
-        if api_id != None and api_id != "":
+        elif api_id != None and api_id != ""and api_id !="undefined":
             sql += " and res.api_id=%s" % api_id
-        if res_id != None and res_id != "":
+        elif res_id != None and res_id != "" and res_id !="undefined":
             sql += " and res.id=%s" % res_id
-        if resq_code != None and resq_code != "":
+        elif resq_code != None and resq_code != ""and resq_code !="undefined":
             sql += " and resq_code=%s" % resq_code
-        sql += " order by res.id desc"
-        if page == 0 and page != "":
-            sql += " limit 100"
         else:
-            sql += " limit %s,20" % str((int(page) * 20))
-        print(sql)
+            sql += " order by res.id desc"
+            if page == 0 and page != "" and page !="undefined":
+                sql += " limit 100"
+            else:
+                sql += " limit %s,20" % str((int(page) * 20))
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -236,7 +237,21 @@ class Monitor_Task(SqlOperate):
             data1.append(i)
         return data1
 
+#查询总数,查询sql中表的总数
+    def get_count(self):
+        self.dbcur ()
+        sql="select count(*) from apirun_result"
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchone()
+        return data[0]
 
-if __name__ == "__main__":
-    a = Monitor_Task()
-    print(a.get_rest(page=1))
+
+
+
+
+
+# if __name__ == "__main__":
+#     a = Monitor_Task()
+#     print(a.get_rest(page=1))

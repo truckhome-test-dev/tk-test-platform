@@ -12,4 +12,5 @@ from .time_test import *
 from .project_information import *
 from .grab_bug import *
 from .appreport import *
+from .monitor_res import *
 

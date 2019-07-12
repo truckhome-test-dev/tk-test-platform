@@ -4,11 +4,13 @@ from flask import Blueprint, render_template, request, redirect
 from test_code import *
 from functools import wraps
 import json
+import pysnooper
 
 # 创建蓝图对象
 monitor = Blueprint('monitor', __name__)
 task = Monitor_Task()
 api = Api_Monitor()
+res = Monitor_Res()
 
 
 # 判断登录装饰器方法
@@ -204,23 +206,31 @@ def editapi3():
     return "ok"
 
 
-# 查询结果
+# 接口请求记录
+
 @monitor.route('/report', methods=['get', 'post'])
+# @pysnooper.snoop(depth=2)
 def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
-        res = task.get_rest(task_id=task_id)
-        return render_template('report.html', res=res, time_frame="", task_id=task_id, api_id="", res_id="",
-                               resq_code="")
-    if request.method == "POST":
-        time_frame = request.form.get('time_frame')
-        task_id = request.form.get('task_id')
-        api_id = request.form.get('api_id')
-        res_id = request.form.get('res_id')
-        resq_code = request.form.get('resq_code')
-        res = task.get_rest(time_frame=time_frame, task_id=task_id, api_id=api_id, res_id=res_id, resq_code=resq_code)
-        return render_template('report.html', res=res, time_frame=time_frame, task_id=task_id, api_id=api_id,
-                               res_id=res_id, resq_code=resq_code)
+        res = task.get_rest(task_id=task_id,page=1)
+        count = task.get_count() #查询所有的总数
+        return render_template('report.html', res=res,count=count)
+    else:
+        data = request.get_data()#获取页数的编号
+        data = json.loads(data.decode("utf-8"))#json.loads函数的使用
+        # 传入参数获取到需要的条件
+        time_frame = data['time_frame'] #时间表
+        task_id = data['task_id']#任务
+        api_id = data['api_id']#接口
+        res_id = data['res_id']#编号
+       # print(res_id)
+        resq_code = data['resq_code']#结果
+        page = data['page']#从前端获取页数
+        res = task.get_rest(page=page,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
+        return render_template('reportpage.html', res=res)# 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
+
+
 
 
 # 验证token
@@ -239,3 +249,53 @@ def token_check():
         return json.dumps(data)
     else:
         return render_template('admin.html')
+
+@monitor.route('/result', methods=['get', 'post'])
+def result():
+    tasklist = task.task_list()
+    prolist= res.get_pro()
+    if request.method == 'GET':
+        mydate=res.get_time()
+        return render_template('result.html',tasklist=tasklist,prolist=prolist,mydate=mydate)
+    else:
+        task_id = request.get_data()
+        task_id = json.loads(task_id.decode("utf-8"))
+        task_id = task_id['task_id']
+        time_frame= request.get_data()
+        time_frame = json.loads(time_frame.decode("utf-8"))
+        time_frame = time_frame['time_frame']
+
+        taskstatis = res.get_task_statistics(task_id,time_frame=time_frame)
+        data = {"code": 1000, "taskstatis": taskstatis}
+        return json.dumps(data)
+
+@monitor.route('/apistatis', methods=['get', 'post'])
+def apistatis():
+    if request.method == 'POST':
+        api_id = request.get_data()
+        api_id = json.loads(api_id.decode("utf-8"))
+        api_id = api_id['api_id']
+
+        time_frame = request.get_data()
+        time_frame = json.loads(time_frame.decode("utf-8"))
+        time_frame = time_frame['time_frame']
+        rt=res.api_rt(api_id,time_frame=time_frame)
+        data={"code": 1000,"t":rt[0],"r":rt[1]}
+        return json.dumps(data)
+
+@monitor.route('/get_apiname', methods=['get', 'post'])
+def get_apiname():
+    if request.method == 'POST':
+        pro_name = request.get_data()
+        pro_name = json.loads(pro_name.decode("utf-8"))
+        pro_name = pro_name['pro_name']
+
+        api_name=res.get_api(pro_name)
+        if api_name:
+            data = {"code": 1000,"api_name": api_name}
+        else:
+            data = {"code": 1002,"api_name": api_name}
+        return json.dumps(data)
+
+
+

@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
+
 from flask import Flask, request, render_template, redirect, send_from_directory, abort,jsonify,url_for
+# from sqlalchemy import null
 from test_code import *
 from route import *
 from functools import wraps
@@ -11,6 +13,7 @@ from test_code.xmindupload import *
 from test_code.to_xls import *
 from werkzeug.utils import secure_filename
 from xmindparser import xmind_to_xml
+import platform
 import json
 
 app = Flask(__name__)
@@ -19,7 +22,7 @@ pt = APP_Report()
 bug = Mantis_Bug()
 pp = Cha_Project()
 bug_calculate = Bug_Calculate()
-up = Bug_Calculate()
+up = Xmind_Upload()
 app.config.from_object('settings.DevConfig')
 # token = request.cookies.get('token')
 
@@ -314,6 +317,7 @@ def Project_information():
     return render_template('project_information.html', u=data)
 
 
+
 # 抓虫节排行榜
 @app.route('/grab_bug', methods=['post', 'get'])
 def grab_bug():
@@ -436,21 +440,29 @@ def calcu():
 
 
 #xmind上传下载
-@app.route('/upload',methods=['post','get'])
+@app.route('/testcase',methods=['post','get'])
 def upload():
     a = up.filelist()
     if request.method == 'POST':
         f = request.files['file']
-        up.fileupload(f)    
+        up.fileupload(f)
+        way = ""
+        way_xls = ""
+        if(platform.system()=='Windows'):
+            way ="C:/Users/360che/Desktop/check_point/tmp/"
+            way_xls = "C:/Users/360che/Desktop/check_point/xls/"
+        elif(platform.system()=='Linux'):
+            way ="data/check_point/xmind"
+            way_xls = "data/check_point/xls/"
         #将xmind转为excel
         x_c = f.filename[0:-6]
-        x_a = xmind_to_xx('tmp/', f.filename, x_c)
+        x_a = xmind_to_xx(way, f.filename, x_c)
         x_a.to_excel(x_a.data_dict[0]['topic'])
         x_a.save_xls()
         #合并单元格
-        x_b = style_excel('tmp/xls/', x_c+'.xls', x_a.data_dict[0]['topic']['title'])
+        x_b = style_excel(way_xls, x_c+'.xls', x_a.data_dict[0]['topic']['title'])
         x_b.merge_excel(x_b.calculate())
-        x_b.save_style_excel('tmp/xls/'+x_c+'.xls')
+        x_b.save_style_excel(way_xls+x_c+'.xls')
         # up.fileinsert(f.filename)
         a.append(f.filename)
         return "1"
@@ -462,9 +474,14 @@ def upload():
 def return_file(filename):
     import os
     if request.method == "GET":
-        file_dir = os.path.join('tmp/xls',filename)
+        way = ""
+        if(platform.system()=='Windows'):
+            way ="C:/Users/360che/Desktop/check_point/xls"
+        elif(platform.system()=='Linux'):
+            way ="data/check_point/xls"
+        file_dir = os.path.join(way,filename)
         if os.path.isfile(file_dir):
-            return send_from_directory("tmp/xls", filename, as_attachment=True)
+            return send_from_directory(way, filename, as_attachment=True)
         abort(404)
 
 

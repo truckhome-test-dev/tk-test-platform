@@ -2,6 +2,7 @@
 import xlwt, xlrd
 from xmindparser import xmind_to_dict, xmind_to_xml, xmind_to_json
 import pysnooper
+import platform
 # title_name:用例字符串
 # topics：下一级
 
@@ -18,7 +19,10 @@ class xmind_to_xx(object):
     def __init__(self, xmind_path, xmind_file, name):
         self.xmind_file_path = xmind_path + xmind_file
         self.data_dict = xmind_to_dict(self.xmind_file_path)
-        self.xls_path = 'tmp/xls/' + name + '.xls'
+        if(platform.system()=='Windows'):
+            self.xls_path = 'C:/Users/360che/Desktop/check_point/xls/' + name + '.xls'
+        elif(platform.system()=='Linux'):
+            self.xls_path = 'data/check_point/xls/' + name + '.xls'
         self.workbook = xlwt.Workbook()
         self.worksheet = self.workbook.add_sheet(self.data_dict[0]['topic']['title'])
         # self.workbook.save(self.xls_path)
@@ -80,9 +84,15 @@ class style_excel(object):
         self.name = name
         self.data = xlrd.open_workbook(path).sheets()[0]
         self.row, self.column = self.data.nrows, self.data.ncols
-        self.style_xls_path = xls_path + 'tmp/xls/' + name + '.xls'
+        if(platform.system()=='Windows'):
+            self.style_xls_path = xls_path + 'C:/Users/360che/Desktop/check_point/xls/' + name + '.xls'
+        elif(platform.system()=='Linux'):
+            self.style_xls_path = xls_path + 'data/check_point/xls/' + name + '.xls'
         self.set_style()
         self.set_level()
+
+
+
 
     def end_col(self, row, next_cols):
         #是否为最后一列

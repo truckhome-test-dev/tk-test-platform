@@ -49,7 +49,11 @@
 		</thead>
 		<tbody>
 			{% for i in alldata %}
+				{% if i[2] == 0 %}
 				<tr class="table-item">
+					{% else %}
+				<tr class="table-item" style="color:#FF5722;">
+				{% endif %}
 					<td style="text-align: center">{{i[1]}}</td>
 					<td style="text-align: center">
 					{% if i[2] == 0 %}

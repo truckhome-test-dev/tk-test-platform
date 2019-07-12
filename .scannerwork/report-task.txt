@@ -1,0 +1,6 @@
+projectKey=TH_QAPF
+serverUrl=https://sonar.360che.com
+serverVersion=7.3.0.15553
+dashboardUrl=https://sonar.360che.com/dashboard?id=TH_QAPF
+ceTaskId=AWtAPu92rfXvoh5KX7cm
+ceTaskUrl=https://sonar.360che.com/api/ce/task?id=AWtAPu92rfXvoh5KX7cm
