@@ -32,6 +32,7 @@ def check_token2(func):
 
 # 任务列表展示
 @monitor.route('/task_list', methods=['get', 'post'])
+# @check_permissions("/monitor/task_list")
 def task_list():
     if request.method == "GET":
         task_list = task.task_list()
@@ -40,7 +41,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
-#@check_token2
+@check_permissions("/monitor/task_edit")
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"
@@ -59,7 +60,7 @@ def task_edit():
 
 # 添加任务
 @monitor.route('/task_add', methods=['get', 'post'])
-@check_token2
+@check_permissions("/monitor/task_add")
 def task_add():
     if request.method == "GET":
         title = "添加任务"
@@ -77,7 +78,7 @@ def task_add():
 
 # 删除任务
 @monitor.route('/task_del', methods=['get', 'post'])
-@check_token2
+@check_permissions("/monitor/task_del")
 def task_del():
     if request.method == "POST":
         data = request.get_data()
@@ -92,7 +93,7 @@ def task_del():
 
 # 启动、停止任务
 @monitor.route('/task_status', methods=['get', 'post'])
-@check_token2
+@check_permissions("/monitor/task_status")
 def task_status():
     if request.method == "POST":
         data = request.get_data()
@@ -104,7 +105,7 @@ def task_status():
 
 # 监控平台接口新增
 @monitor.route('/newapi', methods=['post', 'get'])
-@check_token2
+@check_permissions("/monitor/newapi")
 def newapi():
     if request.method == 'POST':
         data = request.get_data()
@@ -129,14 +130,14 @@ def showapi():
         apidatas = api.getapi()
         prolist = api.prolist()
         count = len(api.getapi(page=-1))
-        return render_template('apilist.html', apidata2=apidatas, prolist=prolist, count=count,proid=0)
+        return render_template('apilist.html', apidata2=apidatas, prolist=prolist, count=count, proid=0)
     else:
         proid = request.form.get('proid')
         if proid != None:
             prolist = api.prolist()
             apidatas = api.proapi(proid, page=0)
             count = len(api.proapi(proid, count=1))
-            return render_template('apilist.html', apidata2=apidatas, prolist=prolist, proid=proid,count=count)
+            return render_template('apilist.html', apidata2=apidatas, prolist=prolist, proid=proid, count=count)
         else:
             page = request.get_data()
             page = json.loads(page.decode("utf-8"))
@@ -144,15 +145,15 @@ def showapi():
             proid = request.get_data()
             proid = json.loads(proid.decode("utf-8"))
             proid = proid['proid']
-            apidatas = api.proapi(proid,page=page)
+            apidatas = api.proapi(proid, page=page)
             prolist = api.prolist()
-            count = len(api.proapi(proid,count=1))
+            count = len(api.proapi(proid, count=1))
             return render_template('apipage.html', apidata2=apidatas, prolist=prolist, count=count)
 
 
 # 监控平台修改接口内容
 @monitor.route('/api', methods=['post', 'get'])
-#@check_token2
+@check_permissions("/monitor/api")
 def editapi():
     if request.method == 'GET':
         prolist = api.prolist()
@@ -186,7 +187,7 @@ def selapi():
 
 # 监控平台修改接口使用状态
 @monitor.route('/editstatus', methods=['post', 'get'])
-@check_token2
+@check_permissions("/editstatus")
 def editapi2():
     data = request.get_data()
     data = json.loads(data)
@@ -209,7 +210,7 @@ def editapi3():
 # 接口请求记录
 
 @monitor.route('/report', methods=['get', 'post'])
-# @pysnooper.snoop(depth=2)
+# @check_permissions("/monitor/report")
 def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
@@ -250,24 +251,27 @@ def token_check():
     else:
         return render_template('admin.html')
 
+
 @monitor.route('/result', methods=['get', 'post'])
+# @check_permissions("/monitor/result")
 def result():
     tasklist = task.task_list()
-    prolist= res.get_pro()
+    prolist = res.get_pro()
     if request.method == 'GET':
-        mydate=res.get_time()
-        return render_template('result.html',tasklist=tasklist,prolist=prolist,mydate=mydate)
+        mydate = res.get_time()
+        return render_template('result.html', tasklist=tasklist, prolist=prolist, mydate=mydate)
     else:
         task_id = request.get_data()
         task_id = json.loads(task_id.decode("utf-8"))
         task_id = task_id['task_id']
-        time_frame= request.get_data()
+        time_frame = request.get_data()
         time_frame = json.loads(time_frame.decode("utf-8"))
         time_frame = time_frame['time_frame']
 
-        taskstatis = res.get_task_statistics(task_id,time_frame=time_frame)
+        taskstatis = res.get_task_statistics(task_id, time_frame=time_frame)
         data = {"code": 1000, "taskstatis": taskstatis}
         return json.dumps(data)
+
 
 @monitor.route('/apistatis', methods=['get', 'post'])
 def apistatis():
@@ -279,9 +283,10 @@ def apistatis():
         time_frame = request.get_data()
         time_frame = json.loads(time_frame.decode("utf-8"))
         time_frame = time_frame['time_frame']
-        rt=res.api_rt(api_id,time_frame=time_frame)
-        data={"code": 1000,"t":rt[0],"r":rt[1]}
+        rt = res.api_rt(api_id, time_frame=time_frame)
+        data = {"code": 1000, "t": rt[0], "r": rt[1]}
         return json.dumps(data)
+
 
 @monitor.route('/get_apiname', methods=['get', 'post'])
 def get_apiname():
@@ -290,12 +295,9 @@ def get_apiname():
         pro_name = json.loads(pro_name.decode("utf-8"))
         pro_name = pro_name['pro_name']
 
-        api_name=res.get_api(pro_name)
+        api_name = res.get_api(pro_name)
         if api_name:
-            data = {"code": 1000,"api_name": api_name}
+            data = {"code": 1000, "api_name": api_name}
         else:
-            data = {"code": 1002,"api_name": api_name}
+            data = {"code": 1002, "api_name": api_name}
         return json.dumps(data)
-
-
-

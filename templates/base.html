@@ -19,17 +19,28 @@
         <div class="layui-layout-admin">
             <!-- 顶部 -->
             <div class="layui-header">
-                <a href="/"  class="layui-logo" style="font-weight:bold;color:#FFFFFF">卡家测试管理平台</a>
+                <div style="display: inline-block">
+                    <a href="/"  style="margin-left: 40px;top:0;width:200px;height:100%;line-height:60px;text-align:center;font-size:16px;font-weight:bold;color:#FFFFFF;">卡家测试管理平台</a>
+                </div>
+                <div style="display: inline-block;float: right">
+                    <ul class="layui-nav">
+                      <li id="nolog" class="layui-nav-item" lay-unselect="">
+                        <a  href="javascript:;" id="username">
+                        </a>
+                        <dl id="layui-nav-child" class="layui-nav-child" style="text-align: left">
+                          <dd><a href="/logout" onclick="logout()">退出</a></dd>
+                        </dl>
+                      </li>
+                    </ul>
+                </div>
             </div>
 
             <!-- 左侧 -->
-            <div class="layui-side layui-bg-black">
+            <div class="layui-side layui-bg-black" id="menu1">
                 <div class="layui-side-scroll">
-                    <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                    <ul class="layui-nav layui-nav-tree"  lay-filter="test" id="menu">
 
                         <!-- 左侧栏目配置 -->
-
-
 
                         {% set left_list = {'资源管理':{'测试设备': 'http://127.0.0.1:5000/device','排期': 'http://127.0.0.1:5000/scheduling','bug统计': 'http://127.0.0.1:5000/bug_statistics','APP自动化报告': 'http://127.0.0.1:5000/appreport','卡车之家业务信息表': 'http://127.0.0.1:5000/project_information','抓虫节排行榜': 'http://127.0.0.1:5000/grab_bug','BUG率计算': 'http://127.0.0.1:5000/bug_calculate','BUG率统计': 'http://127.0.0.1:5000/calculate','检查点': 'http://127.0.0.1:5000/testcase'},'测试工具':{'YApi':'http://127.0.0.1:5000/yapi','响应时间测试':'http://127.0.0.1:5000/time_test'},'接口监控':{'接口管理':'http://127.0.0.1:5000/monitor/apilist','任务管理':'http://127.0.0.1:5000/monitor/task_list','结果查询':'http://127.0.0.1:5000/monitor/report'}} %}
 
@@ -49,8 +60,12 @@
             </div>
         <script>
             layui.use('element', function(){
-              var element = layui.element; 
-            });
+              var element = layui.element;
+              is_menu();
+              get_menu();
+              set_username();
+              element.render();
+});
         </script>
     {% endblock left %}
 

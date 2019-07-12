@@ -5,7 +5,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.6 (tk-test-platform1)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (test-tools)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="locust" />
     <orderEntry type="module" module-name="Che360Test" />

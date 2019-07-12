@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html style="
+    height: 100%;"lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <script src="static/layui/layui.js"></script>
+    <script type="text/javascript" src="static/js/tool_p.js"></script>
+</head>
+<body>
+<form class="layui-form" action="login_new" method="POST">
+    <div align="center" style="margin-top: 20%">
+  <div class="layui-form-item" style="width: 400px">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block" >
+      <input type="text" name="username" lay-verify="username" autocomplete="off" placeholder="请输入标题" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item" style="width: 400px">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-block" >
+      <input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="请输入密码" class="layui-input">
+    </div>
+  </div>
+
+<div class="layui-form-item" style="margin-left: 10%">
+        {% if error %}
+        <label class="layui-form-label">{{ error }}</label>
+    {% endif %}
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+    </div>
+  </div>
+        </div>
+</form>
+
+</bode>
+
+<script>
+document.onkeydown =cdk;
+function cdk(){
+    if(event.keyCode ==13){
+        token_check();
+    }
+}
+</script>
+</body>
+</html>

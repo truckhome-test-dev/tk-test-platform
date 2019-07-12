@@ -125,7 +125,6 @@ class Monitor_Res(SqlOperate):
     def get_api(self,pro_name):
         self.dbcur()
         sql = "select a.id,a.urlname from api_list as a,product as p where a.pro_id = p.ID and p.name='%s'"%pro_name
-        print (sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
