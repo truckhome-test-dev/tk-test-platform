@@ -215,8 +215,8 @@ def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
         res = task.get_rest(task_id=task_id,page=1)
-        count = task.get_count() #查询所有的总数
-        return render_template('report.html', res=res,count=count)
+        # count = task.get_count() #查询所有的总数
+        return render_template('report.html', res=res[1],count=res[0])
     else:
         data = request.get_data()#获取页数的编号
         data = json.loads(data.decode("utf-8"))#json.loads函数的使用
@@ -228,7 +228,8 @@ def report():
         resq_code = data['resq_code']#结果
         page = data['page']#从前端获取页数
         res = task.get_rest(page=page,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
-        return render_template('reportpage.html', res=res)# 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
+        # count = task.get_count ()  # 查询所有的总数
+        return render_template('reportpage.html', res=res[1],count=res[0])# 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
 
 
 
