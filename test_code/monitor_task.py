@@ -3,7 +3,8 @@ from test_code.sqlop import *
 import configparser
 import time
 import datetime
-
+import pymongo
+import json
 
 class Monitor_Task(SqlOperate):
     '''
@@ -248,10 +249,53 @@ class Monitor_Task(SqlOperate):
         return data[0]
 
 
+class Monitor_Mongodb():
+    def __init__(self):
+        self.conn = pymongo.MongoClient('192.168.2.1',27017)
+        self.db = self.conn.yapi
+
+#获取所有分组
+    def get_group(self):
+        myset=self.db.group
+        data=myset.find({'type':'public'},{'group_name':1})
+        L=[]
+        for i in data:
+            L.append(i)
+        return L
+
+#获取某分组下项目
+    def get_project(self,group_id):
+        myset=self.db.project
+        data=myset.find({'group_id':group_id},{'name':1})
+        L=[]
+        for i in data:
+            L.append(i)
+        return L
+
+#获取某项目下模块
+    def get_interface_cat(self,project_id):
+        myset=self.db.interface_cat
+        data=myset.find({'project_id':project_id},{'name':1})
+        L=[]
+        for i in data:
+            L.append(i)
+        return L
+
+#获取某模块下接口
+    def get_interface(self,catid):
+        myset=self.db.interface
+        data=myset.find({'catid':catid},{'title':1})
+        L=[]
+        for i in data:
+            L.append(i)
+        return L
 
 
 
 
-# if __name__ == "__main__":
-#     a = Monitor_Task()
-#     print(a.get_rest(page=1))
+if __name__ == "__main__":
+    a = Monitor_Mongodb()
+    print(a.get_interface(3279))
+# a={'type':'group','id':1}
+# print(type(a))
+# print(json.loads(a))
