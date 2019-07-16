@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<script src="../static/js/jquery-1.11.3.min.js"></script>
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = 'TestCase' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+<script type="text/javascript">
+ 
+       $(function () {
+           $("#btn_uploadimg").click(function () {
+               var fileObj = document.getElementById("FileUpload").files[0]; // js 获取文件对象
+               var fileObj1 = document.getElementById("FileUpload").value;  //获取文件路径
+               var houzui = "." + fileObj1.replace(/.+\./, ""); //获取文件后缀
+               var name = fileObj1.split("\\");
+               var names = name[name.length - 1];
+               if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                        alert("请选择文件");                  
+                        return;
+               }
+               if(houzui != ".xmind"){
+                        alert("请上传.xmind格式文件");
+                        return;
+               }
+               if(names.search("-") == -1){
+                        alert("请上传文件名为【产品线-业务线-版本号-备注】格式的文件")
+                        return;
+               }
+               
+               
+               var formFile = new FormData();
+               formFile.append("action", "upload");  
+               formFile.append("file", fileObj); //加入文件对象
+ 
+              
+               var data = formFile;
+               $.ajax({
+                   url: "/testcase",
+                   data: data,
+                   type: "post",
+                   dataType: "text",
+                   cache: false,//上传文件无需缓存
+                   processData: false,//用于对data参数进行序列化处理 这里必须false
+                   contentType: false, //必须
+                   success:function (res) {
+                    if(res=="1"){
+                          alert("上传完成!");
+                          location.reload();
+                        }                      
+                   },
+                   error:function (jqXHR, textStatus, errorThrown) {
+                      /*弹出jqXHR对象的信息*/
+                      alert("上传失败！");
+                }
+              })
+           })
+       })
+
+   </script>
+<div  >
+       <input type="file" name="FileUpload" id="FileUpload" >
+       <a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传文件</a> &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#FF0000;font-size:15px;" >请上传文件名为【产品线-业务线-版本号-备注】格式的文件</span>
+</div>
+<hr class="layui-bg-green">
+</br>
+
+<div>
+    <form action="" method="GET">
+      <table>
+      {% for i in a %}
+            <tr>
+                <td width="650px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px" forestgreen" value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
+                  <td width="110px"><a href="" class="layui-btn layui-btn-normal" style="display:none">查看详情</a></td>
+                  <td><a href="http://192.168.2.92:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
+            </tr>
+      {% endfor %}       
+      </table>
+      </form>
+ </div>
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
