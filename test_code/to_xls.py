@@ -22,7 +22,7 @@ class xmind_to_xx(object):
         if(platform.system()=='Windows'):
             self.xls_path = 'C:/Users/360che/Desktop/check_point/xls/' + name + '.xls'
         elif(platform.system()=='Linux'):
-            self.xls_path = '/data/check_point/xls/' + name + '.xls'
+            self.xls_path = 'data/check_point/xls/' + name + '.xls'
         self.workbook = xlwt.Workbook()
         self.worksheet = self.workbook.add_sheet(self.data_dict[0]['topic']['title'])
         # self.workbook.save(self.xls_path)
@@ -87,7 +87,7 @@ class style_excel(object):
         if(platform.system()=='Windows'):
             self.style_xls_path = xls_path + 'C:/Users/360che/Desktop/check_point/xls/' + name + '.xls'
         elif(platform.system()=='Linux'):
-            self.style_xls_path = xls_path + '/data/check_point/xls/' + name + '.xls'
+            self.style_xls_path = xls_path + 'data/check_point/xls/' + name + '.xls'
         self.set_style()
         self.set_level()
 

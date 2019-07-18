@@ -464,7 +464,9 @@ def bug_calculate1():
         bug_calculate.bugInsert(vname, proname, versionname, name, checknum, fristnum, leaknum, newnum, bugcount,
                                 bugdensity, fristleak, bringerror, addtime)
         data = bug_calculate.getInfor()
-        return render_template('bug_calculate.html', data=data, v=v)
+        return json.dumps(data)
+        # return render_template('bug_calculate.html', data=data, v=v)
+        # return json.dumps(data)
 
     else:
         return render_template('bug_calculate.html', data=("", "", ""), vn=vn, v=v)
@@ -510,6 +512,7 @@ def calcu():
 
 #xmind上传下载
 @app.route('/testcase',methods=['post','get'])
+# @check_permissions('/testcase')
 def upload():
     a = up.filelist()
     if request.method == 'POST':
@@ -532,7 +535,7 @@ def upload():
         x_b = style_excel(way_xls, x_c+'.xls', x_a.data_dict[0]['topic']['title'])
         x_b.merge_excel(x_b.calculate())
         x_b.save_style_excel(way_xls+x_c+'.xls')
-        # up.fileinsert(f.filename)
+        up.fileinsert(f.filename)
         a.append(f.filename)
         return "1"
     else:
