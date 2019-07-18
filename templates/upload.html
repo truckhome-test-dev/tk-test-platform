@@ -9,7 +9,7 @@
 {% block right %}
 	{{ super() }}
 	<!-- 修改name（页面名称） -->
-	{% set name = 'xmind解析' %}
+	{% set name = 'TestCase' %}
 	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
 		<legend>{{name}}</legend>
 	</fieldset>
@@ -77,8 +77,8 @@
       <table>
       {% for i in a %}
             <tr>
-                <td width="600px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:300px" forestgreen" value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
-                  <td width="110px"><a href="" class="layui-btn layui-btn-normal" download="chrome">查看详情</a></td>
+                <td width="700px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px" forestgreen" value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
+                  <!-- <td width="110px"><a href="" class="layui-btn layui-btn-normal" download="chrome">查看详情</a></td> -->
                   <td><a href="http://127.0.0.1:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
             </tr>
       {% endfor %}       
