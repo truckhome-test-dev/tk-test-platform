@@ -42,7 +42,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
-@check_permissions("/monitor/task_edit")
+# @check_permissions("/monitor/task_edit")#权限
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"
@@ -311,6 +311,7 @@ def get_interface_list():
         data = json.loads(data.decode("utf-8"))
         type = data['type']
         id = data['id']
+        #层级
         if type == "group":
             data = mm.get_group()
         elif type == 'project':
