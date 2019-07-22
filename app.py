@@ -512,7 +512,7 @@ def calcu():
 
 #xmind上传下载
 @app.route('/testcase',methods=['post','get'])
-@check_permissions('/testcase')
+# @check_permissions('/testcase')
 def upload():
     a = up.filelist()
     if request.method == 'POST':
