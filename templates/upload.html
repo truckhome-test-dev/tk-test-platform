@@ -37,7 +37,7 @@
                
                
                var formFile = new FormData();
-               formFile.append("action", "upload");  
+               formFile.append("action", "testcase");  
                formFile.append("file", fileObj); //加入文件对象
  
               
@@ -77,9 +77,9 @@
       <table>
       {% for i in a %}
             <tr>
-                <td width="650px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px" forestgreen" value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
-                  <td width="110px"><a href="" class="layui-btn layui-btn-normal" style="display:none">查看详情</a></td>
-                  <td><a href="http://192.168.2.92:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
+                <td width="700px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px" forestgreen" value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
+                  <!-- <td width="110px"><a href="" class="layui-btn layui-btn-normal" download="chrome">查看详情</a></td> -->
+                  <td><a href="http://127.0.0.1:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
             </tr>
       {% endfor %}       
       </table>

@@ -17,21 +17,22 @@ class Xmind_Upload(SqlOperate):
 	#插入数据
 	def fileinsert(self,filename):
 		
-		product = ""
-		work =""
 		vesion =""
 		beizhu =""
-		filename=filename.split('-')
-		for a in range(len(filename)):
-			product = filename[0]
-			work = filename[1]
-			vesion = filename[2]
-			if len(filename) < 4:
-			    beizhu = ""
-			else:
-				beizhu = filename[3]
+		str2 = "-"
+		# str1[:str1.index(str2)]
+		product = filename[:filename.index(str2)]
+		# filename=filename.split('-')
+		# for a in range(len(filename)):
+		# 	product = filename[0]
+		# 	work = filename[1]
+		# 	vesion = filename[2]
+		# 	if len(filename) < 4:
+		# 	    beizhu = ""
+		# 	else:
+		# 		beizhu = filename[3]
 		self.dbcur()
-		sql = "INSERT INTO checklist (product,work,vesion,beizhu,addtime,updatetime)VALUES( '%s', '%s','%s','%s',curdate(),curdate())"%(product,work,vesion,beizhu)
+		sql = "INSERT INTO checklist (product,work,vesion,beizhu,addtime,updatetime)VALUES( '%s', '%s','%s','%s',curdate(),curdate())"%(product,filename,vesion,beizhu)
 		self.sqlExe(sql)
 		self.sqlCom()
 		self.sqlclo()
