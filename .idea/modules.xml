@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://E:/Che360Test/.idea/Che360Test.iml" filepath="E:/Che360Test/.idea/Che360Test.iml" />
       <module fileurl="file://E:/locust/.idea/locust.iml" filepath="E:/locust/.idea/locust.iml" />
-      <module fileurl="file://E:/test-flask/.idea/test-flask.iml" filepath="E:/test-flask/.idea/test-flask.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/tk-test-platform.iml" filepath="$PROJECT_DIR$/.idea/tk-test-platform.iml" />
     </modules>
   </component>
