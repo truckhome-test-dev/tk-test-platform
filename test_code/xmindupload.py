@@ -123,7 +123,7 @@ class Xmind_Upload(SqlOperate):
 		#合并单元格
 		x_b = style_excel('C:/Users/360che/Desktop/check_point/xls/', x_c+'.xls', x_a.data_dict[0]['topic']['title'])
 		x_b.merge_excel(x_b.calculate())
-		x_b.save_style_excel('C:/Users/360che/Desktop/check_point/xls/'+x_c+'.xls')
+		x_b.save_style_excel('/data/check_point/xls/'+x_c+'.xls')
 		return "pass"
 
 	#文件上传路径
