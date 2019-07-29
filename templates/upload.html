@@ -83,7 +83,7 @@ function sure() {
                                  "<input  type='text' style='border-style:none;font-size:18px;width:600px'  value='"+res[i]+"' name='upname' class='layui-icon layui-icon-rate-solid'>"+
                                  "</td>"+
                                  "<td>"+
-                                 "<a href='http://127.0.0.1:5000/export_xls/"+res[i]+"' class='layui-btn' download='chrome'>击下载文件</a>"
+                                 "<a href='http://127.0.0.1:5000/export_xls/"+res[i]+"' class='layui-btn' download='chrome'>点击下载文件</a>"
                                  "</td>"+
                                  "</tr>"
                             }
@@ -103,13 +103,13 @@ function sure() {
    </script>
 <div  >
        <input type="file" name="FileUpload" id="FileUpload">
-       <a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传文件</a> &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#FF0000;font-size:15px;" >请上传文件名为【产品线-业务线-版本号-备注】格式的文件</span>
+       <a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传文件</a> &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#FF0000;font-size:15px;" >（请上传文件名为【产品线-业务线-版本号-备注】格式的文件）</span>
        </br>
        </br>
        <div>
         <table>
           <td>请选择业务线：</td>
-          <td><select  style="width:180px;"  id="project" name="project" class="layui-form-label"  >
+          <td ><select  style="width:163px;"  id="project" name="project" class="layui-form-label">
             <option value="" >全部</option>
             <option value="" >产品库</option>
             <option value="" >App</option>
@@ -121,7 +121,7 @@ function sure() {
             <option value="" >电商系统</option>
             <option value="" >资讯</option>
             </select></td>
-           <td>&nbsp;&nbsp;<input type="button" id="sure" value="筛选" onclick="sure()" class="layui-btn layui-btn-mini"></td>
+           <td>&nbsp;&nbsp;<input type="button" id="sure" value="筛选" onclick="sure()" class="layui-btn layui-btn-mini" style="width:93px;"></td>
         </table>
        </div>
        

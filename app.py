@@ -51,6 +51,7 @@ def check_token(func):
             data = json.dumps({"code": 1001})
             return data
 
+
     return inner
 
 
@@ -530,7 +531,6 @@ def upload():
 def return_file(filename):
     import os
     if request.method == "GET":
-        print(filename)
         search = up.xls_true(filename)
         if search:
             file_dir = os.path.join(up.xls_way(),filename)

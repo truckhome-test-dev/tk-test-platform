@@ -108,7 +108,6 @@ class Xmind_Upload(SqlOperate):
 		self.sqlCom()
 		self.sqlclo()
 		data = self.cur.fetchall()
-		print(data)
 		l = ""
 		for i in data:
 			l=i[0]
