@@ -7,6 +7,106 @@ import json
 import pymysql
 
 
+# 获取mongo数据
+class get_md():
+    def __init__(self):
+        self.conn = pymongo.MongoClient('192.168.2.1', 27017)
+        self.db = self.conn.yapi
+
+    # 获取domain
+    def get_domain(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": interface_id}, {"project_id": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            project_id = L[0]["project_id"]
+        else:
+            project_id = ""
+        myset = self.db.project
+        data = myset.find({"env": {"$elemMatch": {"name": "正式环境"}}, "_id": project_id},
+                          {"env": {"$elemMatch": {"name": "正式环境"}}})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["env"][0]["domain"]
+        else:
+            data = ""
+        return data
+
+    # 获取method
+    def get_method(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": interface_id}, {"method": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["method"]
+        else:
+            data = ""
+        return data
+
+    # 获取path
+    def get_path(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": interface_id}, {"path": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["path"]
+        else:
+            data = ""
+        return data
+
+    # 获取type
+    def get_type(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": interface_id}, {"req_body_type": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["req_body_type"]
+        else:
+            data = ""
+        return data
+
+    # 获取query
+    def get_query(self, interface_id):
+        myset = self.db.interface_case
+        data = myset.find({"interface_id": interface_id}, {"req_query": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["req_query"]
+            D = {}
+            for i in data:
+                key = i["name"]
+                value = i["value"]
+                D[key] = value
+        else:
+            D = ""
+        return D
+
+    # 获取json类型参数
+    def get_req_body_json(self, interface_id):
+        myset = self.db.interface_case
+        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["req_body_other"]
+        else:
+            data = ""
+        return data
+
+
 # 执行脚本类
 class run(SqlOperate):
     '''
@@ -161,7 +261,10 @@ class run(SqlOperate):
             print("执行完成")
 
 
-if __name__ == "__main__":
-    task_id = sys.argv[1]
-    run = run(task_id)
-    run.main()
+m = get_md()
+print(m.get_req_body_json(11317))
+
+# if __name__ == "__main__":
+#     task_id = sys.argv[1]
+#     run = run(task_id)
+#     run.main()

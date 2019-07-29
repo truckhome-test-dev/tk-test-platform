@@ -10,7 +10,7 @@ class APP_Report():
 
     def get_text(self):
         # 获取第一级别页面内容
-        url = "http://192.168.10.20/TestReport/"
+        url = "http://192.168.20.20/TestReport/"
         retext = requests.get(url).text
         return retext
 
@@ -36,7 +36,7 @@ class APP_Report():
         urls = re.findall(r'a href="(.+)/">', retext)
         urls = sorted(urls, reverse=True)
         for i in urls:
-            url = "http://192.168.10.20/TestReport/" + i
+            url = "http://192.168.20.20/TestReport/" + i
             datelist.append(url)
         for j in datelist:
             retext = requests.get(j).text
