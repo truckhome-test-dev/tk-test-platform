@@ -11,6 +11,7 @@ monitor = Blueprint('monitor', __name__)
 task = Monitor_Task()
 api = Api_Monitor()
 res = Monitor_Res()
+mm = Monitor_Mongodb()
 
 
 # 判断登录装饰器方法
@@ -214,23 +215,23 @@ def editapi3():
 def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
-        res = task.get_rest(task_id=task_id,page=1)
-        count = task.get_count() #查询所有的总数
-        return render_template('report.html', res=res,count=count)
+        res = task.get_rest(task_id=task_id, page=1)
+        count = task.get_count()  # 查询所有的总数
+        return render_template('report.html', res=res, count=count)
     else:
-        data = request.get_data()#获取页数的编号
-        data = json.loads(data.decode("utf-8"))#json.loads函数的使用
+        data = request.get_data()  # 获取页数的编号
+        data = json.loads(data.decode("utf-8"))  # json.loads函数的使用
         # 传入参数获取到需要的条件
-        time_frame = data['time_frame'] #时间表
-        task_id = data['task_id']#任务
-        api_id = data['api_id']#接口
-        res_id = data['res_id']#编号
-        resq_code = data['resq_code']#结果
-        page = data['page']#从前端获取页数
-        res = task.get_rest(page=page,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
-        return render_template('reportpage.html', res=res)# 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
-
-
+        time_frame = data['time_frame']  # 时间表
+        task_id = data['task_id']  # 任务
+        api_id = data['api_id']  # 接口
+        res_id = data['res_id']  # 编号
+        # print(res_id)
+        resq_code = data['resq_code']  # 结果
+        page = data['page']  # 从前端获取页数
+        res = task.get_rest(page=page, time_frame=time_frame, task_id=task_id, api_id=api_id, res_id=res_id,
+                            resq_code=resq_code)
+        return render_template('reportpage.html', res=res)  # 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
 
 
 # 验证token
@@ -300,3 +301,34 @@ def get_apiname():
         else:
             data = {"code": 1002, "api_name": api_name}
         return json.dumps(data)
+
+
+# 获取接口列表，根据不同type获取对应列表
+@monitor.route('/get_interface_list', methods=['post'])
+def get_interface_list():
+    try:
+        #获取json数据
+        # data = request.get_data()
+        # data = json.loads(data.decode("utf-8"))
+        # type = data['type']
+        # id = data['id']
+        #获取form数据
+        type = request.form.get('type')
+        id = request.form.get('id')
+        if type == "group":
+            data = mm.get_group()
+        elif type == 'project':
+            data = mm.get_project(id)
+        elif type == 'cat':
+            data = mm.get_interface_cat(id)
+        elif type == 'interface':
+            data = mm.get_interface(id)
+        else:
+            data = '参数异常'
+        if data == '参数异常':
+            ret = {"code": 1003, "data": data}
+        else:
+            ret = {"code": 1000, "data": data}
+    except:
+        ret = {"code": 1003, "data": "参数异常"}
+    return json.dumps(ret)

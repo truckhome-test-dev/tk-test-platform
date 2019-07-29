@@ -549,22 +549,23 @@ function ret(e) {
 
 //    新增任务
 function task_add(e) {
-    var token = getCookie("token")
-    xmlhttp = new XMLHttpRequest();
-    var data = '{  "token" :"' + token + '"}';
-    xmlhttp.open("POST", "token_check", true);
-    xmlhttp.send(data);
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var c = JSON.parse(xmlhttp.responseText)
-            if (c.code == 1000) {
-                window.location.href = "http://127.0.0.1:5000/monitor/task_add";
-            } else {
-                alert("请登录")
-            }
-
-        }
-    }
+    window.location.href = "http://127.0.0.1:5000/monitor/task_add";
+    // var token = getCookie("token")
+    // xmlhttp = new XMLHttpRequest();
+    // var data = '{  "token" :"' + token + '"}';
+    // xmlhttp.open("POST", "token_check", true);
+    // xmlhttp.send(data);
+    // xmlhttp.onreadystatechange = function () {
+    //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //         var c = JSON.parse(xmlhttp.responseText)
+    //         if (c.code == 1000) {
+    //             window.location.href = "http://127.0.0.1:5000/monitor/task_add";
+    //         } else {
+    //             alert("请登录")
+    //         }
+    //
+    //     }
+    // }
 }
 
 //获取菜单并存到localStorage

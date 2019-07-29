@@ -16,9 +16,10 @@ class xmind_to_xx(object):
     xmind_to_xx.to_json
     xmind_to_xx.to_excel
     '''
-    def __init__(self, xmind_path, xmind_file, name):
-        self.xmind_file_path = xmind_path + xmind_file
-        self.data_dict = xmind_to_dict(self.xmind_file_path)
+    def __init__(self, data, xmind_file, name):
+        # self.xmind_file_path = xmind_path + xmind_file
+        #self.data_dict = xmind_to_dict(xmind_path)
+        self.data_dict = data
         if(platform.system()=='Windows'):
             self.xls_path = 'C:/Users/360che/Desktop/check_point/xls/' + name + '.xls'
         elif(platform.system()=='Linux'):
@@ -27,7 +28,6 @@ class xmind_to_xx(object):
         self.worksheet = self.workbook.add_sheet(self.data_dict[0]['topic']['title'])
         # self.workbook.save(self.xls_path)
         self.ex_row = 0
-
 
     def to_xml(self): 
         #转xml并存储
@@ -225,3 +225,14 @@ class style_excel(object):
 # b = style_excel('xml/', 'App-v709.xls', a.data_dict[0]['topic']['title'])
 # b.merge_excel(b.calculate())
 # b.save_style_excel('xml/App-v709.xls')
+
+
+
+
+
+
+
+
+
+
+
