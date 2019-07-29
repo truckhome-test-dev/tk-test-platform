@@ -30,10 +30,8 @@ class Bug_Calculate(SqlOperate):
                                       'bugcount': bugcount, 'bugdensity': bugdensity, 'fristleak': fristleak,
                                       'bringerror': bringerror, 'addtime': addtime})
         data = self.bugnewsel()
-        print(data)
         # self.bugdel()
         if data:
-            print(1)
             self.bugdel()
         else:
             self.bugnewinser()
@@ -82,7 +80,6 @@ class Bug_Calculate(SqlOperate):
     def bugnewinser(self):
         self.dbcur()
         sql = "insert into bugmidu(addtime,density,leakage,lead,updatetime)select DATE_FORMAT( addtime, '%Y-%m' ),ROUND(sum(bugdensity)/count(proname),2),ROUND(sum(fristleak)/count(proname),2),ROUND(sum(bringerror)/count(proname),2),CURDATE( ) from bugcalculate WHERE DATE_FORMAT( addtime, '%Y-%m' ) = DATE_FORMAT( CURDATE( ) , '%Y-%m' )  group by DATE_FORMAT(addtime,'%Y-%m')"
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()

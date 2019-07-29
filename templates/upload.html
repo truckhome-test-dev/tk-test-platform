@@ -14,6 +14,7 @@
 		<legend>{{name}}</legend>
 	</fieldset>
 <script type="text/javascript">
+  
  
        $(function () {
            $("#btn_uploadimg").click(function () {
@@ -35,16 +36,16 @@
                         return;
                }
                
-               
+
                var formFile = new FormData();
                formFile.append("action", "testcase");  
                formFile.append("file", fileObj); //加入文件对象
- 
-              
+               formFile.append("path",fileObj1);
+               formFile.append("project",project);
                var data = formFile;
                $.ajax({
                    url: "/testcase",
-                   data: data,
+                   data:data,
                    type: "post",
                    dataType: "text",
                    cache: false,//上传文件无需缓存
@@ -64,26 +65,82 @@
            })
        })
 
+// 筛选
+function sure() {
+        var project = $('#project option:selected').text();
+        var newtable = window.document.getElementById('newtable');
+        var str = "";
+                $.ajax({                      
+                    type:'post',
+                    url:'/selectfile',
+                    data:{'project':project},
+                    dataType:'json',
+                    success:function (res) {    //后端返回数据，是列表形式的
+                        if (res){
+                            for (i=0;i<res.length;i++){
+                                 str +="<tr>" +
+                                 "<td width='700px' height='48px'>"+
+                                 "<input  type='text' style='border-style:none;font-size:18px;width:600px'  value='"+res[i]+"' name='upname' class='layui-icon layui-icon-rate-solid'>"+
+                                 "</td>"+
+                                 "<td>"+
+                                 "<a href='http://127.0.0.1:5000/export_xls/"+res[i]+"' class='layui-btn' download='chrome'>击下载文件</a>"
+                                 "</td>"+
+                                 "</tr>"
+                            }
+                            newtable.innerHTML = str;
+
+                        }
+                        else {
+                            alert(查询失败)
+                        }
+                    }
+        
+                });
+
+            }
+    //     }
+    // }
    </script>
 <div  >
-       <input type="file" name="FileUpload" id="FileUpload" >
+       <input type="file" name="FileUpload" id="FileUpload">
        <a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传文件</a> &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#FF0000;font-size:15px;" >请上传文件名为【产品线-业务线-版本号-备注】格式的文件</span>
+       </br>
+       </br>
+       <div>
+        <table>
+          <td>请选择业务线：</td>
+          <td><select  style="width:180px;"  id="project" name="project" class="layui-form-label"  >
+            <option value="" >全部</option>
+            <option value="" >产品库</option>
+            <option value="" >App</option>
+            <option value="" >IT系统</option> 
+            <option value="" >互动</option>
+            <option value="" >其它</option>
+            <option value="" >支持</option>
+            <option value="" >独立</option>
+            <option value="" >电商系统</option>
+            <option value="" >资讯</option>
+            </select></td>
+           <td>&nbsp;&nbsp;<input type="button" id="sure" value="筛选" onclick="sure()" class="layui-btn layui-btn-mini"></td>
+        </table>
+       </div>
+       
 </div>
 <hr class="layui-bg-green">
 </br>
 
 <div>
     <form action="" method="GET">
-      <table>
+      <table id="newtable"  >
       {% for i in a %}
             <tr>
-                <td width="700px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px" forestgreen" value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
+                <td width="700px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px"  value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
                   <!-- <td width="110px"><a href="" class="layui-btn layui-btn-normal" download="chrome">查看详情</a></td> -->
                   <td><a href="http://127.0.0.1:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
             </tr>
       {% endfor %}       
       </table>
       </form>
- </div>
+ </div
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

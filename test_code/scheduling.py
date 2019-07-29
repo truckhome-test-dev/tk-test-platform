@@ -4,7 +4,7 @@
 import requests
 import json
 import datetime
-from dateutil.relativedelta import relativedelta
+# from dateutil.relativedelta import relativedelta
 import random
 
 
