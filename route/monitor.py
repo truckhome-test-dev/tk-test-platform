@@ -42,7 +42,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
-# @check_permissions("/monitor/task_edit")#权限
+@check_permissions("/monitor/task_edit")
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"
@@ -303,15 +303,18 @@ def get_apiname():
         return json.dumps(data)
 
 
-#获取接口列表，根据不同type获取对应列表
+# 获取接口列表，根据不同type获取对应列表
 @monitor.route('/get_interface_list', methods=['post'])
 def get_interface_list():
     try:
-        data = request.get_data()
-        data = json.loads(data.decode("utf-8"))
-        type = data['type']
-        id = data['id']
-        #层级
+        #获取json数据
+        # data = request.get_data()
+        # data = json.loads(data.decode("utf-8"))
+        # type = data['type']
+        # id = data['id']
+        #获取form数据
+        type = request.form.get('type')
+        id = request.form.get('id')
         if type == "group":
             data = mm.get_group()
         elif type == 'project':
@@ -321,11 +324,11 @@ def get_interface_list():
         elif type == 'interface':
             data = mm.get_interface(id)
         else:
-            data='参数异常'
-        if data=='参数异常':
-            ret={"code": 1003, "data": data}
+            data = '参数异常'
+        if data == '参数异常':
+            ret = {"code": 1003, "data": data}
         else:
-            ret={"code": 1000, "data": data}
+            ret = {"code": 1000, "data": data}
     except:
         ret = {"code": 1003, "data": "参数异常"}
     return json.dumps(ret)

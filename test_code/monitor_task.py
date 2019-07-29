@@ -266,7 +266,7 @@ class Monitor_Mongodb():
 #获取某分组下项目
     def get_project(self,group_id):
         myset=self.db.project
-        data=myset.find({'group_id':group_id},{'name':1})
+        data=myset.find({'group_id':int(group_id)},{'name':1})
         L=[]
         for i in data:
             L.append(i)
@@ -275,7 +275,7 @@ class Monitor_Mongodb():
 #获取某项目下模块
     def get_interface_cat(self,project_id):
         myset=self.db.interface_cat
-        data=myset.find({'project_id':project_id},{'name':1})
+        data=myset.find({'project_id':int(project_id)},{'name':1})
         L=[]
         for i in data:
             L.append(i)
@@ -284,7 +284,7 @@ class Monitor_Mongodb():
 #获取某模块下接口
     def get_interface(self,catid):
         myset=self.db.interface
-        data=myset.find({'catid':catid},{'title':1})
+        data=myset.find({'catid':int(catid)},{'title':1})
         L=[]
         for i in data:
             L.append(i)

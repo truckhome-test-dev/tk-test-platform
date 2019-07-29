@@ -2,16 +2,18 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-
-from flask import Flask, request, render_template, redirect, send_from_directory, abort, jsonify, session, url_for, \
-    Response, make_response
-from sqlalchemy import null
+from flask import Flask, request, render_template, redirect, send_from_directory, abort, jsonify, session, url_for, Response, make_response
+# from sqlalchemy import null
 from test_code import *
 from base_server import *
-from sqlalchemy import null
 from route import *
 from functools import wraps
 from test_code.bug_calculate import *
+from test_code.xmindupload import *
+from test_code.to_xls import *
+from werkzeug.utils import secure_filename
+from xmindparser import xmind_to_xml
+import platform
 import json
 from datetime import timedelta
 
@@ -24,6 +26,7 @@ pt = APP_Report()
 bug = Mantis_Bug()
 pp = Cha_Project()
 bug_calculate = Bug_Calculate()
+up = Xmind_Upload()
 app.config.from_object('settings.DevConfig')
 
 '''
@@ -47,6 +50,7 @@ def check_token(func):
         else:
             data = json.dumps({"code": 1001})
             return data
+
 
     return inner
 
@@ -461,8 +465,7 @@ def bug_calculate1():
         bug_calculate.bugInsert(vname, proname, versionname, name, checknum, fristnum, leaknum, newnum, bugcount,
                                 bugdensity, fristleak, bringerror, addtime)
         data = bug_calculate.getInfor()
-
-        return render_template('bug_calculate.html', data=data, v=v)
+        return json.dumps(data)
 
     else:
         return render_template('bug_calculate.html', data=("", "", ""), vn=vn, v=v)
@@ -505,6 +508,49 @@ def calcu():
     else:
         return render_template('calculate.html', data=("", "", ""))
 
+
+#xmind上传下载
+@app.route('/testcase',methods=['post','get'])
+# @check_permissions('/testcase')
+def upload():
+    a = up.fileselect()
+    if request.method == 'POST':
+        f = request.files['file']
+        up.fileupload(f)
+        way = up.xmind_way()
+        path = way+f.filename
+        data = up.to_dict(path)
+        up.fileinsert(f.filename,data)
+        os.remove(path) 
+        return "1"
+    else:
+        return render_template('upload.html',a = a)
+ 
+#下载  
+@app.route('/export_xls/<filename>', methods=['get'])
+def return_file(filename):
+    import os
+    if request.method == "GET":
+        search = up.xls_true(filename)
+        if search:
+            file_dir = os.path.join(up.xls_way(),filename)
+        else:
+            up.downexcel(filename)
+            file_dir = os.path.join(up.xls_way(),filename)
+        if os.path.isfile(file_dir):
+            return send_from_directory(up.xls_way(), filename, as_attachment=True)
+        abort(404)
+#查询
+@app.route('/selectfile', methods=['post','get'])
+def select_file():
+    if request.method == "POST":
+        project = request.form.get('project')
+        a = ""
+        if(project == "全部"):
+            a = up.fileselect()
+        else:
+            a = up.sel_file(project)
+        return json.dumps(a)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

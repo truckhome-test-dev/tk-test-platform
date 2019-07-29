@@ -54,6 +54,46 @@
         alert("请输入bug总数")
         return false;
       }
+      var project = document.getElementById("project").value;
+      var proname = document.getElementById("module").value;
+      var versionname = document.getElementById("versionname").value;
+      var name = document.getElementById("beizhu").value;
+      var checknum = document.getElementById("checknum").value;
+      var fristnum = document.getElementById("fristnum").value;
+      var leaknum = document.getElementById("leaknum").value;
+      var newnum = document.getElementById("newnum").value;
+      var bugcount = document.getElementById("bugcount").value;
+      // js = 'return document.getElementById("元素ID").value'
+     $.ajax({
+                   url: "/bug_calculate",
+                   type: "post",
+                   data:{'project':project,'proname':proname,'versionname':versionname,'name':name,'checknum':checknum,'fristnum':fristnum,'leaknum':leaknum,'newnum':newnum,'bugcount':bugcount},                 
+                   dataType: 'json',
+                   // cache: false,//上传文件无需缓存
+                   // processData: false,//用于对data参数进行序列化处理 这里必须false
+                   // contentType: false, //必须
+                   success:function (res) {
+                    
+                    if(res){
+                          alert("添加成功!");
+                          // location.reload();
+                          for (i=0;i<res.length;i++){                           
+                            $("#bugdensity").val(res[0]);
+                            $("#fristleak").val(res[1]);
+                            $("#bringerror").val(res[2]);
+                          }
+                        }                      
+                   },
+                   error:function (jqXHR, textStatus, errorThrown) {
+                    // alert(res)
+                      /*弹出jqXHR对象的信息*/
+                      alert(res)
+                      alert(jqXHR);
+                      alert(textStatus);
+                      alert(errorThrown);
+                      alert("添加失败！");
+                }
+              })
     }
 
 function selectProject() {
@@ -123,6 +163,7 @@ function selectProject1() {
             }
         }
     }
+
 </script>
 
   <div id="divone">
@@ -133,7 +174,7 @@ function selectProject1() {
         </tr>
       </table>
   </div>
-    <form action="bug_calculate" method="POST">
+    <form action="" method="POST">
       <table border="0px" id="table2" cellspacing="10">
       <br/>
       <tr>
@@ -153,7 +194,7 @@ function selectProject1() {
         <td><select  style="width:180px;" id='versionname' name="versionname" class="layui-form-label">  
             </select> </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：</td>
-        <td><input class="layui-input" type="text" name="name"></td>
+        <td><input class="layui-input" type="text" id='beizhu' name="name"></td>
       </tr>
       <br/>
       <tr>
@@ -169,18 +210,19 @@ function selectProject1() {
         <td ><input type="text" class="layui-input" name="bugcount" id="bugcount"  placeholder="请输入数字" oninput="value=value.replace(/[^\d]/g,'')"></td>
       </tr>
         <tr>
-          <td colspan="8" align="center"><b><input type="submit" id="sure" value="确定" onclick="return Show()" class="layui-btn layui-btn-primary"></b>
+          <td colspan="8" align="center"><b><input type="button" id="sure" value="确定" onclick="return Show()" class="layui-btn layui-btn-primary"></b>
+         <!--  <td colspan="8" align="center"><b><input type="submit" id="sure" value="确定" class="layui-btn layui-btn-primary"></b> -->
           </td>
         </tr>
         </form>
         <tr valign="top" class="input2">
-          <td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;<b>bug密度：</b><input type="text" value="{{data[0]}}" name="bugdensity" class="input2" ></td>
+          <td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;<b>bug密度：</b><input type="text" value="{{data[0]}}" id="bugdensity" name="bugdensity" class="input2" ></td>
         </tr>
         <tr valign="top" class="input2">
-          <td colspan="8" align="left" ><b>首轮漏测率：</b><input type="text" value="{{data[1]}}" name="fristleak" class="input2"></td>
+          <td colspan="8" align="left" ><b>首轮漏测率：</b><input type="text" value="{{data[1]}}" id="fristleak" name="fristleak" class="input2"></td>
         </tr>
         <tr valign="top" class="input2">
-          <td colspan="8" align="left"><b>引入错误率：</b><input type="text" value="{{data[2]}}" name="bringerror" class="input2"></td>
+          <td colspan="8" align="left"><b>引入错误率：</b><input type="text" value="{{data[2]}}" id="bringerror" name="bringerror" class="input2"></td>
         </tr>        
       </table>
     
