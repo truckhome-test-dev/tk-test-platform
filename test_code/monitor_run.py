@@ -311,6 +311,6 @@ if __name__ == "__main__":
     # task_id = sys.argv[1]
     task_id = 8
     main(task_id)
-    s=Send_Email()
+    s=Send_All()
     msg="有接口异常，请及时处理，任务id：%s"%task_id
     s.sendemail("jinyue.cui@360che.com",msg)
