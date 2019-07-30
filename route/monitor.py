@@ -308,13 +308,13 @@ def get_apiname():
 def get_interface_list():
     try:
         #获取json数据
-        # data = request.get_data()
-        # data = json.loads(data.decode("utf-8"))
-        # type = data['type']
-        # id = data['id']
+        data = request.get_data()
+        data = json.loads(data.decode("utf-8"))
+        type = data['type']
+        id = data['id']
         #获取form数据
-        type = request.form.get('type')
-        id = request.form.get('id')
+        # type = request.form.get('type')
+        # id = request.form.get('id')
         if type == "group":
             data = mm.get_group()
         elif type == 'project':

@@ -5,6 +5,7 @@ import time
 import sys
 import json
 import pymysql
+from base_server import *
 
 
 # 获取mongo数据
@@ -16,16 +17,16 @@ class get_md():
     # 获取domain
     def get_domain(self, interface_id):
         myset = self.db.interface
-        data = myset.find({"_id": interface_id}, {"project_id": 1})
+        data = myset.find({"_id": int(interface_id)}, {"project_id": 1})
         L = []
         for i in data:
             L.append(i)
         if L != []:
             project_id = L[0]["project_id"]
         else:
-            project_id = ""
+            project_id = None
         myset = self.db.project
-        data = myset.find({"env": {"$elemMatch": {"name": "正式环境"}}, "_id": project_id},
+        data = myset.find({"env": {"$elemMatch": {"name": "正式环境"}}, "_id": int(project_id)},
                           {"env": {"$elemMatch": {"name": "正式环境"}}})
         L = []
         for i in data:
@@ -33,7 +34,7 @@ class get_md():
         if L != []:
             data = L[0]["env"][0]["domain"]
         else:
-            data = ""
+            data = None
         return data
 
     # 获取method
@@ -46,7 +47,7 @@ class get_md():
         if L != []:
             data = L[0]["method"]
         else:
-            data = ""
+            data = None
         return data
 
     # 获取path
@@ -59,7 +60,7 @@ class get_md():
         if L != []:
             data = L[0]["path"]
         else:
-            data = ""
+            data = None
         return data
 
     # 获取type
@@ -72,7 +73,7 @@ class get_md():
         if L != []:
             data = L[0]["req_body_type"]
         else:
-            data = ""
+            data = None
         return data
 
     # 获取query
@@ -90,7 +91,7 @@ class get_md():
                 value = i["value"]
                 D[key] = value
         else:
-            D = ""
+            D = None
         return D
 
     # 获取json类型参数
@@ -101,9 +102,28 @@ class get_md():
         for i in data:
             L.append(i)
         if L != []:
-            data = L[0]["req_body_other"]
+            data = json.loads(L[0]["req_body_other"])
         else:
-            data = ""
+            data = None
+        return data
+
+    # 获取form类型参数
+    def get_req_body_form(self, interface_id):
+        myset = self.db.interface_case
+        data = myset.find({"interface_id": interface_id}, {"req_body_form": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["req_body_form"]
+            D = {}
+            for i in data:
+                key = i['name']
+                value = i['value']
+                D[key] = value
+            data = D
+        else:
+            data = None
         return data
 
 
@@ -117,8 +137,8 @@ class run(SqlOperate):
     def __init__(self, task_id):
         self.task_id = task_id
         conf = configparser.ConfigParser()
-        conf.read("/home/jinyue/test/conf/config.ini")
-        # conf.read("../static/conf/config.ini")
+        # conf.read("/home/jinyue/test/conf/config.ini")
+        conf.read("../conf/config.ini")
         self.host = conf.get('monitor_db', 'host')
         self.user = conf.get('monitor_db', 'user')
         self.passwd = conf.get('monitor_db', 'passwd')
@@ -145,14 +165,15 @@ class run(SqlOperate):
         return data
 
     # 请求接口
-    def run_api(self, url, method, params):
+    def run_api(self, url, method, params, data, json):
         try:
             if method == "GET":
-                r = requests.get(url, params, timeout=(10, 10))
+                r = requests.get(url, params=params, timeout=(10, 10))
             elif method == "POST":
-                r = requests.post(url, params, timeout=(10, 10))
+                r = requests.post(url, params=params, data=data, json=json, timeout=(10, 10))
             else:
                 print("请求类型错误，目前只支持POST/GET")
+            print(r.text)
             return r.status_code, r.elapsed.total_seconds() * 1000, r.text
         except requests.exceptions.ConnectTimeout as e:
             return 9001, 0, ("链接超时----%s" % e)
@@ -162,12 +183,12 @@ class run(SqlOperate):
             return 9003, 0, ("未知的服务器----%s" % e)
 
     # 结果入库
-    def write_result(self, api_id, pro_id, task_id, resq_code, res_time, response):
+    def write_result(self, api_id, task_id, resq_code, res_time, response):
         response = pymysql.escape_string(response)
         create_time = int(time.time())
         self.dbcur()
         sql = self.sqlInsert("apirun_result",
-                             {"api_id": api_id, "pro_id": pro_id, "task_id": task_id, "resq_code": resq_code,
+                             {"api_id": api_id, "task_id": task_id, "resq_code": resq_code,
                               "res_time": res_time, "response": response, "create_time": create_time})
         self.sqlExe(sql)
         self.sqlCom()
@@ -236,35 +257,60 @@ class run(SqlOperate):
             ret = "发送超过5次"
         print(ret)
 
-    # 主方法
-    def main(self):
-        api_list = self.get_taskinfo()[2][1:-1].split(",")
-        for i in api_list:
-            url = self.get_apiinfo(i)
-            if not url:
-                print("接口id：%s 不存在，跳过" % i)
-                continue
-            else:
-                url = self.get_apiinfo(i)[3]
-            method = self.get_apiinfo(i)[5]
-            params = self.get_apiinfo(i)[7]
-            api_id = self.get_apiinfo(i)[0]
-            pro_id = self.get_apiinfo(i)[1]
-            task_id = self.task_id
-            resq_code, res_time, response = self.run_api(url, method, params)
-            if resq_code != 200 and resq_code != 9001 and resq_code != 9002 and resq_code != 9003:
-                self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
-                self.ding(api_id)
-            else:
-                self.write_result(api_id, pro_id, task_id, resq_code, res_time, "ok")
+
+# 主方法
+def main(task_id):
+    r = run(task_id)
+    m = get_md()
+    api_list = r.get_taskinfo()[2][1:-1].split(",")
+    for i in api_list:
+        i = int(i)
+        url = m.get_domain(i)
+        if url is None:
+            print("接口id：%s 不存在正式环境，跳过" % i)
+            continue
+        method = m.get_method(i)
+        path = m.get_path(i)
+        url = url + path
+        query = m.get_query(i)
+        # type = m.get_type(i)
+        if method == "POST":
+            form = m.get_req_body_form(i)
+            json = m.get_req_body_json(i)
+        resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
+        if resq_code != 200 and resq_code != 9001 and resq_code != 9002 and resq_code != 9003:
+            r.write_result(i, task_id, resq_code, res_time, response)
+            # r.ding(i)
         else:
-            print("执行完成")
+            r.write_result(i, task_id, resq_code, res_time, "ok")
+    else:
+        print("执行完成")
+
+        #     url = self.get_apiinfo(i)[3]
+        # method = self.get_apiinfo(i)[5]
+        # params = self.get_apiinfo(i)[7]
+        # api_id = self.get_apiinfo(i)[0]
+        # pro_id = self.get_apiinfo(i)[1]
+        # task_id = self.task_id
+        # resq_code, res_time, response = self.run_api(url, method, params)
+        # if resq_code != 200 and resq_code != 9001 and resq_code != 9002 and resq_code != 9003:
+        #     self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
+        #     self.ding(api_id)
+        # else:
+        #     self.write_result(api_id, pro_id, task_id, resq_code, res_time, "ok")
+    # else:
+    #     print("执行完成")
 
 
-m = get_md()
-print(m.get_req_body_json(11317))
+# m = get_md()
+# if m.get_domain(10966):
+#     print(1)
+# print(m.get_path(10966))
 
-# if __name__ == "__main__":
-#     task_id = sys.argv[1]
-#     run = run(task_id)
-#     run.main()
+if __name__ == "__main__":
+    # task_id = sys.argv[1]
+    task_id = 8
+    main(task_id)
+    s=Send_Email()
+    msg="有接口异常，请及时处理，任务id：%s"%task_id
+    s.sendemail("jinyue.cui@360che.com",msg)
