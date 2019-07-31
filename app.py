@@ -51,6 +51,7 @@ def check_token(func):
             data = json.dumps({"code": 1001})
             return data
 
+
     return inner
 
 
@@ -465,8 +466,6 @@ def bug_calculate1():
                                 bugdensity, fristleak, bringerror, addtime)
         data = bug_calculate.getInfor()
         return json.dumps(data)
-        # return render_template('bug_calculate.html', data=data, v=v)
-        # return json.dumps(data)
 
     else:
         return render_template('bug_calculate.html', data=("", "", ""), vn=vn, v=v)
@@ -514,29 +513,15 @@ def calcu():
 @app.route('/testcase',methods=['post','get'])
 # @check_permissions('/testcase')
 def upload():
-    a = up.filelist()
+    a = up.fileselect()
     if request.method == 'POST':
         f = request.files['file']
         up.fileupload(f)
-        way = ""
-        way_xls = ""
-        if(platform.system()=='Windows'):
-            way ="C:/Users/360che/Desktop/check_point/tmp/"
-            way_xls = "C:/Users/360che/Desktop/check_point/xls/"
-        elif(platform.system()=='Linux'):
-            way ="/data/check_point/xmind/"
-            way_xls = "/data/check_point/xls/"
-        #将xmind转为excel
-        x_c = f.filename[0:-6]
-        x_a = xmind_to_xx(way, f.filename, x_c)
-        x_a.to_excel(x_a.data_dict[0]['topic'])
-        x_a.save_xls()
-        #合并单元格
-        x_b = style_excel(way_xls, x_c+'.xls', x_a.data_dict[0]['topic']['title'])
-        x_b.merge_excel(x_b.calculate())
-        x_b.save_style_excel(way_xls+x_c+'.xls')
-        # up.fileinsert(f.filename)
-        a.append(f.filename)
+        way = up.xmind_way()
+        path = way+f.filename
+        data = up.to_dict(path)
+        up.fileinsert(f.filename,data)
+        os.remove(path) 
         return "1"
     else:
         return render_template('upload.html',a = a)
@@ -546,17 +531,26 @@ def upload():
 def return_file(filename):
     import os
     if request.method == "GET":
-        way = ""
-        if(platform.system()=='Windows'):
-            way ="C:/Users/360che/Desktop/check_point/xls"
-        elif(platform.system()=='Linux'):
-            way ="/data/check_point/xls/"
-        file_dir = os.path.join(way,filename)
+        search = up.xls_true(filename)
+        if search:
+            file_dir = os.path.join(up.xls_way(),filename)
+        else:
+            up.downexcel(filename)
+            file_dir = os.path.join(up.xls_way(),filename)
         if os.path.isfile(file_dir):
-            return send_from_directory(way, filename, as_attachment=True)
+            return send_from_directory(up.xls_way(), filename, as_attachment=True)
         abort(404)
-
-
+#查询
+@app.route('/selectfile', methods=['post','get'])
+def select_file():
+    if request.method == "POST":
+        project = request.form.get('project')
+        a = ""
+        if(project == "全部"):
+            a = up.fileselect()
+        else:
+            a = up.sel_file(project)
+        return json.dumps(a)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
