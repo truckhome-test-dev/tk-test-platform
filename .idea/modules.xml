@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://E:/che360/.idea/che360.iml" filepath="E:/che360/.idea/che360.iml" />
       <module fileurl="file://E:/locust/.idea/locust.iml" filepath="E:/locust/.idea/locust.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/tk-test-platform.iml" filepath="$PROJECT_DIR$/.idea/tk-test-platform.iml" />
     </modules>
