@@ -1,13 +1,9 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-29 17:08:26
-import pymysql
 
-pymysql.install_as_MySQLdb
 from test_code import *
 from collections import Counter
-import json
-import requests
 
 
 class Monitor_Inform(SqlOperate):
@@ -43,36 +39,43 @@ class Monitor_Inform(SqlOperate):
     # 是否发钉钉
     def start_inform(self, taskid, apiid, code):
         info = self.seltimes(taskid)
-        start_times = info[0]
-        stop_times = info[1]
-        re_times = info[2]
-        token = info[3]
-        receiver = info[4].split(",")
-        self.dbcur()
-        sql1 = "SELECT inform FROM `api_inform` WHERE apiid=%d " % (apiid)
-        self.sqlExe(sql1)
-        data = list(self.cur.fetchall())
-        if data == []:
-            sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
+        if info[5] == 0:
+            start_times = info[0]
+            stop_times = info[1]
+            re_times = info[2]
+            token = info[3]
+            receiver = info[4].split(",")
+
+            self.dbcur()
+            sql1 = "SELECT inform FROM `api_inform` WHERE apiid=%d " % (apiid)
             self.sqlExe(sql1)
-            self.sqlCom()
-            data = [(0,)]
-        if str(code) != "200":
-            num = data[0][0] + 1
+            data = list(self.cur.fetchall())
+            if data == []:
+                sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
+                self.sqlExe(sql1)
+                self.sqlCom()
+                data = [(0,)]
+
+            if str(code) != "200":
+                num = data[0][0] + 1
+            else:
+                num = 0
+
+            stopnum = start_times + stop_times
+            renum = stopnum + re_times
+            if num < start_times or renum > num >= stopnum:
+                ding = 0
+                content = ""
+            elif start_times <= num < stopnum:
+                ding = 1
+                content = '''该接口已经报错,请相关人员及时修复 '''
+            else:
+                ding = 1
+                content = '''该接口已经连续报错%d次''' % (num)
+            return (ding, content, token, receiver, num)
         else:
-            num = 0
-        stopnum = start_times + stop_times
-        renum = stopnum + re_times
-        if num < start_times or renum > num >= stopnum:
             ding = 0
-            content = ""
-        elif start_times <= num < stopnum:
-            ding = 1
-            content = '''该接口已经报错,请相关人员及时修复 '''
-        else:
-            ding = 1
-            content = '''该接口已经连续报错%d次''' % (num)
-        return (ding, content, token, receiver, num)
+            return (ding,)
 
     def qq(self, taskid, apiid, code):
         info = self.start_inform(taskid, apiid, code)

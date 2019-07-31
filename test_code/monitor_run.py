@@ -6,6 +6,7 @@ import sys
 import json
 import pymysql
 from base_server import *
+from test_code import *
 
 
 # 获取mongo数据
@@ -262,6 +263,7 @@ class run(SqlOperate):
 def main(task_id):
     r = run(task_id)
     m = get_md()
+    strategy=Monitor_Inform()
     api_list = r.get_taskinfo()[2][1:-1].split(",")
     for i in api_list:
         i = int(i)
@@ -278,6 +280,7 @@ def main(task_id):
             form = m.get_req_body_form(i)
             json = m.get_req_body_json(i)
         resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
+        strategy.start_inform(task_id,)
         if resq_code != 200 and resq_code != 9001 and resq_code != 9002 and resq_code != 9003:
             r.write_result(i, task_id, resq_code, res_time, response)
             # r.ding(i)
