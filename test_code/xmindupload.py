@@ -112,8 +112,11 @@ class Xmind_Upload(SqlOperate):
 		l = ""
 		for i in data:
 			l=i[0]
-		dict_data = eval(l)
+		dict_data =self.to_line(l)
+		dict_data = eval(dict_data)
+		
 		return dict_data
+		
 	#下载excel
 	def downexcel(self,filename):
 		data_dict = self.filedata(filename)
@@ -149,3 +152,15 @@ class Xmind_Upload(SqlOperate):
 	def xls_true(self,filename):
 		path = self.xls_way()+filename
 		os.path.exists(path)
+
+	def to_line(self,s):
+		d = {'\r':'###','\n':'***'} 
+		if '\r' in s:
+			for i,o in d.items():
+				n = s.replace(i,o)
+				s = n
+		else:
+			for o,i in d.items():
+				n = s.replace(i,o)
+				s = n
+		return s

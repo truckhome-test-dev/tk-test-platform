@@ -520,6 +520,7 @@ def upload():
         way = up.xmind_way()
         path = way+f.filename
         data = up.to_dict(path)
+        print(data)
         up.fileinsert(f.filename,data)
         os.remove(path) 
         return "1"
