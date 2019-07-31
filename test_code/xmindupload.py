@@ -5,6 +5,7 @@ import platform
 from test_code.sqlop import *
 from xmindparser import xmind_to_dict, xmind_to_xml, xmind_to_json
 from test_code.to_xls import *
+import re
 
 class Xmind_Upload(SqlOperate):
 	#连接数据库
@@ -121,9 +122,9 @@ class Xmind_Upload(SqlOperate):
 		x_a.to_excel(x_a.data_dict[0]['topic'])
 		x_a.save_xls()
 		#合并单元格
-		x_b = style_excel('C:/Users/360che/Desktop/check_point/xls/', x_c+'.xls', x_a.data_dict[0]['topic']['title'])
+		x_b = style_excel(self.xls_way(), x_c+'.xls', x_a.data_dict[0]['topic']['title'])
 		x_b.merge_excel(x_b.calculate())
-		x_b.save_style_excel('/data/check_point/xls/'+x_c+'.xls')
+		x_b.save_style_excel(self.xls_way()+x_c+'.xls')
 		return "pass"
 
 	#文件上传路径

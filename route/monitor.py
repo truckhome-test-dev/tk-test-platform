@@ -256,10 +256,10 @@ def token_check():
 # @check_permissions("/monitor/result")
 def result():
     tasklist = task.task_list()
-    prolist = res.get_pro()
+    # group = mm.get_group()
     if request.method == 'GET':
         mydate = res.get_time()
-        return render_template('result.html', tasklist=tasklist, prolist=prolist, mydate=mydate)
+        return render_template('result.html', tasklist=tasklist, mydate=mydate)
     else:
         task_id = request.get_data()
         task_id = json.loads(task_id.decode("utf-8"))
@@ -315,6 +315,8 @@ def get_interface_list():
         #获取form数据
         type = request.form.get('type')
         id = request.form.get('id')
+        print(type)
+        print(id)
         if type == "group":
             data = mm.get_group()
         elif type == 'project':
