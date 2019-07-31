@@ -3,102 +3,80 @@
     <head>
         <meta charset="UTF-8">
         <title>测试管理系统</title>
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <link rel="stylesheet" href="../static/layui/css/layui.css">
-        <script src="../static/layui/layui.js"></script>
-    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+
+        {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
+        <link rel="stylesheet" href="https://res.layui.com/layui/dist/css/layui.css?t=1560414887305">
+        <script src="https://www.layuicdn.com/layui-v2.5.4/layui.js"></script>
+        <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
         <script type="text/javascript" src="../static/js/tool_p.js"></script>
     </head>
 {% endblock head %}
 {% block left %}
-	{{ super() }}
+    {{ super() }}
 {% endblock left %}
 {% block right %}
-	{{ super() }}
-	<!-- 修改name（页面名称） -->
-{#	{% set name = '编辑任务' %}#}
-	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-		<legend>{{title}}</legend>
-	</fieldset>
-	<!-- 页面私有部分 -->
-    <form class="layui-form" lay-filter="exam" action="{{ api }}" method="POST"   style="width: 600px ;margin-top: 50px" >
-                <div  class="layui-form-item" >
-                    {% if title == "编辑任务" %}
-                    <div class="layui-form-item" style="line-height:30px">
-                        <label class="layui-form-label">任务ID</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="task_id" lay-verify="required" autocomplete="off"   class="layui-input" style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
-                        </div>
+    {{ super() }}
+
+    <!-- 修改name（页面名称） -->
+    {#	{% set name = '编辑任务' %}#}
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>{{ title }}</legend>
+    </fieldset>
+    <!-- 页面私有部分 -->
+    <form class="layui-form" lay-filter="exam" action="{{ api }}" method="POST" style="width: 600px ;margin-top: 50px">
+        <div class="layui-form-item">
+            {% if title == "编辑任务" %}
+                <div class="layui-form-item" style="line-height:30px">
+                    <label class="layui-form-label">任务ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="task_id" lay-verify="required" autocomplete="off" class="layui-input"
+                               style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
                     </div>
-                    {% endif %}
-                    <div class="layui-form-item" style="line-height:30px">
-                        <label class="layui-form-label">任务名称</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"  class="layui-input" style="width: 300px" value={{ task_info[1] }}>
-                        </div>
-                    </div>
-                    <form class="layui-form" action="">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">执行频率</label>
-                        <div class="layui-input-block" style="width: 300px">
-                          <select name="frequency" lay-filter="aihao" id="select">
-                              <option value=""></option>
-                            <option value="1" >1分钟执行一次</option>
+                </div>
+            {% endif %}
+            <div class="layui-form-item" style="line-height:30px">
+                <label class="layui-form-label">任务名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"
+                           class="layui-input" style="width: 300px" value={{ task_info[1] }}>
+                </div>
+            </div>
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">执行频率</label>
+                    <div class="layui-input-block" style="width: 300px">
+                        <select name="frequency" lay-filter="aihao" id="select">
+                            <option value=""></option>
+                            <option value="1">1分钟执行一次</option>
                             <option value="2">2分钟执行一次</option>
                             <option value="3">3分钟执行一次</option>
                             <option value="5">5分钟执行一次</option>
-                              <option value="10">10分钟执行一次</option>
-                          </select>
-                        </div>
-                      </div>
-                    </form>
-                        <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">api接口池</label>
-                            <div class="layui-input-block" style="width: 300px">
-                              <textarea name="api_id" placeholder="请输入内容，英文逗号分隔"  class="layui-textarea">{{ task_info[2] }}</textarea>
-                            </div>
-                          </div>
-
-                    <div style="margin-top: 10px;margin-left: 300px">
-                        <input class="layui-btn layui-btn-danger" type="submit" value="保存" style="margin-left:50px;margin-top:0px"></input>
-{#                        <span class="layui-btn" id="del_button" name="edit" onclick=task_save(this)>保存</span>#}
-
+                            <option value="10">10分钟执行一次</option>
+                        </select>
                     </div>
                 </div>
             </form>
-<<<<<<< Updated upstream
-    <script>
-layui.use(['form', 'layedit', 'laydate'], function(){
-  var form = layui.form
-  ,layer = layui.layer
-  ,layedit = layui.layedit
-  ,laydate = layui.laydate;
-  form.val('exam', {
-      frequency: {{ task_info[3] }}
-  })
-});
-</script>
-=======
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">api接口池</label></div>
             {#——————————————————加入分级树形——————————————————#}
-
             <div id="test12" class="demo-tree-more"></div>
-            {#——————————————————上面代码是新加入的——————————————————————#}
 
+            {#——————————————————上面代码是新加入的——————————————————————#}
             <div style="margin-top: 10px;margin-left: 300px">
                 <input class="layui-btn layui-btn-danger" type="submit" value="保存"
                        style="margin-left:50px;margin-top:0px"></input>
-
-                {#                        <span class="layui-btn" id="del_button" name="edit" onclick=task_save(this)>保存</span>#}
             </div>
         </div>
     </form>
     <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
     <script>
+    
         {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
-        layui.use(['form', 'layedit', 'laydate', 'tree', 'util'], function () {
+        layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
+            function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
@@ -109,139 +87,50 @@ layui.use(['form', 'layedit', 'laydate'], function(){
             //树形结果使用
             var tree = layui.tree
                 , layer = layui.layer
-                , util = layui.util
+                , util = layui.util, dataList = []
 
-            //使用jQurty方法获取后端数据
+            //使用jQurty方法获取后端数据获取业务线
             jQuery.ajax({
-                url: "/get_interface_list",
-               // data:{jsondata: JSON.stringify(arry)},
+                url: "/monitor/get_interface_list",
                 type: "POST",
-                header:{
-                   "Content-Type":"application/x-www-form-urlencoded"
-                },
                 data: {
                     type: "group",
                     id: "0"
                 },
-                dataType:'json',
+                dataType: 'json',
                 success: function (res) {
                     console.log(res)
+                    if (res.code === 1000) {
+                        dataList = res.data
+
+                        //基本功能
+                        tree.render({
+                            elem: '#test12'
+                            , data: dataList
+                            , showCheckbox: true  //是否显示复选框
+                            , id: '33'
+                            , isJump: true //是否允许点击节点时弹出新窗口跳转
+                            , click:function (obj) {
+                                var data = obj.dataList;  //获取当前点击的节点数据
+
+                                var str = ""
+                                dataList.forEach(function (item, index) {
+                                    str += item.group_name + "<br/>";
+                                    $('.layui-tree-txt').eq(index).html(item.group_name);//TXT重命名
+
+                                })
+                               // layer.msg('状态：' + obj.state + '<br>节点数据：' + str);
+                            }
+                        });
+                    }
+
                 }
             })
 
-                //获取数据分级
-                , data = [{
-                    title: '易盾'
-                    , id: 33
-                    , checked: true
-                    , spread: true
-                }, {
-                    title: '支持'
-                    , id: 36
-                    , spread: true
-                }, {
-                    title: 'IT系统'
-                    , id: 42
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '经销商'
-                    , id: 48
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '公共服务'
-                    , id: 66
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '独立'
-                    , id: 69
-                    , checked: true
-                    , spread: true
-                },{
-                    title: 'APP'
-                    , id: 60
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '互动'
-                    , id: 63
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '长尾词'
-                    , id: 87
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '商配'
-                    , id: 99
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '产品库'
-                    , id: 93
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '其他'
-                    , id: 108
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '微信公众号'
-                    , id: 105
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '资讯'
-                    , id: 111
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '站内搜索'
-                    , id: 162
-                    , checked: true
-                    , spread: true
-                },{
-                    title: '测试分组'
-                    , id: 247
-                    , checked: true
-                    , spread: true
 
-                }]
-
-            //基本演示
-            tree.render({
-                elem: '#test12'
-                , data: data
-                , showCheckbox: true  //是否显示复选框
-                , id: 'demoId1'
-                , isJump: true //是否允许点击节点时弹出新窗口跳转
-                , click: function (obj) {
-                    var data = obj.data;  //获取当前点击的节点数据
-                    layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
-                }
-            });
         });
-        //按钮事件
-        {#util.event('lay-demo', {#}
-        {#    getChecked: function (othis) {#}
-        {#        var checkedData = tree.getChecked('demoId1'); //获取选中节点的数据#}
-        {##}
-        {#        layer.alert(JSON.stringify(checkedData), {shade: 0});#}
-        {#        console.log(checkedData);#}
-        {#    }#}
-        {#    , setChecked: function () {#}
-        {#        tree.setChecked('demoId1', [1, 2]); //勾选指定节点#}
-        {#    }#}
-        {#    , reload: function () {#}
-        {#        //重新加载数据#}
-        {#        tree.reload('demoId1', {});#}
 
     </script>
->>>>>>> Stashed changes
 
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
