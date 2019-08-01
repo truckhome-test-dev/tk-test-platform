@@ -14,5 +14,5 @@ from .grab_bug import *
 from .appreport import *
 from .monitor_res import *
 from .login import *
-from .monitor_inform import *
+#from .monitor_inform import *
 

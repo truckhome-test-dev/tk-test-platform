@@ -12,7 +12,7 @@ class Monitor_Inform(SqlOperate):
     def __init__(self):
         conf = configparser.ConfigParser()
         # conf.read("../static/conf/config.ini")
-        conf.read("../conf/config.ini")
+        conf.read("conf/config.ini")
         self.host = conf.get('monitor_db', 'host')
         self.user = conf.get('monitor_db', 'user')
         self.passwd = conf.get('monitor_db', 'passwd')
