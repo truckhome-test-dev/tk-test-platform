@@ -301,10 +301,29 @@ class Monitor_Mongodb():
             L.append(i)
         return L
 
+    # 获取项目下所有接口id
+    def get_allinterface(self, project_id):
+        myset = self.db.interface
+        data = myset.find({'project_id': int(project_id)}, {'__id': 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            l1 = []
+            for i in L:
+                i_id = i["_id"]
+                l1.append(i_id)
+        else:
+            l1 = []
+        return l1
 
-if __name__ == "__main__":
-    a = Monitor_Mongodb()
-    print(a.has_case(11335))
-# a={'type':'group','id':1}
-# print(type(a))
-# print(json.loads(a))
+# if __name__ == "__main__":
+#     a = Monitor_Mongodb()
+#     # print(a.get_allinterface(250))
+#     L=[]
+#     for i in [376,370,364,358,352,346,340,334,328,322,316,310,304,298,292,286,280,274,268,262,256,250,244,232]:
+#         print(i)
+#         q=a.get_allinterface(i)
+#         print(q)
+#         L+=q
+#     print(L)

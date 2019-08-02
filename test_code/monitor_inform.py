@@ -1,8 +1,10 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-29 17:08:26
+import pymysql
 
-from test_code import *
+pymysql.install_as_MySQLdb
+from test_code.sqlop import *
 from collections import Counter
 
 
@@ -11,8 +13,7 @@ class Monitor_Inform(SqlOperate):
 
     def __init__(self):
         conf = configparser.ConfigParser()
-        # conf.read("../static/conf/config.ini")
-        conf.read("conf/config.ini")
+        conf.read("../conf/config.ini")
         self.host = conf.get('monitor_db', 'host')
         self.user = conf.get('monitor_db', 'user')
         self.passwd = conf.get('monitor_db', 'passwd')
@@ -21,7 +22,7 @@ class Monitor_Inform(SqlOperate):
     # 查询任务对应的策略次数、token、email
     def seltimes(self, taskid):
         self.dbcur()
-        sql = "SELECT start_inform,stop_inform,re_inform,token,re_email FROM `task_list` WHERE id=%d " % (taskid)
+        sql = "SELECT start_inform,stop_inform,re_inform,token,re_email,inform FROM `task_list` WHERE id=%d " % (taskid)
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
         self.sqlCom()
@@ -50,14 +51,18 @@ class Monitor_Inform(SqlOperate):
             sql1 = "SELECT inform FROM `api_inform` WHERE apiid=%d " % (apiid)
             self.sqlExe(sql1)
             data = list(self.cur.fetchall())
-            if data == []:
+            if str(code) != "200" and data == []:
+                num = 1
+                sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 1)" % (apiid)
+                self.sqlExe(sql1)
+                self.sqlCom()
+            elif str(code) != "200" and data != []:
+                num = data[0][0] + 1
+            elif str(code) == "200" and data == []:
+                num = 0
                 sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
                 self.sqlExe(sql1)
                 self.sqlCom()
-                data = [(0,)]
-
-            if str(code) != "200":
-                num = data[0][0] + 1
             else:
                 num = 0
 
@@ -75,17 +80,4 @@ class Monitor_Inform(SqlOperate):
             return (ding, content, token, receiver, num)
         else:
             ding = 0
-            return (ding,)
-
-    def qq(self, taskid, apiid, code):
-        info = self.start_inform(taskid, apiid, code)
-        if info[0] == 1:
-            content = "接口名称：%s \n 接口地址：%s \n 备注：%s + 详情信息……"
-            self.sending(info[2], content)
-            self.sendemail(info[3], info[1])
-        self.upnum(apiid, info[4])
-
-
-aa = Monitor_Inform()
-aa.qq(8, 33, "200")
-# aa.sendemail("aa")
+            return (ding, "", "", "", 0)

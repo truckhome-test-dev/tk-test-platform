@@ -127,6 +127,19 @@ class get_md():
             data = None
         return data
 
+    # 获取接口名称
+    def get_interface_name(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": int(interface_id)}, {"title": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            title = L[0]["title"]
+        else:
+            title = None
+        return title
+
 
 # 执行脚本类
 class run(SqlOperate):
@@ -174,7 +187,6 @@ class run(SqlOperate):
                 r = requests.post(url, params=params, data=data, json=json, timeout=(10, 10))
             else:
                 print("请求类型错误，目前只支持POST/GET")
-            print(r.text)
             return r.status_code, r.elapsed.total_seconds() * 1000, r.text
         except requests.exceptions.ConnectTimeout as e:
             return 9001, 0, ("链接超时----%s" % e)
@@ -263,10 +275,13 @@ class run(SqlOperate):
 def main(task_id):
     r = run(task_id)
     m = get_md()
-    strategy=Monitor_Inform()
+    strategy = Monitor_Inform()
+    send = Send_All()
     api_list = r.get_taskinfo()[2][1:-1].split(",")
     for i in api_list:
+        print(datetime.datetime.now())
         i = int(i)
+        interface_name = m.get_interface_name(i)
         url = m.get_domain(i)
         if url is None:
             print("接口id：%s 不存在正式环境，跳过" % i)
@@ -275,45 +290,32 @@ def main(task_id):
         path = m.get_path(i)
         url = url + path
         query = m.get_query(i)
-        # type = m.get_type(i)
         if method == "POST":
             form = m.get_req_body_form(i)
             json = m.get_req_body_json(i)
-        resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
-        strategy.start_inform(task_id,)
-        if resq_code != 200 and resq_code != 9001 and resq_code != 9002 and resq_code != 9003:
-            r.write_result(i, task_id, resq_code, res_time, response)
-            # r.ding(i)
         else:
-            r.write_result(i, task_id, resq_code, res_time, "ok")
+            form = None
+            json = None
+        resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
+        if resq_code == 200:
+            response = "ok"
+        r.write_result(i, task_id, resq_code, res_time, response)
+        print(task_id, i, resq_code)
+        st = strategy.start_inform(task_id, i, resq_code)
+        num = st[4]
+        print(st)
+        if st[0] == 1:
+            content = "接口名称：%s \n 接口地址：%s \n 备注：%s " % (interface_name, url, st[1])
+            d_token = st[2]
+            receiver = st[3]
+            send.sending(d_token, content)
+            send.sendemail(receiver, content)
+        strategy.upnum(i, num)
     else:
         print("执行完成")
 
-        #     url = self.get_apiinfo(i)[3]
-        # method = self.get_apiinfo(i)[5]
-        # params = self.get_apiinfo(i)[7]
-        # api_id = self.get_apiinfo(i)[0]
-        # pro_id = self.get_apiinfo(i)[1]
-        # task_id = self.task_id
-        # resq_code, res_time, response = self.run_api(url, method, params)
-        # if resq_code != 200 and resq_code != 9001 and resq_code != 9002 and resq_code != 9003:
-        #     self.write_result(api_id, pro_id, task_id, resq_code, res_time, response)
-        #     self.ding(api_id)
-        # else:
-        #     self.write_result(api_id, pro_id, task_id, resq_code, res_time, "ok")
-    # else:
-    #     print("执行完成")
-
-
-# m = get_md()
-# if m.get_domain(10966):
-#     print(1)
-# print(m.get_path(10966))
 
 if __name__ == "__main__":
-    # task_id = sys.argv[1]
-    task_id = 8
+    task_id = sys.argv[1]
+    # task_id = 9
     main(task_id)
-    s=Send_All()
-    msg="有接口异常，请及时处理，任务id：%s"%task_id
-    s.sendemail("jinyue.cui@360che.com",msg)
