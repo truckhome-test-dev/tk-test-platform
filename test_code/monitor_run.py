@@ -1,11 +1,5 @@
-from test_code import *
-import configparser
-import requests
-import time
 import sys
-import json
-import pymysql
-from base_server import *
+sys.path.append('../')
 from test_code import *
 
 
@@ -273,6 +267,7 @@ class run(SqlOperate):
 
 # 主方法
 def main(task_id):
+    task_id=int(task_id)
     r = run(task_id)
     m = get_md()
     strategy = Monitor_Inform()
@@ -300,7 +295,7 @@ def main(task_id):
         if resq_code == 200:
             response = "ok"
         r.write_result(i, task_id, resq_code, res_time, response)
-        print(task_id, i, resq_code)
+        print(task_id, i, resq_code,res_time)
         st = strategy.start_inform(task_id, i, resq_code)
         num = st[4]
         print(st)
