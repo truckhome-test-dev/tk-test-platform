@@ -8,8 +8,9 @@
         <link rel="stylesheet" href="../static/layui/css/layui.css">
 
         {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
-        <link rel="stylesheet" href="https://res.layui.com/layui/dist/css/layui.css?t=1560414887305">
-        <script src="https://www.layuicdn.com/layui-v2.5.4/layui.js"></script>
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <script src="../static/layui/layui.js"></script>
+        {#____________________________________layui样式———————————————————————————#}
         <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
         <script type="text/javascript" src="../static/js/tool_p.js"></script>
     </head>
@@ -73,23 +74,20 @@
     </form>
     <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
     <script>
-    
+
         {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
         layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
             function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
-                , laydate = layui.laydate;
+                , laydate = layui.laydate
+                , tree = layui.tree
+                , util = layui.util, dataList = [];
             form.val('exam', {
                 frequency: {{ task_info[3] }}
             });
-            //树形结果使用
-            var tree = layui.tree
-                , layer = layui.layer
-                , util = layui.util, dataList = []
-
-            //使用jQurty方法获取后端数据获取业务线
+            //使用jQurty方法获取后端数据
             jQuery.ajax({
                 url: "/monitor/get_interface_list",
                 type: "POST",
@@ -99,35 +97,62 @@
                 },
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res)
+                   // console.log(res)
                     if (res.code === 1000) {
-                        dataList = res.data
-
+                        let list = []
+                        for (var i = 0; i < res.data.length; i++){
+                            list.push({
+                                title: res.data[i].group_name,
+                                id: res.data[i]._id,
+                                type: "project",
+                                children: []
+                            })
+                        }
+                        dataList = list
                         //基本功能
                         tree.render({
                             elem: '#test12'
                             , data: dataList
                             , showCheckbox: true  //是否显示复选框
-                            , id: '33'
+                            , id: 'demo'
                             , isJump: true //是否允许点击节点时弹出新窗口跳转
                             , click:function (obj) {
-                                var data = obj.dataList;  //获取当前点击的节点数据
-
-                                var str = ""
-                                dataList.forEach(function (item, index) {
-                                    str += item.group_name + "<br/>";
-                                    $('.layui-tree-txt').eq(index).html(item.group_name);//TXT重命名
-
+                                var data = obj.data;  //获取当前点击的节点数据
+                                console.log(obj)
+                                getSecondList(data.type, data.id,arr=>{
+                                    data.children = arr
+                                    //重载实例
+                                  tree.reload('demo', {});
                                 })
-                               // layer.msg('状态：' + obj.state + '<br>节点数据：' + str);
                             }
-                        });
+                        })
+
                     }
 
                 }
             })
-
-
+                function getSecondList(type, id, callback) {
+            jQuery.ajax({
+                    url: "/monitor/get_interface_list",
+                    type: "POST",
+                    data: {
+                        type: type,
+                        id: id
+                    },
+                dataType: 'json',
+                success: function (res) {
+                    let list = [];
+                    let types = ['project','cat', 'interface']
+                 for (var j = 0; j < res.data.length; j++){
+                    list.push({
+                        title: res.data[j].name,
+                        id: res.data[j]._id
+                    })
+                 }
+                 callback(list)
+                }
+            })
+        }
         });
 
     </script>
