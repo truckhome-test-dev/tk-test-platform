@@ -8,8 +8,9 @@
         <link rel="stylesheet" href="../static/layui/css/layui.css">
 
         {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
-        <link rel="stylesheet" href="../static/layui/css/layui.css">
+        <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
         <script src="../static/layui/layui.js"></script>
+
         {#____________________________________layui样式———————————————————————————#}
         <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
         <script type="text/javascript" src="../static/js/tool_p.js"></script>
@@ -83,9 +84,9 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate
                 , tree = layui.tree
-                , util = layui.util, dataList = [];
+                , util = layui.util, dataList = [],types = ['group' ,'project', 'cat', 'interface'];
             form.val('exam', {
-                frequency: {{ task_info[3] }}
+                frequency: {{ task_info[4] }}
             });
             //使用jQurty方法获取后端数据
             jQuery.ajax({
@@ -104,7 +105,7 @@
                             list.push({
                                 title: res.data[i].group_name,
                                 id: res.data[i]._id,
-                                type: "project",
+                                type: "group",
                                 children: []
                             })
                         }
@@ -113,16 +114,25 @@
                         tree.render({
                             elem: '#test12'
                             , data: dataList
-                            , showCheckbox: true  //是否显示复选框
                             , id: 'demo'
+                            , showCheckbox: true  //是否显示复选框
                             , isJump: true //是否允许点击节点时弹出新窗口跳转
                             , click:function (obj) {
                                 var data = obj.data;  //获取当前点击的节点数据
+                                let index = types.findIndex(item=>{
+                                    return item === data.type
+                                })
                                 console.log(obj)
-                                getSecondList(data.type, data.id,arr=>{
+                                index ++;
+                                if (index > types.length - 1) return;
+                                getSecondList(types[index], data.id,arr=>{
+                                    if (!arr.length) return;
                                     data.children = arr
+                                    data.spread= true
                                     //重载实例
-                                  tree.reload('demo', {});
+                                  tree.reload('demo', {
+                                      [obj.state]: 'open'
+                                  });
                                 })
                             }
                         })
@@ -142,14 +152,14 @@
                 dataType: 'json',
                 success: function (res) {
                     let list = [];
-                    let types = ['project','cat', 'interface']
                  for (var j = 0; j < res.data.length; j++){
                     list.push({
                         title: res.data[j].name,
-                        id: res.data[j]._id
+                        id: res.data[j]._id,
+                        type: type
                     })
                  }
-                 callback(list)
+                 callback(list)//回调list
                 }
             })
         }
