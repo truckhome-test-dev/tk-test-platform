@@ -314,7 +314,7 @@ def get_interface_list():
         # id = data['id']
         # 获取form数据
         type = request.form.get('type')
-        id = request.form.get('id')
+        id = int(request.form.get('id'))
         if type == "group":
             data = mm.get_group()
         elif type == 'project':

@@ -259,7 +259,8 @@ class Monitor_Mongodb():
     # 获取所有分组
     def get_group(self):
         myset = self.db.group
-        data = myset.find({'type': 'public'}, {'group_name': 1})
+        # data = myset.find({'type': 'public'}, {'group_name': 1})
+        data = myset.aggregate([{"$match": {"type": "public"}}, {"$project": {"_id": 0, "id": "$_id", "title": "$group_name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -268,7 +269,8 @@ class Monitor_Mongodb():
     # 获取某分组下项目
     def get_project(self, group_id):
         myset = self.db.project
-        data = myset.find({'group_id': int(group_id)}, {'name': 1})
+        # data = myset.find({'group_id': int(group_id)}, {'name': 1})
+        data = myset.aggregate([{"$match": {"group_id": group_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -277,7 +279,8 @@ class Monitor_Mongodb():
     # 获取某项目下模块
     def get_interface_cat(self, project_id):
         myset = self.db.interface_cat
-        data = myset.find({'project_id': int(project_id)}, {'name': 1})
+        # data = myset.find({'project_id': int(project_id)}, {'name': 1})
+        data = myset.aggregate([{"$match": {"project_id": project_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -295,7 +298,8 @@ class Monitor_Mongodb():
     # 获取某模块下接口
     def get_interface(self, catid):
         myset = self.db.interface
-        data = myset.find({'catid': int(catid)}, {'title': 1})
+        # data = myset.find({'catid': int(catid)}, {'title': 1})
+        data = myset.aggregate([{"$match": {"catid": catid}}, {"$project": {"_id": 0, "id": "$_id", "title": "$title"}}])
         L = []
         for i in data:
             L.append(i)
@@ -317,9 +321,9 @@ class Monitor_Mongodb():
             l1 = []
         return l1
 
-# if __name__ == "__main__":
-#     a = Monitor_Mongodb()
-#     # print(a.get_allinterface(250))
+if __name__ == "__main__":
+    a = Monitor_Mongodb()
+    print(a.get_group())
 #     L=[]
 #     for i in [376,370,364,358,352,346,340,334,328,322,316,310,304,298,292,286,280,274,268,262,256,250,244,232]:
 #         print(i)
