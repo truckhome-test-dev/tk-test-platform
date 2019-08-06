@@ -1,3 +1,4 @@
+
 # -*- coding: utf:8-*-
 import xlwt, xlrd
 from xmindparser import xmind_to_dict, xmind_to_xml, xmind_to_json
@@ -65,8 +66,21 @@ class xmind_to_xx(object):
 
     def do_write_excel(self, text, row, column):
         #执行写入
+        text = self.to_line(text)
         self.worksheet.write(row, column, text)
 
+
+    def to_line(self,s):
+        d = {'\r':'###','\n':'***'} 
+        if '\r' in s:
+            for i,o in d.items():
+                n = s.replace(i,o)
+                s = n
+        else:
+            for o,i in d.items():
+                n = s.replace(i,o)
+                s = n
+        return s
 
 class style_excel(object):
     '''

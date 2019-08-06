@@ -16,6 +16,7 @@
     <orderEntry type="module" module-name="Che360Test" />
     <orderEntry type="module" module-name="Che360Test" />
     <orderEntry type="module" module-name="Che360Test" />
+    <orderEntry type="module" module-name="che360" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
