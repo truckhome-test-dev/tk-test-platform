@@ -118,7 +118,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">api接口池</label>
                 {#——————————————————加入分级树形——————————————————#}
-                <div id="test12" class="demo-tree-more"style="margin-left:150px;margin-top:0px"></div>
+                <div id="test12" class="demo-tree-more" style="margin-left:150px"></div>
 
                 {#——————————————————上面代码是新加入的——————————————————————#}
 
@@ -144,9 +144,6 @@
             <!--form.on('select(inform)', function(data){                    接着改这-->
 
         });
-
-
-
 
 
         <!--张晨的接口池子-->
@@ -180,8 +177,8 @@
                             //循环获取group中的命名为title
                             for (var i = 0; i < res.data.length; i++) {
                                 list.push({
-                                    title: res.data[i].group_name,
-                                    id: res.data[i]._id,
+                                    title: res.data[i].title,
+                                    id: res.data[i].id,
                                     type: "group",
                                     children: []
                                 })
@@ -193,24 +190,24 @@
                                 elem: '#test12'
                                 , data: dataList
                                 , id: 'demo'
-                                ,edit: ['add', 'update', 'del']//开启编辑删除功能
+                                , edit: ['add', 'update', 'del']//开启编辑删除功能
                                 , showCheckbox: true  //是否显示复选框
                                 , isJump: true //是否允许点击节点时弹出新窗口跳转
                                 , click: function (obj) {
                                     var data = obj.data;  //获取当前点击的节点数据
-                                    let index = types.findIndex(item => {
+                                    let index = types.findIndex(item => { //使用let 声明一个块级的变量，可以在循环语句中使用
+                                        //findIndex方法为数组中的每个元素都调用一次函数执行
                                         return item === data.type
                                     })
-                                    console.log(obj)
                                     index++;
                                     if (index > types.length - 1) return;
                                     getSecondList(types[index], data.id, arr => {
                                         if (!arr.length) return;
                                         data.children = arr
                                         data.spread = true
-                                        //重载实例
+                                        //重载实例重载
                                         tree.reload('demo', {
-                                            [obj.state]: 'open'
+                                            [obj.state]: 'open'//重载一个新的参数
                                         });
                                     })
                                 }
@@ -221,6 +218,7 @@
                     }
                 })
 
+                //获取第二分级展示
                 function getSecondList(type, id, callback) {
                     jQuery.ajax({
                         url: "/monitor/get_interface_list",
@@ -230,16 +228,17 @@
                             id: id
                         },
                         dataType: 'json',
+                        //success请求并成功返回信息
                         success: function (res) {
                             let list = [];
                             for (var j = 0; j < res.data.length; j++) {
                                 list.push({
-                                    title: res.data[j].name,
-                                    id: res.data[j]._id,
+                                    title: res.data[j].title,
+                                    id: res.data[j].id,
                                     type: type
                                 })
                             }
-                            callback(list)//回调list
+                            callback(list)//回调list参数
                         }
                     })
                 }
