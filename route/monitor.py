@@ -55,7 +55,13 @@ def task_edit():
         task_name = request.form.get('task_name')
         frequency = request.form.get('frequency')
         api_id = "[" + request.form.get('api_id') + "]"
-        task.task_edit(task_id, task_name, api_id, frequency)
+        start_inform = request.form.get('start_inform')
+        token = request.form.get('token')
+        re_email = request.form.get('re_email')
+        stop_inform = request.form.get('stop_inform')
+        re_inform = request.form.get('re_inform')        
+        inform = request.form.get('inform')        
+        task.task_edit(task_id, task_name, api_id, frequency,start_inform,token,re_email,stop_inform,re_inform,inform)
         return redirect("http://127.0.0.1:5000/monitor/task_list")
 
 
@@ -65,14 +71,20 @@ def task_edit():
 def task_add():
     if request.method == "GET":
         title = "添加任务"
-        task_info = ("", "", "", "3", "")
+        task_info = ("", "", "", "3", "1")
         api = "task_add"
         return render_template('task_edit.html', api=api, title=title, task_info=task_info)
     else:
         task_name = request.form.get('task_name')
         frequency = request.form.get('frequency')
         api_id = "[" + request.form.get('api_id') + "]"
-        task.task_add(task_name, api_id, frequency)
+        start_inform = request.form.get('start_inform')
+        token = request.form.get('token')
+        re_email = request.form.get('re_email')
+        stop_inform = request.form.get('stop_inform')
+        re_inform = request.form.get('re_inform')
+        inform = request.form.get('inform')
+        task.task_add(task_name, api_id, frequency,start_inform,token,re_email,stop_inform,re_inform,inform)
         # task_list = task.task_list()
         return redirect("http://127.0.0.1:5000/monitor/task_list")
 

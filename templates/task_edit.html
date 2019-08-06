@@ -141,8 +141,6 @@
                 "frequency": {{ task_info[3] }},
                 "inform": {{ task_info[4] }}
             });
-            <!--form.on('select(inform)', function(data){                    接着改这-->
-
         });
 
 
@@ -157,9 +155,7 @@
                     , laydate = layui.laydate
                     , tree = layui.tree
                     , util = layui.util, dataList = [], types = ['group', 'project', 'cat', 'interface'];
-                form.val('exam', {
-                    frequency: {{ task_info[4] }}
-                });
+
                 //使用jQurty方法获取后端数据
                 jQuery.ajax({
                     url: "/monitor/get_interface_list",
@@ -190,7 +186,7 @@
                                 elem: '#test12'
                                 , data: dataList
                                 , id: 'demo'
-                                , edit: ['add', 'update', 'del']//开启编辑删除功能
+                                <!--, edit: ['add', 'update', 'del']//开启编辑删除功能-->
                                 , showCheckbox: true  //是否显示复选框
                                 , isJump: true //是否允许点击节点时弹出新窗口跳转
                                 , click: function (obj) {

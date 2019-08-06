@@ -7,7 +7,6 @@ pymysql.install_as_MySQLdb
 from test_code.sqlop import *
 from collections import Counter
 
-
 class Monitor_Inform(SqlOperate):
     """接口监控策略"""
 
@@ -61,6 +60,7 @@ class Monitor_Inform(SqlOperate):
             elif str(code) == "200" and data == []:
                 num = 0
                 sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
+
                 self.sqlExe(sql1)
                 self.sqlCom()
             else:
@@ -68,6 +68,7 @@ class Monitor_Inform(SqlOperate):
 
             stopnum = start_times + stop_times
             renum = stopnum + re_times
+
             if num < start_times or renum > num >= stopnum:
                 ding = 0
                 content = ""
