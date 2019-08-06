@@ -19,7 +19,7 @@ class Monitor_Task(SqlOperate):
         self.database = conf.get('monitor_db', 'database')
 
     # 添加任务
-    def task_add(self, task_name, api_id, frequency):
+    def task_add(self, task_name, api_id, frequency,start_inform,token,re_email,stop_inform,re_inform,inform):
         '''
         :param task_name:
         :param api_id:列表
@@ -30,7 +30,8 @@ class Monitor_Task(SqlOperate):
         self.dbcur()
         sql = self.sqlInsert("task_list",
                              {"task_name": task_name, "api_id": api_id, "frequency": frequency,
-                              "create_time": create_time, "update_time": create_time})
+                              "create_time": create_time, "update_time": create_time,"start_inform":start_inform,
+                              "token":token,"re_email":re_email,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform})
         try:
             self.sqlExe(sql)
             self.sqlCom()
@@ -47,8 +48,8 @@ class Monitor_Task(SqlOperate):
         :return: (('APP', None, '', 0), ('产品库', None, '', 0), ('互动', None, '60s', 0)）
         '''
         self.dbcur()
-        sql = self.sqlSelect("task_list", ["id", "task_name", "api_id", "frequency", "status"],
-                             condition={"is_delete": 0}, repeat="1")
+        sql = self.sqlSelect("task_list", ["id", "task_name", "api_id", "frequency", "status","start_inform","token"
+            ,"re_email","stop_inform","re_inform","inform"],condition={"is_delete": 0}, repeat="1")
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -62,7 +63,7 @@ class Monitor_Task(SqlOperate):
         :return: (1,'论坛', '[1,32,34]', '20',1)/不存在返回None
         '''
         self.dbcur()
-        sql = "select id,task_name,api_id,frequency,status from task_list where id='%s'" % task_id
+        sql = "select id,task_name,api_id,frequency,status,start_inform,token,re_email,stop_inform,re_inform,inform from task_list where id='%s'" % task_id
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -72,7 +73,7 @@ class Monitor_Task(SqlOperate):
         return data
 
     # 编辑任务
-    def task_edit(self, task_id, task_name, api_id, frequency):
+    def task_edit(self, task_id, task_name, api_id, frequency,start_inform,token,re_email,stop_inform,re_inform,inform):
         '''
         :param id:
         :param task_name:
@@ -86,8 +87,7 @@ class Monitor_Task(SqlOperate):
             return "任务id不存在"
         self.dbcur()
         sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
-                                           "update_time": update_time},
-                             {"id": task_id})
+                                           "update_time": update_time,"start_inform":start_inform,"token":token,"re_email":re_email,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform},{"id": task_id})
         try:
             self.sqlExe(sql)
             self.sqlCom()

@@ -1,82 +1,147 @@
 {% extends "base.html" %}
 {% block head %}
-    <head>
-        <meta charset="UTF-8">
-        <title>测试管理系统</title>
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <link rel="stylesheet" href="../static/layui/css/layui.css">
-        <script src="../static/layui/layui.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>测试管理系统</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
+
+    {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
+    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+    <script src="../static/layui/layui.js"></script>
+
+    {#____________________________________layui样式———————————————————————————#}
+    <script src="../static/layui/layui.js"></script>
     <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
-        <script type="text/javascript" src="../static/js/tool_p.js"></script>
-    </head>
+    <script type="text/javascript" src="../static/js/tool_p.js"></script>
+</head>
 {% endblock head %}
 {% block left %}
-	{{ super() }}
+{{ super() }}
 {% endblock left %}
 {% block right %}
-	{{ super() }}
-	<!-- 修改name（页面名称） -->
-{#	{% set name = '编辑任务' %}#}
-	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-		<legend>{{title}}</legend>
-	</fieldset>
-	<!-- 页面私有部分 -->
-    <form class="layui-form" lay-filter="exam" action="{{ api }}" method="POST"   style="width: 600px ;margin-top: 50px" >
-                <div  class="layui-form-item" >
-                    {% if title == "编辑任务" %}
-                    <div class="layui-form-item" style="line-height:30px">
-                        <label class="layui-form-label">任务ID</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="task_id" lay-verify="required" autocomplete="off"   class="layui-input" style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
-                        </div>
-                    </div>
-                    {% endif %}
-                    <div class="layui-form-item" style="line-height:30px">
-                        <label class="layui-form-label">任务名称</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"  class="layui-input" style="width: 300px" value={{ task_info[1] }}>
-                        </div>
-                    </div>
-                    <form class="layui-form" action="">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">执行频率</label>
-                        <div class="layui-input-block" style="width: 300px">
-                          <select name="frequency" lay-filter="aihao" id="select">
-                              <option value=""></option>
-                            <option value="1" >1分钟执行一次</option>
-                            <option value="2">2分钟执行一次</option>
-                            <option value="3">3分钟执行一次</option>
-                            <option value="5">5分钟执行一次</option>
-                              <option value="10">10分钟执行一次</option>
-                          </select>
-                        </div>
-                      </div>
-                    </form>
-                        <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">api接口池</label>
-                            <div class="layui-input-block" style="width: 300px">
-                              <textarea name="api_id" placeholder="请输入内容，英文逗号分隔"  class="layui-textarea">{{ task_info[2] }}</textarea>
-                            </div>
-                          </div>
+{{ super() }}
+<!-- 修改name（页面名称） -->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>{{title}}</legend>
+</fieldset>
+<!-- 页面私有部分 -->
+<form class="layui-form" action="{{ api }}" method="POST" style="width: 600px ;margin-top: 50px" lay-filter="exam">
+    <div class="layui-form-item">
+        {% if title == "编辑任务" %}
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">任务ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="task_id" lay-verify="required" autocomplete="off" class="layui-input"
+                       style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
+            </div>
+        </div>
+        {% endif %}
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">任务名称<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"
+                       class="layui-input" style="width: 300px" value={{ task_info[1] }}>
+            </div>
+        </div>
 
-                    <div style="margin-top: 10px;margin-left: 300px">
-                        <input class="layui-btn layui-btn-danger" type="submit" value="保存" style="margin-left:50px;margin-top:0px"></input>
-{#                        <span class="layui-btn" id="del_button" name="edit" onclick=task_save(this)>保存</span>#}
+        <div class="layui-form-item">
+            <label class="layui-form-label">执行频率<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block" style="width: 150px">
+                <select name="frequency" lay-filter="frequency">
+                    <option value=""></option>
+                    <option value="1">1分钟执行一次</option>
+                    <option value="2">2分钟执行一次</option>
+                    <option value="3">3分钟执行一次</option>
+                    <option value="5">5分钟执行一次</option>
+                    <option value="10">10分钟执行一次</option>
+                </select>
+            </div>
+        </div>
 
-                    </div>
-                </div>
-            </form>
-    <script>
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警开关<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block" style="width: 100px">
+                <select name="inform" lay-filter="inform">
+                    <option value="">请选择</option>
+                    <option value="0">开</option>
+                    <option value="1">关</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">钉钉Token</label>
+            <div class="layui-input-inline">
+                <input type="text" name="token" lay-verify="pass" placeholder="请输入接收报警的钉钉群token" autocomplete="off"
+                       class="layui-input" style="width: 300px" value={{task_info[6]}}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮件地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="re_email" lay-verify="pass" placeholder="请输入接收报警人员的邮件地址，用','隔开"
+                       autocomplete="off"
+                       class="layui-input" style="width: 300px" value={{task_info[7]}}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警通知<font color="#FF0000"> *</font></label>
+            <div class="layui-input-inline" style="width: 150px">
+                <input type="text" name="start_inform" lay-verify="pass" placeholder="连续报错n次" autocomplete="off"
+                       class="layui-input" value={{task_info[5]}}>
+            </div>
+            <div class="layui-form-mid">发出告警通知</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">停止通知<font color="#FF0000"> *</font></label>
+            <div class="layui-input-inline" style="width: 150px">
+                <input type="text" name="stop_inform" lay-verify="pass" placeholder="连续通知n次" autocomplete="off"
+                       class="layui-input" value={{task_info[8]}}>
+            </div>
+            <div class="layui-form-mid ">停止告警通知</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">恢复通知<font color="#FF0000"> *</font></label>
+            <div class="layui-input-inline" style="width: 150px">
+                <input type="text" name="re_inform" lay-verify="pass" placeholder="连续停止n次未修复" autocomplete="off"
+                       class="layui-input" value={{task_info[9]}}>
+            </div>
+            <div class="layui-form-mid">恢复告警通知</div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">api接口池</label>
+
+            <div style="margin-top: 10px;margin-left: 300px">
+                <input class="layui-btn layui-btn-danger" type="submit" value="保存"
+                       style="margin-left:50px;margin-top:0px"></input>
+            </div>
+        </div>
+</form>
+
+<script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
+
+<script>
 layui.use(['form', 'layedit', 'laydate'], function(){
   var form = layui.form
   ,layer = layui.layer
   ,layedit = layui.layedit
   ,laydate = layui.laydate;
-  form.val('exam', {
-      frequency: {{ task_info[3] }}
-  })
+
+  form.val("exam", {
+  "frequency": {{ task_info[3] }},
+  "inform": {{ task_info[4] }}
+  });
+
 });
+
+
 </script>
 
 {% endblock right %}
