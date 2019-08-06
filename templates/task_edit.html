@@ -118,19 +118,24 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">api接口池</label>
                 {#——————————————————加入分级树形——————————————————#}
+
                 <div id="test12" class="demo-tree-more" style="margin-left:150px"></div>
 
                 {#——————————————————上面代码是新加入的——————————————————————#}
 
                 <div style="margin-top: 10px;margin-left: 300px">
-                    <input class="layui-btn layui-btn-danger" type="submit" value="保存"
-                           style="margin-left:50px;margin-top:0px"></input>
+
+                    <input class="layui-btn layui-btn-danger" id="id" type="button" onclick="test()" value="保存"
+                           style="margin-left:50px;margin-top:0px">
+                    </input>
+
                 </div>
             </div>
     </form>
 
     <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
     <script>
+        let newTree = null;
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
@@ -142,13 +147,14 @@
                 "inform": {{ task_info[4] }}
             });
             <!--form.on('select(inform)', function(data){                    接着改这-->
-
         });
 
 
         <!--张晨的接口池子-->
 
         {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
+
+
         layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
             function () {
                 var form = layui.form
@@ -158,8 +164,10 @@
                     , tree = layui.tree
                     , util = layui.util, dataList = [], types = ['group', 'project', 'cat', 'interface'];
                 form.val('exam', {
-                    frequency: {{ task_info[4] }}
+                    frequency: {{ task_info[3] }}
                 });
+
+
                 //使用jQurty方法获取后端数据
                 jQuery.ajax({
                     url: "/monitor/get_interface_list",
@@ -170,13 +178,16 @@
                     },
                     dataType: 'json',
                     //success请求并成功返回信息
+
+
                     success: function (res) {
                         if (res.code === 1000) {
                             //声明一个变量
                             let list = []
-                            //循环获取group中的命名为title
+                            //循环获取group中的数据
                             for (var i = 0; i < res.data.length; i++) {
                                 list.push({
+                                    //使用push方法进数组length的返回，返回的是length不是数组
                                     title: res.data[i].title,
                                     id: res.data[i].id,
                                     type: "group",
@@ -184,13 +195,14 @@
                                 })
                             }
                             dataList = list
+                            newTree = tree//定义一个全局的变量
 
-                            //基本功能
+                            //tree方法使用
                             tree.render({
                                 elem: '#test12'
                                 , data: dataList
                                 , id: 'demo'
-                                , edit: ['add', 'update', 'del']//开启编辑删除功能
+                                , onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
                                 , showCheckbox: true  //是否显示复选框
                                 , isJump: true //是否允许点击节点时弹出新窗口跳转
                                 , click: function (obj) {
@@ -205,20 +217,28 @@
                                         if (!arr.length) return;
                                         data.children = arr
                                         data.spread = true
+                                        //checked方法，参数对节点进行初始勾选需要在重载之后进行获取勾选
+                                        let checkedData = newTree.getChecked('demo');
+                                        let idList = []
+                                        getId(idList, checkedData)
+                                        console.log(checkedData, idList)
                                         //重载实例重载
                                         tree.reload('demo', {
                                             [obj.state]: 'open'//重载一个新的参数
                                         });
+                                        //对
+                                        newTree.setChecked('demo', idList);
+
                                     })
+
                                 }
                             })
 
                         }
-
                     }
                 })
 
-                //获取第二分级展示
+                //获取第二分级
                 function getSecondList(type, id, callback) {
                     jQuery.ajax({
                         url: "/monitor/get_interface_list",
@@ -228,11 +248,12 @@
                             id: id
                         },
                         dataType: 'json',
-                        //success请求并成功返回信息
+                        //success请求并成功返回信息，循环type中的数据
                         success: function (res) {
                             let list = [];
                             for (var j = 0; j < res.data.length; j++) {
                                 list.push({
+                                    //使用push方法进数组length的返回，返回的是length不是数组
                                     title: res.data[j].title,
                                     id: res.data[j].id,
                                     type: type
@@ -243,6 +264,36 @@
                     })
                 }
             });
+        {#-------------------------------这块走了4次循环获取每个id----每次循环储存id----------------------------------#}
+
+        function getId(idList, arr) {
+            if (!arr.length) return
+            for (let i = 0; i < arr.length; i++) {
+                idList.push(arr[i].id)
+                if (arr[i].children && arr[i].children.length) {
+                    getId(idList, arr[i].children)
+                }
+            }
+        }
+ {# ------------------------------------------------上面这块是王京写的--------------------------------------------------------#}
+
+        //onclick事件的传值 然后去执行ajax请求
+        function test() {
+            let checkedData = newTree.getChecked('demo');
+            console.log(checkedData)
+            let idList = []
+            getId(idList, checkedData)
+            console.log(idList)
+//进行ajax接口返回
+            jQuery.ajax({
+                type: "POST",
+                data: {type: "group", id: "0"},
+                url: "/monitor/get_interface_list",
+                dataType: 'json',
+                success: function () {
+                },
+            })
+        }
 
 
     </script>
