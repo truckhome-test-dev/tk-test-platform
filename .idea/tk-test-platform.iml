@@ -7,24 +7,12 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="Python 3.6 (tk-test-platform)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="locust" />
     <orderEntry type="module" module-name="Che360Test" />
     <orderEntry type="module" module-name="test-flask" />
-    <orderEntry type="module" module-name="Che360Test" />
-    <orderEntry type="module" module-name="Che360Test" />
-    <orderEntry type="module" module-name="Che360Test" />
-    <orderEntry type="module" module-name="Che360Test" />
-    <orderEntry type="module" module-name="Che360Test" />
-    <orderEntry type="module" module-name="Che360Test" />
     <orderEntry type="module" module-name="che360" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
-    <option name="TEMPLATE_FOLDERS">
-      <list>
-        <option value="$MODULE_DIR$/templates" />
-      </list>
-    </option>
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />

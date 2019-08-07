@@ -42,7 +42,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
-@check_permissions("/monitor/task_edit")
+#@check_permissions("/monitor/task_edit")
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"

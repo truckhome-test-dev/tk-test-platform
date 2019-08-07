@@ -29,5 +29,5 @@ print(mysql_host,mysql_password)
 # ['test.ini']
 # ['driver', 'mysql']
 # ['host', 'port', 'username', 'password']
-# [('path', 'E:\\Automation\\UI\\testcase\\browser\\chromedriver.exe'), ('url', 'https://www.baidu.com/')]
+# [('path', 'E:\\Automation\\pages\\testcase\\browser\\chromedriver.exe'), ('url', 'https://www.baidu.com/')]
 # 127.0.0.1 123456
