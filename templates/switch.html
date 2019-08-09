@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
+    <script src="../static/layui/layui.js"></script>
+    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+    <script type="text/javascript" src="../static/js/tool_p.js"></script>
+</head>
+<body>
+
+<div class="layui-form-item" style="text-align: center;margin-top: 100px">
+    <label class="layui-form-label">接口id</label>
+    <div class="layui-input-block">
+        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入接口id" class="layui-input"
+               style="width: 200px">
+    </div>
+    <br>
+    <br>
+    <button type="button" class="layui-btn" onclick="open_monitor()">开启监控</button>
+    <button type="button" class="layui-btn" onclick="stop_monitor()">停止监控</button>
+    <br>
+    <br>
+    <button type="button" class="layui-btn" onclick="open_notice()">开启通知</button>
+    <button type="button" class="layui-btn" onclick="stop_notice()">停止通知</button>
+    <br>
+    <br>
+    <button type="button" class="layui-btn" onclick="status()">查询接口状态</button>
+</div>
+</body>
+<script>
+    function open_monitor() {
+alert(1)
+    }
+
+    function stop_monitor() {
+alert(2)
+    }
+
+    function open_notice() {
+alert(3)
+    }
+
+    function stop_notice() {
+alert(4)
+    }
+
+    function status() {
+alert(5)
+    }
+</script>
+</html>

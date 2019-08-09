@@ -16,7 +16,7 @@ class Send_All():
 
         msg = email.mime.multipart.MIMEMultipart()
         msg['from'] = sender
-        msg['to'] = str(receiver)
+        msg['to'] = str(receiver)[1:-1].replace("'","")
         msg['subject'] = "接口异常报警通知"
 
         txt = email.mime.text.MIMEText(content)

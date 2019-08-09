@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('../')
 from test_code import *
 
@@ -267,7 +268,7 @@ class run(SqlOperate):
 
 # 主方法
 def main(task_id):
-    task_id=int(task_id)
+    task_id = int(task_id)
     r = run(task_id)
     m = get_md()
     strategy = Monitor_Inform()
@@ -295,12 +296,16 @@ def main(task_id):
         if resq_code == 200:
             response = "ok"
         r.write_result(i, task_id, resq_code, res_time, response)
-        print(task_id, i, resq_code,res_time)
+        print(task_id, i, resq_code, res_time)
         st = strategy.start_inform(task_id, i, resq_code)
         num = st[4]
         print(st)
+        if str(resq_code)[:1]=="9":
+            resq_code=str(resq_code)+"(接口响应超过10s)"
+        else:
+            resq_code=str(resq_code)
         if st[0] == 1:
-            content = "接口名称：%s \n 接口地址：%s \n 备注：%s " % (interface_name, url, st[1])
+            content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, st[1])
             d_token = st[2]
             receiver = st[3]
             send.sending(d_token, content)
