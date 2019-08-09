@@ -5,7 +5,6 @@ import email.mime.multipart
 import json
 import requests
 
-
 # 发邮件、发钉钉
 class Send_All():
 
@@ -23,10 +22,12 @@ class Send_All():
         msg.attach(txt)
 
         smtp = smtplib.SMTP()
+
         smtp.connect('smtp.mxhichina.com', '25')
         smtp.login('mantis@360che.com', '360CHEche1')
         smtp.sendmail(sender, receiver, str(msg))
         smtp.quit()
+
 
     # 发钉钉
     def sending(self, token, content):
@@ -34,3 +35,4 @@ class Send_All():
         data = {"msgtype": "text", "text": {"content": content}, "at": {"atMobiles": [], "isAtAll": "false"}}
         data = json.dumps(data)
         res = requests.post(token, data=data, headers=HEADERS)
+

@@ -25,13 +25,17 @@
 <div class="layui-form">
     <span class="layui-btn layui-btn-normal" name="task_add"
           onclick="task_add(this)">新增任务</span>
-    <table class="layui-table" style="width: 50% ">
+    <table class="layui-table" style="width: 85% ">
         <colgroup>
-            <col width="100">
-            <col width="150">
-            <col width="100">
-            <col width="100">
-            <col width="400">
+            <col width="40">
+            <col width="80">
+            <col width="40">
+            <col width="40" style="display:none">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="120">
         </colgroup>
         <thead>
         <tr>
@@ -44,8 +48,20 @@
             <th>
                 <div align="center">频率</div>
             </th>
-            <th>
+            <th style="display:none">
                 <div align="center">状态</div>
+            </th>
+            <th>
+                <div align="center">开始报警次数</div>
+            </th>
+            <th>
+                <div align="center">停止报警次数</div>
+            </th>
+            <th>
+                <div align="center">恢复报警次数</div>
+            </th>
+            <th>
+                <div align="center">是否报警</div>
             </th>
             <th>
                 <div style="text-align: center">操作</div>
@@ -62,10 +78,25 @@
                 <div align="center">{{i[1]}}</div>
             </td>
             <td style="text-align:center;width:10px;">{{i[3]}}分钟/次</td>
-            <td style="text-align:center;word-break:break-all;">
+            <td style="text-align:center;word-break:break-all;display:none">
                 <div>{{i[4]}}</div>
             </td>
-
+            <td>
+                <div align="center">{{i[5]}}</div>
+            </td>
+            <td>
+                <div align="center">{{i[8]}}</div>
+            </td>
+            <td>
+                <div align="center">{{i[9]}}</div>
+            </td>
+            <td>
+            {% if i[10] == 1 %}
+                <div align="center">关</div>
+            {% else %}
+                <div align="center">开</div>
+            {% endif %}
+            </td>
             <td id="td1">
 
                 {% if i[4] == 1 %}

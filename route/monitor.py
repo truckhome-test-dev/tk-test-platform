@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect,url_for
 from test_code import *
 from functools import wraps
 import json
@@ -51,31 +51,51 @@ def task_edit():
         api = "task_edit"
         return render_template('task_edit.html', api=api, title=title, task_info=task_info)
     else:
-        task_id = request.form.get('task_id')
-        task_name = request.form.get('task_name')
-        frequency = request.form.get('frequency')
-        api_id = "[" + request.form.get('api_id') + "]"
-        task.task_edit(task_id, task_name, api_id, frequency)
-        return redirect("http://127.0.0.1:5000/monitor/task_list")
+        data = request.get_data()
+        data = json.loads(data)
+        task_id = data['task_id']
+        task_name = data['task_name']
+        frequency = data['frequency']
+        inform = data['inform']
+        api_id = data['apis']
+        # api_id = "11"
+        start_inform = data['start_inform']
+        stop_inform = data['stop_inform']
+        re_inform = data['re_inform']
+        if inform == 0:
+            token = data['token']
+            re_email = data['email']
+            task.task_edit(task_id, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token,re_email)
+        else:
+            task.task_edit(task_id, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform)
+        return "ok"
 
-
-# 添加任务
+#添加任务
 @monitor.route('/task_add', methods=['get', 'post'])
 @check_permissions("/monitor/task_add")
 def task_add():
     if request.method == "GET":
         title = "添加任务"
-        task_info = ("", "", "", "3", "")
+        task_info = ("", "", "", "3", "","","","","","","1")
         api = "task_add"
         return render_template('task_edit.html', api=api, title=title, task_info=task_info)
     else:
-        task_name = request.form.get('task_name')
-        frequency = request.form.get('frequency')
-        api_id = "[" + request.form.get('api_id') + "]"
-        task.task_add(task_name, api_id, frequency)
-        # task_list = task.task_list()
-        return redirect("http://127.0.0.1:5000/monitor/task_list")
-
+        data = request.get_data()
+        data = json.loads(data)
+        task_name = data['task_name']
+        frequency = data['frequency']
+        api_id = data['apis']
+        start_inform = data['start_inform']
+        stop_inform = data['stop_inform']
+        re_inform = data['re_inform']
+        inform = data['inform']
+        if inform == 0:
+            token = data['token']
+            re_email = data['email']
+            task.task_add(task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token,re_email)
+        else:
+            task.task_add(task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform)
+        return "ok"
 
 # 删除任务
 @monitor.route('/task_del', methods=['get', 'post'])
