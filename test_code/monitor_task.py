@@ -162,13 +162,13 @@ class Monitor_Task(SqlOperate):
         :param frequency:
         :return:"task_id已存在"/"添加定时任务成功"
         */10 * * * * /usr/sbin/ntpdate ntp3.aliyun.com
-        #* * * * * /root/.pyenv/shims/python /home/jinyue/tk-test-platform/test_code/monitor_run.py 1 >> /home/jinyue/tk-test-platform/test_code/load.log
+        #*/3 * * * * cd /home/tk-test-platform/test_code && /root/.pyenv/shims/python /home/tk-test-platform/test_code/monitor_run.py 9 >> /home/tk-test-platform/test_code/task.log 2>&1
         '''
         frequency = int(self.task_info(task_id)[3])
         if frequency == 1:
-            data = "* * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % task_id
+            data = "* * * * * cd /home/tk-test-platform/test_code && /root/.pyenv/shims/python /home/tk-test-platform/test_code/monitor_run.py %d >> /home/tk-test-platform/test_code/task.log 2>&1\n" % task_id
         else:
-            data = "*/%d * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % (
+            data = "*/%d * * * * cd /home/tk-test-platform/test_code && /root/.pyenv/shims/python /home/tk-test-platform/test_code/monitor_run.py %d >> /home/tk-test-platform/test_code/task.log 2>&1\n" % (
                 frequency, task_id)
         data_task = "monitor_run.py %d" % task_id
         with open("/var/spool/cron/root", "r", encoding="utf-8") as f:
@@ -260,7 +260,8 @@ class Monitor_Mongodb():
     def get_group(self):
         myset = self.db.group
         # data = myset.find({'type': 'public'}, {'group_name': 1})
-        data = myset.aggregate([{"$match": {"type": "public"}}, {"$project": {"_id": 0, "id": "$_id", "title": "$group_name"}}])
+        data = myset.aggregate(
+            [{"$match": {"type": "public"}}, {"$project": {"_id": 0, "id": "$_id", "title": "$group_name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -270,7 +271,8 @@ class Monitor_Mongodb():
     def get_project(self, group_id):
         myset = self.db.project
         # data = myset.find({'group_id': int(group_id)}, {'name': 1})
-        data = myset.aggregate([{"$match": {"group_id": group_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
+        data = myset.aggregate(
+            [{"$match": {"group_id": group_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -280,7 +282,8 @@ class Monitor_Mongodb():
     def get_interface_cat(self, project_id):
         myset = self.db.interface_cat
         # data = myset.find({'project_id': int(project_id)}, {'name': 1})
-        data = myset.aggregate([{"$match": {"project_id": project_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
+        data = myset.aggregate(
+            [{"$match": {"project_id": project_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -299,7 +302,8 @@ class Monitor_Mongodb():
     def get_interface(self, catid):
         myset = self.db.interface
         # data = myset.find({'catid': int(catid)}, {'title': 1})
-        data = myset.aggregate([{"$match": {"catid": catid}}, {"$project": {"_id": 0, "id": "$_id", "title": "$title"}}])
+        data = myset.aggregate(
+            [{"$match": {"catid": catid}}, {"$project": {"_id": 0, "id": "$_id", "title": "$title"}}])
         L = []
         for i in data:
             L.append(i)
@@ -320,6 +324,7 @@ class Monitor_Mongodb():
         else:
             l1 = []
         return l1
+
 
 if __name__ == "__main__":
     a = Monitor_Mongodb()

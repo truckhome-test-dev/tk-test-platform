@@ -127,8 +127,8 @@ function task_edit(e) {
 }
 
 function task_res(e) {
-    var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
-    window.location.href = "http://127.0.0.1:5000/monitor/report?task_id=" + task_id
+    // var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
+    window.location.href = "http://127.0.0.1:5000/monitor/result"
 }
 
 //test
@@ -622,7 +622,7 @@ function logout() {
 //判断localStorage是否存在menu
 function is_menu() {
     let menu = localStorage.getItem('menu');
-    if (!menu){
+    if (!menu) {
         set_menu();
         get_menu();
     }
