@@ -21,7 +21,7 @@ class Monitor_Task(SqlOperate):
         self.database = conf.get('monitor_db', 'database')
 
     # 添加任务
-    def task_add(self, task_name, api_id, frequency,start_inform,token,re_email,stop_inform,re_inform,inform):
+    def task_add(self, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token="",re_email=""):
         '''
         :param task_name:
         :param api_id:列表
@@ -75,7 +75,7 @@ class Monitor_Task(SqlOperate):
         return data
 
     # 编辑任务
-    def task_edit(self, task_id, task_name, api_id, frequency,start_inform,token,re_email,stop_inform,re_inform,inform):
+    def task_edit(self, task_id, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token="",re_email=""):
         '''
         :param id:
         :param task_name:
@@ -88,8 +88,12 @@ class Monitor_Task(SqlOperate):
         if data is None:
             return "任务id不存在"
         self.dbcur()
-        sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
-                                           "update_time": update_time,"start_inform":start_inform,"token":token,"re_email":re_email,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform},{"id": task_id})
+        if inform == 0:
+            sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
+                                               "update_time": update_time,"start_inform":start_inform,"token":token,"re_email":re_email,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform},{"id": task_id})
+        else:
+            sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
+                                               "update_time": update_time,"start_inform":start_inform,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform},{"id": task_id})
         try:
             self.sqlExe(sql)
             self.sqlCom()
