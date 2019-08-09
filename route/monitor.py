@@ -12,7 +12,7 @@ task = Monitor_Task()
 api = Api_Monitor()
 res = Monitor_Res()
 mm = Monitor_Mongodb()
-
+strategy = Monitor_Inform()
 
 # 判断登录装饰器方法
 def check_token2(func):
@@ -352,3 +352,20 @@ def get_interface_list():
     except:
         ret = {"code": 1003, "data": "参数异常"}
     return json.dumps(ret)
+
+@monitor.route('/switch', methods=['post','get'])
+def swich():
+    if request.method=="GET":
+        return render_template('switch.html')
+    else:
+        type = request.form.get('type')
+        id = int(request.form.get('id'))
+        val=int(request.form.get('val'))
+        if type == "status":
+            data=strategy.get_interface_status(id)
+            ret="监控状态：%s \n通知状态：%s"%(data[0],data[1])
+            ret=ret.replace("1","开启").replace("0","关闭")
+            return ret
+        else:
+            strategy.update_interface_status(type, id, val)
+            return "更新成功！"

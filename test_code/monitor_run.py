@@ -1,9 +1,9 @@
-import sys
+import os,sys
 
 sys.path.append('../')
 from test_code import *
 
-
+print (os.getcwd())
 # 获取mongo数据
 class get_md():
     def __init__(self):
@@ -316,6 +316,6 @@ def main(task_id):
 
 
 if __name__ == "__main__":
-    task_id = sys.argv[1]
-    # task_id = 9
+    # task_id = sys.argv[1]
+    task_id = 9
     main(task_id)

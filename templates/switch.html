@@ -15,7 +15,8 @@
 <div class="layui-form-item" style="text-align: center;margin-top: 100px">
     <label class="layui-form-label">接口id</label>
     <div class="layui-input-block">
-        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入接口id" class="layui-input"
+        <input type="text" name="title" id="id" lay-verify="title" autocomplete="off" placeholder="请输入接口id"
+               class="layui-input"
                style="width: 200px">
     </div>
     <br>
@@ -33,23 +34,98 @@
 </body>
 <script>
     function open_monitor() {
-alert(1)
+        var id = document.getElementById("id").value
+        if (id == "") {
+            alert("请输入接口id")
+        }
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "switch", true);
+        var params = 'type=monitor&id=' + id + '&val=1';
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlhttp.send(params);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var c = xmlhttp.responseText
+                alert(c)
+            }
+        }
     }
 
     function stop_monitor() {
-alert(2)
+        var id = document.getElementById("id").value
+        if (id == "") {
+            alert("请输入接口id")
+        }
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "switch", true);
+        var params = 'type=monitor&id=' + id + '&val=0';
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlhttp.send(params);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var c = xmlhttp.responseText
+                alert(c)
+            }
+        }
     }
 
     function open_notice() {
-alert(3)
+        var id = document.getElementById("id").value
+        if (id == "") {
+            alert("请输入接口id")
+        }
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "switch", true);
+        var params = 'type=notice&id=' + id + '&val=1';
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlhttp.send(params);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var c = xmlhttp.responseText
+                alert(c)
+            }
+        }
     }
 
     function stop_notice() {
-alert(4)
+        var id = document.getElementById("id").value
+        if (id == "") {
+            alert("请输入接口id")
+        }
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "switch", true);
+        var params = 'type=notice&id=' + id + '&val=0';
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlhttp.send(params);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var c = xmlhttp.responseText
+                alert(c)
+            }
+        }
     }
 
     function status() {
-alert(5)
+        var id = document.getElementById("id").value;
+        if (id == "") {
+            alert("请输入接口id")
+        }
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "switch", true);
+        var params = 'type=status&id=' + id + '&val=0';
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlhttp.send(params);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var c = xmlhttp.responseText
+                alert(c)
+            }
+        }
     }
 </script>
 </html>

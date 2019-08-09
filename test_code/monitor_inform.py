@@ -6,17 +6,43 @@ import pymysql
 pymysql.install_as_MySQLdb
 from test_code.sqlop import *
 from collections import Counter
+import os
+
 
 class Monitor_Inform(SqlOperate):
     """接口监控策略"""
 
     def __init__(self):
+        print(os.getcwd())
         conf = configparser.ConfigParser()
-        conf.read("../conf/config.ini")
+        conf.read("conf/config.ini")
         self.host = conf.get('monitor_db', 'host')
         self.user = conf.get('monitor_db', 'user')
         self.passwd = conf.get('monitor_db', 'passwd')
         self.database = conf.get('monitor_db', 'database')
+
+    #查询接口状态
+    def get_interface_status(self, interface_id):
+        self.dbcur()
+        sql = "select monitor,notice from api_inform WHERE apiid=%d " % (interface_id)
+        self.sqlExe(sql)
+        data = self.cur.fetchone()
+        self.sqlCom()
+        self.sqlclo()
+        return data
+
+    #更新接口状态
+    def update_interface_status(self,type,interface_id,status):
+        self.dbcur()
+        if type=="monitor":
+            sql = "UPDATE `api_inform` SET `monitor`=%d where apiid = %d" % (status, interface_id)
+        elif type=="notice":
+            sql = "UPDATE `api_inform` SET `notice`=%d where apiid = %d" % (status, interface_id)
+        else:
+            return "类型错误"
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
 
     # 查询任务对应的策略次数、token、email
     def seltimes(self, taskid):
@@ -39,7 +65,8 @@ class Monitor_Inform(SqlOperate):
     # 是否发钉钉
     def start_inform(self, taskid, apiid, code):
         info = self.seltimes(taskid)
-        if info[5] == 0:
+        interface_status = self.get_interface_status(apiid)
+        if info[5] == 0 and interface_status[1] == 1:
             start_times = info[0]
             stop_times = info[1]
             re_times = info[2]
@@ -82,3 +109,7 @@ class Monitor_Inform(SqlOperate):
         else:
             ding = 0
             return (ding, "", "", "", 0)
+
+if __name__ == "__main__":
+    i=Monitor_Inform()
+    print(i.update_interface_status("notice",11578,0))
