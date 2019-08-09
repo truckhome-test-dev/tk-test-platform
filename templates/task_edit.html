@@ -116,183 +116,272 @@
             </div>
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">api接口池</label>
-                {#——————————————————加入分级树形——————————————————#}
+                {#                <label class="layui-form-label">api接口池</label>#}
+                <div class="layui-form" lay-filter="group" style="display:inline-block;width: 250px">
+                    <label class="layui-form-label">业务线</label>
+                    <div class="layui-input-block">
+                        <select id="group" name="group" lay-verify="required" lay-search="" lay-filter="group">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
 
-                <div id="test12" class="demo-tree-more" style="margin-left:150px"></div>
+                <div class="layui-form" lay-filter="project" style="display:inline-block;width: 250px">
+                    <label class="layui-form-label">项目</label>
+                    <div class="layui-input-block">
+                        <select id="project" name="project" lay-verify="required" lay-search=""
+                                lay-filter="project">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-form" lay-filter="cat" style="display:inline-block;width: 250px">
+                    <label class="layui-form-label">模块</label>
+                    <div class="layui-input-block">
+                        <select id="cat" name="cat" lay-verify="required" lay-search="" lay-filter="cat">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+
+                {#——————————————————加入数据表格1——————————————————#}
+                <table class="layui-table" lay-data="{height:315, url:'/monitor/new_get_interface_list?type=group&id=0', page:true, id:'test'}"
+                       id="demo1"
+                       lay-filter="test">
+                    <thead>
+                    <tr>
+                        <th lay-data="{field:'id', width:80, sort: true}">group</th>
+                        <th lay-data="{field:'username', width:80}">project</th>
+                        <th lay-data="{field:'sex', width:80, sort: true}">cat</th>
+                        <th lay-data="{field:'city'}">interface</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                {#——————————————————加入数据表格2——————————————————#}
+                <table class="layui-table" lay-data="{height:315, url:'/monitor/new_get_interface_list?type=group&id=0', page:true, id:'test'}"
+                       id="demo2"
+                       lay-filter="test">
+                    <thead>
+                    <tr>
+                        <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                        <th lay-data="{field:'title', width:80}">用户名</th>
+                    </tr>
+                    </thead>
+                </table>
+
+
+
+
 
                 {#——————————————————上面代码是新加入的——————————————————————#}
 
                 <div style="margin-top: 10px;margin-left: 300px">
 
-                    <input class="layui-btn layui-btn-danger" id="id" type="button" onclick="test()" value="保存"
+                    <input class="layui-btn layui-btn-danger" type="button" onclick="savetask()" value="保存"
                            style="margin-left:50px;margin-top:0px">
                     </input>
 
                 </div>
             </div>
+        </div>
     </form>
 
     <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
     <script>
-        let newTree = null;
-        layui.use(['form', 'layedit', 'laydate'], function () {
+            window.onload = function () {
+            get_group()
+        };
+            //获取业务线
+            function get_group() {
+                var xmlhttp;
+                xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "get_interface_list", true);
+                var params = 'type=group&id=0';
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xmlhttp.send(params);
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var c = JSON.parse(xmlhttp.responseText)
+                        console.log(c)
+                        if (c.code == 1000) {
+                            //给图标赋值
+                            if (c.data == "") {
+                                alert("暂无数据")
+                                layui.form.render('select', 'group');//需要渲染一下
+                            } else {
+                                resultData = c.data;
+                                var htmls = '<option value="">请选择</option>'; //全局变量
+                                for (var i in resultData) {
+                                    htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                                }
+                                $("#group").html(htmls); //通过select id进行赋值
+                                layui.form.render('select', 'group');//需要渲染一下
+                            }
+                        }
+                        if (c.code == 1002) {
+                            alert('该业务线下暂时无数据')
+                        }
+                    }
+                }
+            }
+
+            //获取项目
+            function get_project(group_id) {
+                var xmlhttp;
+                xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "get_interface_list", true);
+                var params = 'type=project&id=' + group_id;
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xmlhttp.send(params);
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var c = JSON.parse(xmlhttp.responseText)
+                        console.log(c)
+                        if (c.code == 1000) {
+                            //给图标赋值
+                            if (c.data == "") {
+                                alert("暂无数据")
+                                layui.form.render('select', 'project');//需要渲染一下
+                            } else {
+                                resultData = c.data;
+                                var htmls = '<option value="">请选择</option>'; //全局变量
+                                for (var i in resultData) {
+                                    htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                                }
+                                $("#project").html(htmls); //通过select id进行赋值
+                                layui.form.render('select', 'project');//需要渲染一下
+                            }
+                        }
+                        if (c.code == 1002) {
+                            alert('该项目下暂时无数据')
+                        }
+                    }
+                }
+            }
+
+            //获取模块
+            function get_cat(project_id) {
+                var xmlhttp;
+                xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "get_interface_list", true);
+                var params = 'type=cat&id=' + project_id;
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xmlhttp.send(params);
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var c = JSON.parse(xmlhttp.responseText)
+                        console.log(c)
+                        if (c.code == 1000) {
+                            //给图标赋值
+                            if (c.data == "") {
+                                alert("暂无数据")
+                                layui.form.render('select', 'cat');//需要渲染一下
+                            } else {
+                                resultData = c.data;
+                                var htmls = '<option value="">请选择</option>'; //全局变量
+                                for (var i in resultData) {
+                                    htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                                }
+                                $("#cat").html(htmls); //通过select id进行赋值
+                                layui.form.render('select', 'cat');//需要渲染一下
+                            }
+                        }
+                        if (c.code == 1002) {
+                            alert('该项模块暂时无数据')
+                        }
+
+                    }
+                }
+            }
+
+        layui.use(['form', 'layedit', 'laydate', 'table'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
-                , laydate = layui.laydate;
+                , laydate = layui.laydate
+                , table = layui.table;
 
-            form.val("exam", {
-                "frequency": {{ task_info[3] }},
-                "inform": {{ task_info[4] }}
+            form.on('select(group)', function (data) {
+                get_project(data.value)
             });
-            <!--form.on('select(inform)', function(data){                    接着改这-->
+            form.on('select(project)', function (data) {
+                get_cat(data.value)
+            });
+            form.on('select(cat)', function (data) {
+                get_interface(data.value)
+            });
+
+
+
+
+            //使用jQurty方法获取后端数据
+            jQuery.ajax({
+                url: "/monitor/get_interface_list",
+                type: "POST",
+                data: {
+                    type: "group",
+                    id: "0"
+                },
+                dataType: 'json',
+
+                //success请求并成功返回信息
+                success: function (res) {
+                    if (res.code === 1000) {
+                        //声明一个变量
+                        let list = []
+                        //循环获取group中的数据
+                        for (var i = 0; i < res.data.length; i++) {
+                            list.push({
+                                //使用push方法进数组length的返回，返回的是length不是数组
+                                title: res.data[i].title,
+                                id: 'group' + res.data[i].id,
+                                value: res.data[i].id,
+                                type: "group",
+
+                            })
+                        }
+
+                    }
+                    table.render({
+                        elem: '#demo1'
+                        , url: 'monitor/new_get_interface_list'
+                        , parseData: function (res) { //res 即为原始返回的数据
+                            {#return {#}
+                            {#    "code": res.status, //解析接口状态#}
+                            {#    "msg": res.message, //解析提示文本#}
+                            {#    "count": res.total, //解析数据长度#}
+                            {#    "data": res.data.item //解析数据列表#}
+
+                        }
+                        //,…… //其他参数
+                    });
+
+
+                }
+            })
+
+
         });
 
 
-        <!--张晨的接口池子-->
-
         {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
 
-
-        layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
-            function () {
-                var form = layui.form
-                    , layer = layui.layer
-                    , layedit = layui.layedit
-                    , laydate = layui.laydate
-                    , tree = layui.tree
-                    , util = layui.util, dataList = [], types = ['group', 'project', 'cat', 'interface'];
-                form.val('exam', {
-                    frequency: {{ task_info[3] }}
-                });
-
-
-                //使用jQurty方法获取后端数据
-                jQuery.ajax({
-                    url: "/monitor/get_interface_list",
-                    type: "POST",
-                    data: {
-                        type: "group",
-                        id: "0"
-                    },
-                    dataType: 'json',
-                    //success请求并成功返回信息
-
-
-                    success: function (res) {
-                        if (res.code === 1000) {
-                            //声明一个变量
-                            let list = []
-                            //循环获取group中的数据
-                            for (var i = 0; i < res.data.length; i++) {
-                                list.push({
-                                    //使用push方法进数组length的返回，返回的是length不是数组
-                                    title: res.data[i].title,
-                                    id: res.data[i].id,
-                                    type: "group",
-                                    children: []
-                                })
-                            }
-                            dataList = list
-                            newTree = tree//定义一个全局的变量
-
-                            //tree方法使用
-                            tree.render({
-                                elem: '#test12'
-                                , data: dataList
-                                , id: 'demo'
-                                , onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
-                                , showCheckbox: true  //是否显示复选框
-                                , isJump: true //是否允许点击节点时弹出新窗口跳转
-                                , click: function (obj) {
-                                    var data = obj.data;  //获取当前点击的节点数据
-                                    let index = types.findIndex(item => { //使用let 声明一个块级的变量，可以在循环语句中使用
-                                        //findIndex方法为数组中的每个元素都调用一次函数执行
-                                        return item === data.type
-                                    })
-                                    index++;
-                                    if (index > types.length - 1) return;
-                                    getSecondList(types[index], data.id, arr => {
-                                        if (!arr.length) return;
-                                        data.children = arr
-                                        data.spread = true
-                                        //checked方法，参数对节点进行初始勾选需要在重载之后进行获取勾选
-                                        let checkedData = newTree.getChecked('demo');
-                                        let idList = []
-                                        getId(idList, checkedData)
-                                        console.log(checkedData, idList)
-                                        //重载实例重载
-                                        tree.reload('demo', {
-                                            [obj.state]: 'open'//重载一个新的参数
-                                        });
-                                        //对
-                                        newTree.setChecked('demo', idList);
-
-                                    })
-
-                                }
-                            })
-
-                        }
-                    }
-                })
-
-                //获取第二分级
-                function getSecondList(type, id, callback) {
-                    jQuery.ajax({
-                        url: "/monitor/get_interface_list",
-                        type: "POST",
-                        data: {
-                            type: type,
-                            id: id
-                        },
-                        dataType: 'json',
-                        //success请求并成功返回信息，循环type中的数据
-                        success: function (res) {
-                            let list = [];
-                            for (var j = 0; j < res.data.length; j++) {
-                                list.push({
-                                    //使用push方法进数组length的返回，返回的是length不是数组
-                                    title: res.data[j].title,
-                                    id: res.data[j].id,
-                                    type: type
-                                })
-                            }
-                            callback(list)//回调list参数
-                        }
-                    })
-                }
-            });
-        {#-------------------------------这块走了4次循环获取每个id----每次循环储存id----------------------------------#}
-
-        function getId(idList, arr) {
-            if (!arr.length) return
-            for (let i = 0; i < arr.length; i++) {
-                idList.push(arr[i].id)
-                if (arr[i].children && arr[i].children.length) {
-                    getId(idList, arr[i].children)
-                }
-            }
-        }
- {# ------------------------------------------------上面这块是王京写的--------------------------------------------------------#}
-
         //onclick事件的传值 然后去执行ajax请求
-        function test() {
+        function savetask() {
             let checkedData = newTree.getChecked('demo');
             console.log(checkedData)
             let idList = []
-            getId(idList, checkedData)
-            console.log(idList)
-//进行ajax接口返回
-            jQuery.ajax({
-                type: "POST",
-                data: {type: "group", id: "0"},
-                url: "/monitor/get_interface_list",
-                dataType: 'json',
-                success: function () {
-                },
-            })
+            for (let i = 0; i < checkedData.length; i++) {
+                getId(idList, checkedData[i])
+            }
+            console.log(submitIdList)
+
         }
 
 

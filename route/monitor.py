@@ -327,8 +327,43 @@ def get_interface_list():
             data = '参数异常'
         if data == '参数异常':
             ret = {"code": 1003, "data": data}
+            # ret={"status": 0,"message": "","total": 180,"data": {"item": data }}
         else:
             ret = {"code": 1000, "data": data}
+            # ret = {"code": 0, "message": "", "total": 180, "data": data}
     except:
         ret = {"code": 1003, "data": "参数异常"}
     return json.dumps(ret)
+
+#数据表用
+@monitor.route('/new_get_interface_list', methods=['get'])
+def new_get_interface_list():
+    try:
+        # 获取json数据
+        # data = request.get_data()
+        # data = json.loads(data.decode("utf-8"))
+        # type = data['type']
+        # id = data['id']
+        # 获取form数据
+        type = request.args.get('type')
+        id = int(request.args.get('id'))
+        if type == "group":
+            data = mm.get_group()
+        elif type == 'project':
+            data = mm.get_project(id)
+        elif type == 'cat':
+            data = mm.get_interface_cat(id)
+        elif type == 'interface':
+            data = mm.get_interface(id)
+        else:
+            data = '参数异常'
+        if data == '参数异常':
+            # ret = {"code": 1003, "data": data}
+            ret={"status": 0,"message": "","total": 180,"data": {"item": data }}
+        else:
+            # ret = {"code": 1000, "data": data}
+            ret = {"code": 0, "message": "", "total": 180, "data": data}
+    except:
+        ret = {"code": 1003, "data": "参数异常"}
+    return json.dumps(ret)
+
