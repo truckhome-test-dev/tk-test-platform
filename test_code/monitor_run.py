@@ -1,9 +1,5 @@
-import os,sys
-
-sys.path.append('../')
 from test_code import *
 
-print (os.getcwd())
 # 获取mongo数据
 class get_md():
     def __init__(self):

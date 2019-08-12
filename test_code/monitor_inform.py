@@ -13,13 +13,12 @@ class Monitor_Inform(SqlOperate):
     """接口监控策略"""
 
     def __init__(self):
-        print(os.getcwd())
         conf = configparser.ConfigParser()
         conf.read("conf/config.ini")
-        self.host = conf.get('monitor_db', 'host')
-        self.user = conf.get('monitor_db', 'user')
-        self.passwd = conf.get('monitor_db', 'passwd')
-        self.database = conf.get('monitor_db', 'database')
+        self.host = "192.168.20.20"
+        self.user = "test"
+        self.passwd = "jghAeuXL0x7npvSS"
+        self.database = "monitor"
 
     #查询接口状态
     def get_interface_status(self, interface_id):
