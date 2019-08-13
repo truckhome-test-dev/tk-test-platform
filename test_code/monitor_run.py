@@ -1,6 +1,8 @@
-import os,sys
+import os, sys
+
 sys.path.append('../')
 from test_code import *
+
 
 # 获取mongo数据
 class get_md():
@@ -187,6 +189,8 @@ class run(SqlOperate):
             return 9002, 0, ("连接、读取超时----%s" % e)
         except requests.exceptions.ConnectionError as e:
             return 9003, 0, ("未知的服务器----%s" % e)
+        except Exception as e:
+            return 9004, 0, ("其他----%s" % e)
 
     # 结果入库
     def write_result(self, api_id, task_id, resq_code, res_time, response):
@@ -298,12 +302,18 @@ def main(task_id):
         st = strategy.start_inform(task_id, i, resq_code)
         num = st[4]
         print(st)
-        if str(resq_code)[:1]=="9":
-            resq_code=str(resq_code)+"(接口响应超过10s)"
+        if str(resq_code)[:1] == "9":
+            # resq_code=str(resq_code)+"(接口响应超过10s)"
+            print(resq_code, response)
+            msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
+            send.sending(
+                "https://oapi.dingtalk.com/robot/send?access_token=c3c8e28d27833fa9b308d716fcebe9b0b93c3db8c0c392e75ef3df25b68a1e9f",
+                msg)
         else:
-            resq_code=str(resq_code)
+            resq_code = str(resq_code)
             if st[0] == 1:
-                content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, st[1])
+                content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (
+                i, interface_name, url, resq_code, st[1])
                 d_token = st[2]
                 receiver = st[3]
                 send.sending(d_token, content)
@@ -315,7 +325,5 @@ def main(task_id):
 
 if __name__ == "__main__":
     # task_id = sys.argv[1]
-    # task_id = 9
-    # main(task_id)
-    send = Send_All()
-    send.sending("https://oapi.dingtalk.com/robot/send?access_token=92093f4d11c5bc141516be76276b8f9b31dee911cec49ab41c01ee4c1a7f4bee", "测试")
+    task_id = 9
+    main(task_id)
