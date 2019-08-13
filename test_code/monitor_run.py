@@ -1,3 +1,5 @@
+import os,sys
+sys.path.append('../')
 from test_code import *
 
 # 获取mongo数据
@@ -173,9 +175,9 @@ class run(SqlOperate):
     def run_api(self, url, method, params, data, json):
         try:
             if method == "GET":
-                r = requests.get(url, params=params, timeout=(10, 10))
+                r = requests.get(url, params=params)
             elif method == "POST":
-                r = requests.post(url, params=params, data=data, json=json, timeout=(10, 10))
+                r = requests.post(url, params=params, data=data, json=json)
             else:
                 print("请求类型错误，目前只支持POST/GET")
             return r.status_code, r.elapsed.total_seconds() * 1000, r.text
@@ -300,12 +302,12 @@ def main(task_id):
             resq_code=str(resq_code)+"(接口响应超过10s)"
         else:
             resq_code=str(resq_code)
-        if st[0] == 1:
-            content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, st[1])
-            d_token = st[2]
-            receiver = st[3]
-            send.sending(d_token, content)
-            send.sendemail(receiver, content)
+            if st[0] == 1:
+                content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, st[1])
+                d_token = st[2]
+                receiver = st[3]
+                send.sending(d_token, content)
+                send.sendemail(receiver, content)
         strategy.upnum(i, num)
     else:
         print("执行完成")
@@ -313,5 +315,7 @@ def main(task_id):
 
 if __name__ == "__main__":
     # task_id = sys.argv[1]
-    task_id = 9
-    main(task_id)
+    # task_id = 9
+    # main(task_id)
+    send = Send_All()
+    send.sending("https://oapi.dingtalk.com/robot/send?access_token=92093f4d11c5bc141516be76276b8f9b31dee911cec49ab41c01ee4c1a7f4bee", "测试")
