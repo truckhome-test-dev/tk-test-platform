@@ -50,22 +50,22 @@ function AjaxErro(e) {
 
 
 //生成验证码
-var code = "";
+var code1 = "";
 function createCode(e) {
-    code = "";
+    code1 = "";
     var codeLength = 4;
     var selectChar = new Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
     for (var i = 0; i < codeLength; i++) {
         var charIndex = Math.floor(Math.random() * 60);
-        code += selectChar[charIndex];
+        code1 += selectChar[charIndex];
     }
-    if (code.length != codeLength) {
+    if (code1.length != codeLength) {
         createCode(e);
     }
 	if(canGetCookie == 1){
     	setCookie(e, code, 60 * 60 * 60, '/');
 	}else{
-		return code;
+		return code1;
 	}
 }
 

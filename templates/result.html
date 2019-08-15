@@ -378,7 +378,7 @@
                             resultData = c.data;
                             var htmls = '<option value="">请选择</option>'; //全局变量
                             for (var i in resultData) {
-                                htmls += '<option value = "' + resultData[i]._id + '">' + resultData[i].group_name + '</option>'
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].group_name + '</option>'
                             }
                             $("#group").html(htmls); //通过select id进行赋值
                             layui.form.render('select', 'group');//需要渲染一下
@@ -412,7 +412,7 @@
                             resultData = c.data;
                             var htmls = '<option value="">请选择</option>'; //全局变量
                             for (var i in resultData) {
-                                htmls += '<option value = "' + resultData[i]._id + '">' + resultData[i].name + '</option>'
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
                             }
                             $("#project").html(htmls); //通过select id进行赋值
                             layui.form.render('select', 'project');//需要渲染一下
@@ -446,7 +446,7 @@
                             resultData = c.data;
                             var htmls = '<option value="">请选择</option>'; //全局变量
                             for (var i in resultData) {
-                                htmls += '<option value = "' + resultData[i]._id + '">' + resultData[i].name + '</option>'
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
                             }
                             $("#cat").html(htmls); //通过select id进行赋值
                             layui.form.render('select', 'cat');//需要渲染一下

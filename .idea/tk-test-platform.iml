@@ -9,7 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Che360Test" />
     <orderEntry type="module" module-name="test-flask" />
-    <orderEntry type="module" module-name="che360" />
+    <orderEntry type="module" module-name="seleniumframework" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />

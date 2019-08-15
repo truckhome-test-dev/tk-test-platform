@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
         <script src="../static/layui/layui.js"></script>
 
+
         {#____________________________________layui样式———————————————————————————#}
         <script src="../static/layui/layui.js"></script>
         <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
@@ -146,44 +147,66 @@
                     </div>
                 </div>
 
+                {#——————————————————加入数据自动渲染表格——————————————————#}
+                {#                <table class="layui-table" lay-data="{height:400, url:'/monitor/new_get_interface_list?type=group&id=0', page:true, id:'test'}"#}
+                {#                       id="demo1"#}
+                {#                       lay-filter="test">#}
+                {#                    <thead>#}
+                {#                    <tr>#}
+                {#                        <th lay-data="{field:'id', width:80, sort: true}">ID</th>#}
+                {#                        <th lay-data="{field:'title', width:80}">项目</th>#}
+                {#                    </tr>#}
+                {#                    </thead>#}
+                {#                </table>#}
+
+                {#-----------------------------------表格手动渲染-----------------------------------------#}
+                <table id="demo1" lay-filter="test1"></table>
+                {#___________________________上面代码为layui数据表格1的新加入的___________________________#}
 
 
+                {#------------------获取监听复选框中的数据渲染給第二个表格--------------------------------------------#}
+                {% set name = '已选择接口' %}
+                <table align="center" class="layui-table" style="width: 30%;margin-left: 30%">
 
-                {#——————————————————加入数据表格1——————————————————#}
-                <table class="layui-table" lay-data="{height:315, url:'/monitor/new_get_interface_list?type=group&id=0', page:true, id:'test'}"
-                       id="demo1"
-                       lay-filter="test">
+                    <colgroup>
+                        <col width=10%>
+                        <col width=10%>
+                        <col width=10%>
+                        <col width=10%>
+
+                    </colgroup>
                     <thead>
                     <tr>
-                        <th lay-data="{field:'id', width:80, sort: true}">group</th>
-                        <th lay-data="{field:'username', width:80}">project</th>
-                        <th lay-data="{field:'sex', width:80, sort: true}">cat</th>
-                        <th lay-data="{field:'city'}">interface</th>
+                        <th>
+                            <div input align="center">ID</div>
+                        </th>
+                        <th>
+                            <div input align="center">接口</div>
+                        </th>
+                        <th>
+                            <div input align="center">操作</div>
+                        </th>
                     </tr>
                     </thead>
+                    <tbody id="tb">
+                    {#          <tr>#}
+                    {#        <td><div align="center" >1</div></td>#}
+                    {#        <td><div align="center" >2</div></td>#}
+                    {#          </tr>#}
+                    {#          <tr>#}
+                    {#        <td><div align="center" >1</div></td>#}
+                    {#        <td><div align="center" >2</div></td>#}
+                    {#          </tr>#}
+
+                    </tbody>
                 </table>
-
-                {#——————————————————加入数据表格2——————————————————#}
-                <table class="layui-table" lay-data="{height:315, url:'/monitor/new_get_interface_list?type=group&id=0', page:true, id:'test'}"
-                       id="demo2"
-                       lay-filter="test">
-                    <thead>
-                    <tr>
-                        <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                        <th lay-data="{field:'title', width:80}">用户名</th>
-                    </tr>
-                    </thead>
-                </table>
-
-
-
 
 
                 {#——————————————————上面代码是新加入的——————————————————————#}
 
                 <div style="margin-top: 10px;margin-left: 300px">
 
-                    <input class="layui-btn layui-btn-danger" type="button" onclick="savetask()" value="保存"
+                    <input class="layui-btn layui-btn-danger" type="button" onclick="apislist()" value="保存"
                            style="margin-left:50px;margin-top:0px">
                     </input>
 
@@ -194,118 +217,135 @@
 
     <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
     <script>
-            window.onload = function () {
+        //获取业务线
+        function get_group() {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "get_interface_list", true);
+            var params = 'type=group&id=0';
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlhttp.send(params);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    console.log(c)
+                    if (c.code == 1000) {
+                        //给图标赋值
+                        if (c.data == "") {
+                            alert("暂无数据")
+                            layui.form.render('select', 'group');//需要渲染一下
+                        } else {
+                            resultData = c.data;
+                            var htmls = '<option value="">请选择</option>'; //全局变量
+                            for (var i in resultData) {
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                            }
+                            $("#group").html(htmls); //通过select id进行赋值
+                            layui.form.render('select', 'group');//需要渲染一下
+                        }
+                    }
+                    if (c.code == 1002) {
+                        alert('该业务线下暂时无数据')
+                    }
+                }
+            }
+        }
+
+        //获取项目
+        function get_project(group_id) {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "get_interface_list", true);
+            var params = 'type=project&id=' + group_id;
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlhttp.send(params);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    console.log(c)
+                    if (c.code == 1000) {
+                        //给图标赋值
+                        if (c.data == "") {
+                            alert("暂无数据")
+                            layui.form.render('select', 'project');//需要渲染一下
+                        } else {
+                            resultData = c.data;
+                            var htmls = '<option value="">请选择</option>'; //全局变量
+                            for (var i in resultData) {
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                            }
+                            $("#project").html(htmls); //通过select id进行赋值
+                            layui.form.render('select', 'project');//需要渲染一下
+                        }
+                    }
+                    if (c.code == 1002) {
+                        alert('该项目下暂时无数据')
+                    }
+                }
+            }
+        }
+
+        //获取模块
+        function get_cat(project_id) {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "get_interface_list", true);
+            var params = 'type=cat&id=' + project_id;
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlhttp.send(params);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    console.log(c)
+                    if (c.code == 1000) {
+                        //给图标赋值
+                        if (c.data == "") {
+                            alert("暂无数据")
+                            layui.form.render('select', 'cat');//需要渲染一下
+                        } else {
+                            resultData = c.data;
+                            var htmls = '<option value="">请选择</option>'; //全局变量
+                            for (var i in resultData) {
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                            }
+                            $("#cat").html(htmls); //通过select id进行赋值
+                            layui.form.render('select', 'cat');//需要渲染一下
+                        }
+                    }
+                    if (c.code == 1002) {
+                        alert('该项模块暂时无数据')
+                    }
+
+                }
+            }
+        }
+
+        // 获取接口
+        function get_interface(cat_id) {
+            return cat_id
+        }
+
+        function apis_del(e) {
+            if (window.confirm("确定要删除吗")) {
+                {#var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML#}
+                {#var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML#}
+                console.log(e)
+                e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+
+            }
+        }
+
+        window.onload = function () {
             get_group()
         };
-            //获取业务线
-            function get_group() {
-                var xmlhttp;
-                xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", "get_interface_list", true);
-                var params = 'type=group&id=0';
-                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send(params);
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var c = JSON.parse(xmlhttp.responseText)
-                        console.log(c)
-                        if (c.code == 1000) {
-                            //给图标赋值
-                            if (c.data == "") {
-                                alert("暂无数据")
-                                layui.form.render('select', 'group');//需要渲染一下
-                            } else {
-                                resultData = c.data;
-                                var htmls = '<option value="">请选择</option>'; //全局变量
-                                for (var i in resultData) {
-                                    htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
-                                }
-                                $("#group").html(htmls); //通过select id进行赋值
-                                layui.form.render('select', 'group');//需要渲染一下
-                            }
-                        }
-                        if (c.code == 1002) {
-                            alert('该业务线下暂时无数据')
-                        }
-                    }
-                }
-            }
-
-            //获取项目
-            function get_project(group_id) {
-                var xmlhttp;
-                xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", "get_interface_list", true);
-                var params = 'type=project&id=' + group_id;
-                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send(params);
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var c = JSON.parse(xmlhttp.responseText)
-                        console.log(c)
-                        if (c.code == 1000) {
-                            //给图标赋值
-                            if (c.data == "") {
-                                alert("暂无数据")
-                                layui.form.render('select', 'project');//需要渲染一下
-                            } else {
-                                resultData = c.data;
-                                var htmls = '<option value="">请选择</option>'; //全局变量
-                                for (var i in resultData) {
-                                    htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
-                                }
-                                $("#project").html(htmls); //通过select id进行赋值
-                                layui.form.render('select', 'project');//需要渲染一下
-                            }
-                        }
-                        if (c.code == 1002) {
-                            alert('该项目下暂时无数据')
-                        }
-                    }
-                }
-            }
-
-            //获取模块
-            function get_cat(project_id) {
-                var xmlhttp;
-                xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", "get_interface_list", true);
-                var params = 'type=cat&id=' + project_id;
-                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send(params);
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var c = JSON.parse(xmlhttp.responseText)
-                        console.log(c)
-                        if (c.code == 1000) {
-                            //给图标赋值
-                            if (c.data == "") {
-                                alert("暂无数据")
-                                layui.form.render('select', 'cat');//需要渲染一下
-                            } else {
-                                resultData = c.data;
-                                var htmls = '<option value="">请选择</option>'; //全局变量
-                                for (var i in resultData) {
-                                    htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
-                                }
-                                $("#cat").html(htmls); //通过select id进行赋值
-                                layui.form.render('select', 'cat');//需要渲染一下
-                            }
-                        }
-                        if (c.code == 1002) {
-                            alert('该项模块暂时无数据')
-                        }
-
-                    }
-                }
-            }
-
+        //_______________________________________万恶的分割线__________________________________________________________
         layui.use(['form', 'layedit', 'laydate', 'table'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate
                 , table = layui.table;
+
 
             form.on('select(group)', function (data) {
                 get_project(data.value)
@@ -314,16 +354,61 @@
                 get_cat(data.value)
             });
             form.on('select(cat)', function (data) {
-                get_interface(data.value)
+
+                //第一个框
+                table.render({
+                    elem: '#demo1'
+                    , height: 500
+                    , id: "test1"
+                    , url: "/monitor/new_get_interface_list?type=interface&id=" + data.value
+                    , page: true
+                    , cols: [[
+                        {checkbox: true}
+                        , {field: 'id', title: 'ID', width: 80, sort: true}
+                        , {field: 'title', title: "接口", width: '100%', minWidth: 100}
+
+                    ]]
+                })
+
+            });
+            //监听复选框
+            var html = ""//定义一个全局的变量html为空
+            table.on('checkbox(test1)', function (obj) {
+
+                var checkStatus = table.checkStatus('test1');//idTest 即为基础参数 id 对应的值
+                let idList = checkStatus.data.filter(item => {
+                    return item.id
+                })
+                console.log(idList)//选的全部相关数据
+                console.log(obj.data) //获取行的数据
+                if (!obj.checked) {
+                    alert("请在下框表单取消")
+                } else {
+                    //对勾选进行一个+=循环，获取idList+1的值
+                    //for (var i = 0; i < idList.length; i++) {
+                    i=idList.length-1;
+                    html += '<tr>';
+                    html += '<td><div align="center" >' + obj.data.id + '</div></td> ';
+                    html += '<td><div align="center" >' + obj.data.title + '</div></td> ';
+                    html += '<td><span class="layui-btn layui-btn-danger" name="status1" onclick="apis_del(this)">删除</span></td>';
+                    html += '<tr>'
+                    console.log(html)
+                    //}
+                    //获取整个结构拼接后的结构进行渲染
+
+                    document.getElementById("tb").innerHTML = html
+                    $("#td").children().append(html)
+                }
+
+
             });
 
-
-
+            //_______________________________________万恶的分割线__________________________________________________________
 
             //使用jQurty方法获取后端数据
             jQuery.ajax({
                 url: "/monitor/new_get_interface_list",
-                type: "POST",
+                type: "GET",
                 data: {
                     type: "group",
                     id: "0"
@@ -342,38 +427,19 @@
                                 title: res.data[i].title,
                                 id: 'group' + res.data[i].id,
                                 value: res.data[i].id,
-                                type: "group",
+                                type: "group"
 
                             })
                         }
 
                     }
-                    table.render({
-                        elem: '#demo1'
-                        , url: 'monitor/new_get_interface_list'
-                        , parseData: function (res) { //res 即为原始返回的数据
-                            {#return {#}
-                            {#    "code": res.status, //解析接口状态#}
-                            {#    "msg": res.message, //解析提示文本#}
-                            {#    "count": res.total, //解析数据长度#}
-                            {#    "data": res.data.item //解析数据列表#}
-
-                        }
-                        //,…… //其他参数
-                    });
-
 
                 }
             })
-
-
         });
-
-
-        {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
-
+        //-------------------------------获取点击事件传递給蕾蕾进行保存👇--------------------------------------------------
         //onclick事件的传值 然后去执行ajax请求
-        function savetask() {
+        function apislist() {
             let checkedData = newTree.getChecked('demo');
             console.log(checkedData)
             let idList = []
@@ -381,9 +447,7 @@
                 getId(idList, checkedData[i])
             }
             console.log(submitIdList)
-
         }
-
 
     </script>
 
