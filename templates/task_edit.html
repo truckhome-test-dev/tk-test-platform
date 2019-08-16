@@ -1,136 +1,336 @@
 {% extends "base.html" %}
 {% block head %}
-    <head>
-        <meta charset="UTF-8">
-        <title>测试管理系统</title>
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <link rel="stylesheet" href="../static/layui/css/layui.css">
+<head>
+    <meta charset="UTF-8">
+    <title>测试管理系统</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
 
-        {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
-        <link rel="stylesheet" href="https://res.layui.com/layui/dist/css/layui.css?t=1560414887305">
-        <script src="https://www.layuicdn.com/layui-v2.5.4/layui.js"></script>
-        <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
-        <script type="text/javascript" src="../static/js/tool_p.js"></script>
-    </head>
+    {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
+    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+    <script src="../static/layui/layui.js"></script>
+
+    {#____________________________________layui样式———————————————————————————#}
+    <script src="../static/layui/layui.js"></script>
+    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+    <script type="text/javascript" src="../static/js/tool_p.js"></script>
+</head>
 {% endblock head %}
 {% block left %}
-    {{ super() }}
+{{ super() }}
 {% endblock left %}
 {% block right %}
-    {{ super() }}
-
-    <!-- 修改name（页面名称） -->
-    {#	{% set name = '编辑任务' %}#}
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>{{ title }}</legend>
-    </fieldset>
-    <!-- 页面私有部分 -->
-    <form class="layui-form" lay-filter="exam" action="{{ api }}" method="POST" style="width: 600px ;margin-top: 50px">
-        <div class="layui-form-item">
-            {% if title == "编辑任务" %}
-                <div class="layui-form-item" style="line-height:30px">
-                    <label class="layui-form-label">任务ID</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="task_id" lay-verify="required" autocomplete="off" class="layui-input"
-                               style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
-                    </div>
-                </div>
-            {% endif %}
-            <div class="layui-form-item" style="line-height:30px">
-                <label class="layui-form-label">任务名称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"
-                           class="layui-input" style="width: 300px" value={{ task_info[1] }}>
-                </div>
-            </div>
-            <form class="layui-form" action="">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">执行频率</label>
-                    <div class="layui-input-block" style="width: 300px">
-                        <select name="frequency" lay-filter="aihao" id="select">
-                            <option value=""></option>
-                            <option value="1">1分钟执行一次</option>
-                            <option value="2">2分钟执行一次</option>
-                            <option value="3">3分钟执行一次</option>
-                            <option value="5">5分钟执行一次</option>
-                            <option value="10">10分钟执行一次</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">api接口池</label></div>
-            {#——————————————————加入分级树形——————————————————#}
-            <div id="test12" class="demo-tree-more"></div>
-
-            {#——————————————————上面代码是新加入的——————————————————————#}
-            <div style="margin-top: 10px;margin-left: 300px">
-                <input class="layui-btn layui-btn-danger" type="submit" value="保存"
-                       style="margin-left:50px;margin-top:0px"></input>
+{{ super() }}
+<!-- 修改name（页面名称） -->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>{{ title }}</legend>
+</fieldset>
+<!-- 页面私有部分 -->
+<form class="layui-form" action="{{ api }}" method="POST" style="width: 600px ;margin-top: 50px" lay-filter="exam">
+    <div class="layui-form-item">
+        {% if title == "编辑任务" %}
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">任务ID</label>
+            <div class="layui-input-block">
+                <input type="text" id="task_id" name="task_id" lay-verify="required" autocomplete="off" class="layui-input"
+                       style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
             </div>
         </div>
+        {% endif %}
+    </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">任务名称<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="task_name" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"
+                       class="layui-input" style="width: 300px" value={{ task_info[1] }}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">执行频率<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block" style="width: 150px">
+                <select name="frequency" id="frequency" lay-filter="frequency">
+                    <option value=""></option>
+                    <option value="1">1分钟执行一次</option>
+                    <option value="2">2分钟执行一次</option>
+                    <option value="3">3分钟执行一次</option>
+                    <option value="5">5分钟执行一次</option>
+                    <option value="10">10分钟执行一次</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警开关<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block" style="width: 100px">
+                <select name="inform" lay-filter="inform" id="inform">
+                    <option value="">请选择</option>
+                    <option value="0">开</option>
+                    <option value="1">关</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="token" style="display:none">
+            <label class="layui-form-label">钉钉Token</label>
+            <div class="layui-input-inline">
+                <input type="text" id="token2"  name="token" lay-verify="pass" placeholder="请输入接收报警的钉钉群token" autocomplete="off"
+                       class="layui-input" style="width: 300px" value={{ task_info[6] }}>
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="display:none" id="email" >
+            <label class="layui-form-label">邮件地址</label>
+            <div class="layui-input-inline">
+                <input type="text"id="email2" name="email" lay-verify="pass" placeholder="请输入接收报警人员的邮件地址，用','隔开"
+                       autocomplete="off" class="layui-input" style="width: 300px" value={{ task_info[7] }}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">报警通知<font color="#FF0000"> *</font></label>
+            <div class="layui-input-inline" style="width: 150px">
+                <input type="text" id="start_inform" name="start_inform" lay-verify="pass" placeholder="连续报错n次" autocomplete="off"
+                       class="layui-input" value={{ task_info[5] }}>
+            </div>
+            <div class="layui-form-mid">发出告警通知</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">停止通知<font color="#FF0000"> *</font></label>
+            <div class="layui-input-inline" style="width: 150px">
+                <input type="text" id="stop_inform" name="stop_inform" lay-verify="pass" placeholder="连续通知n次" autocomplete="off"
+                       class="layui-input" value={{ task_info[8] }}>
+            </div>
+            <div class="layui-form-mid ">停止告警通知</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">恢复通知<font color="#FF0000"> *</font></label>
+            <div class="layui-input-inline" style="width: 150px">
+                <input type="text" id="re_inform" name="re_inform" lay-verify="pass" placeholder="连续停止n次未修复" autocomplete="off"
+                       class="layui-input" value={{ task_info[9] }}>
+            </div>
+            <div class="layui-form-mid">恢复告警通知</div>
+        </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">api接口池</label>
+                {#——————————————————加入分级树形——————————————————#}
+
+                <div id="api_tree" class="demo-tree-more" style="margin-left:150px"></div>
+            </div>
+
+            <div style="margin-top: 10px;margin-left: 300px">
+                {% if title == "编辑任务" %}
+                <input class="layui-btn layui-btn-danger" type="button" onclick="edittask()" value="保存"
+                       style="margin-left:50px;margin-top:0px">
+                </input>
+                {% else %}
+                <input class="layui-btn layui-btn-danger" type="button" onclick="addtask()" value="保存"
+                       style="margin-left:50px;margin-top:0px">
+                </input>
+                {% endif %}
+            </div>
     </form>
-    <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
-    <script>
-    
-        {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
-        layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
-            function () {
+
+<script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
+<script>
+        window.onload = function () {
+            var data = document.getElementById("inform").value;
+            if (data == 1){
+                document.getElementById("token").style.display="none";
+                document.getElementById("email").style.display="none";
+            }
+            else{
+                document.getElementById("token").style.display="";
+                document.getElementById("email").style.display="";
+            }
+        };
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
-            form.val('exam', {
-                frequency: {{ task_info[3] }}
+
+            form.val("exam", {
+                "frequency": {{ task_info[3] }},
+                "inform": {{ task_info[10] }}
             });
-            //树形结果使用
-            var tree = layui.tree
-                , layer = layui.layer
-                , util = layui.util, dataList = []
 
-            //使用jQurty方法获取后端数据获取业务线
-            jQuery.ajax({
-                url: "/monitor/get_interface_list",
-                type: "POST",
-                data: {
-                    type: "group",
-                    id: "0"
-                },
-                dataType: 'json',
-                success: function (res) {
-                    console.log(res)
-                    if (res.code === 1000) {
-                        dataList = res.data
-
-                        //基本功能
-                        tree.render({
-                            elem: '#test12'
-                            , data: dataList
-                            , showCheckbox: true  //是否显示复选框
-                            , id: '33'
-                            , isJump: true //是否允许点击节点时弹出新窗口跳转
-                            , click:function (obj) {
-                                var data = obj.dataList;  //获取当前点击的节点数据
-
-                                var str = ""
-                                dataList.forEach(function (item, index) {
-                                    str += item.group_name + "<br/>";
-                                    $('.layui-tree-txt').eq(index).html(item.group_name);//TXT重命名
-
-                                })
-                               // layer.msg('状态：' + obj.state + '<br>节点数据：' + str);
-                            }
-                        });
-                    }
-
-                }
+            form.on('select(inform)', function(data){
+                show_content(data.value)
             })
-
-
         });
 
-    </script>
+    function show_content(data){
+        if (data == 1){
+            document.getElementById("token").style.display="none";
+            document.getElementById("email").style.display="none";
+        }
+        else{
+            document.getElementById("token").style.display="";
+            document.getElementById("email").style.display="";
+        }
+
+    }
+
+
+        <!--张晨的接口池子-->
+
+        {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
+
+
+        layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
+            function () {
+                var form = layui.form
+                    , layer = layui.layer
+                    , layedit = layui.layedit
+                    , laydate = layui.laydate
+                    , tree = layui.tree
+                    , util = layui.util, dataList = [], types = ['group', 'project', 'cat', 'interface'];
+
+                //使用jQurty方法获取后端数据
+                jQuery.ajax({
+                    url: "/monitor/get_interface_list",
+                    type: "POST",
+                    data: {
+                        type: "group",
+                        id: "0"
+                    },
+                    dataType: 'json',
+                    //success请求并成功返回信息
+
+
+                    success: function (res) {
+                        if (res.code === 1000) {
+                            //声明一个变量
+                            let list = []
+                            //循环获取group中的数据
+                            for (var i = 0; i < res.data.length; i++) {
+                                list.push({
+                                    //使用push方法进数组length的返回，返回的是length不是数组
+                                    title: res.data[i].title,
+                                    id: 'group' + res.data[i].id,
+                                    value: res.data[i].id,
+                                    type: "group",
+                                    children: []
+                                })
+                            }
+                            dataList = list
+                            newTree = tree//定义一个全局的变量
+
+                            //tree方法使用
+                            tree.render({
+                                elem: '#api_tree'
+                                , data: dataList
+                                , id: 'demo'
+                                , onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
+                                , showCheckbox: true  //是否显示复选框
+                                , isJump: false //是否允许点击节点时弹出新窗口跳转
+                                , click: function (obj) {
+                                    var data = obj.data;  //获取当前点击的节点数据
+                                    let index = types.findIndex(item => { //使用let 声明一个块级的变量，可以在循环语句中使用
+                                        //findIndex方法为数组中的每个元素都调用一次函数执行
+                                        return item === data.type
+                                    })
+                                    index++;
+                                    if (index > types.length - 1) return;
+                                    getSecondList(types[index], data.value, arr => {
+                                        if (!arr.length) return;
+                                        data.children = arr
+                                        data.spread = true
+                                        //checked方法，参数对节点进行初始勾选需要在重载之后进行获取勾选
+                                        let checkedData = newTree.getChecked('demo');
+                                        let idList = []
+                                        for (let i = 0; i < checkedData.length; i++) {
+                                            getId(idList, checkedData[i])
+                                        }
+                                        console.log(checkedData, idList)
+                                        //重载实例重载
+                                        tree.reload('demo', {
+                                            [obj.state]: 'open'//重载一个新的参数
+                                        });
+                                        newTree.setChecked('demo', idList);
+
+                                    })
+
+                                }
+                            })
+
+                        }
+                         }
+                })
+
+                //获取第二分级
+                function getSecondList(type, id, callback) {
+                    jQuery.ajax({
+                        url: "/monitor/get_interface_list",
+                        type: "POST",
+                        data: {
+                            type: type,
+                            id: id
+                        },
+                        dataType: 'json',
+                        //success请求并成功返回信息，循环type中的数据
+                        success: function (res) {
+                            let list = [];
+                            for (var j = 0; j < res.data.length; j++) {
+                                list.push({
+                                    //使用push方法进数组length的返回，返回的是length不是数组
+                                    title: res.data[j].title,
+                                    id: type + res.data[j].id,
+                                    value: res.data[j].id,
+                                    type: type
+                                })
+                            }
+                            callback(list)//回调list参数
+                        }
+                    })
+                }
+            });
+        {#-------------------------------这块走了4次循环获取每个id----每次循环储存id----------------------------------#}
+        let nowIndex = 0
+        let submitIdList = []
+
+        function getId(idList, obj) {
+            if (!obj.children) return
+            nowIndex++;
+            let {children, id} = obj
+            idList.push(id)
+            console.log(idList)
+            for (let i = 0; i < children.length; i++) {
+                getId(idList, children[i])
+            }
+            if (nowIndex == 3) {
+                let list = children.map(item => {
+                    return item.value
+                })
+                submitIdList = [...submitIdList, ...list]
+                nowIndex = 0
+            }
+        }
+
+        {# --------------------------------------------------------------------------------------------------------#}
+
+        //onclick事件的传值 然后去执行ajax请求
+        function apislist() {
+            let checkedData = newTree.getChecked('demo');
+            console.log(checkedData)
+            let idList = []
+            for (let i = 0; i < checkedData.length; i++) {
+                getId(idList, checkedData[i])
+            }
+            return submitIdList
+            <!--console.log(submitIdList)-->
+        }
+
+
+
+
+</script>
 
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

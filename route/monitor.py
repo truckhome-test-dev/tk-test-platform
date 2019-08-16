@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect,url_for
 from test_code import *
 from functools import wraps
 import json
@@ -12,7 +12,7 @@ task = Monitor_Task()
 api = Api_Monitor()
 res = Monitor_Res()
 mm = Monitor_Mongodb()
-
+strategy = Monitor_Inform()
 
 # 判断登录装饰器方法
 def check_token2(func):
@@ -42,7 +42,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
-#@check_permissions("/monitor/task_edit")
+@check_permissions("/monitor/task_edit")
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"
@@ -51,31 +51,51 @@ def task_edit():
         api = "task_edit"
         return render_template('task_edit.html', api=api, title=title, task_info=task_info)
     else:
-        task_id = request.form.get('task_id')
-        task_name = request.form.get('task_name')
-        frequency = request.form.get('frequency')
-        api_id = "[" + request.form.get('api_id') + "]"
-        task.task_edit(task_id, task_name, api_id, frequency)
-        return redirect("http://127.0.0.1:5000/monitor/task_list")
+        data = request.get_data()
+        data = json.loads(data)
+        task_id = data['task_id']
+        task_name = data['task_name']
+        frequency = data['frequency']
+        inform = data['inform']
+        api_id = data['apis']
+        # api_id = "11"
+        start_inform = data['start_inform']
+        stop_inform = data['stop_inform']
+        re_inform = data['re_inform']
+        if inform == 0:
+            token = data['token']
+            re_email = data['email']
+            task.task_edit(task_id, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token,re_email)
+        else:
+            task.task_edit(task_id, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform)
+        return "ok"
 
-
-# 添加任务
+#添加任务
 @monitor.route('/task_add', methods=['get', 'post'])
 @check_permissions("/monitor/task_add")
 def task_add():
     if request.method == "GET":
         title = "添加任务"
-        task_info = ("", "", "", "3", "")
+        task_info = ("", "", "", "3", "","","","","","","1")
         api = "task_add"
         return render_template('task_edit.html', api=api, title=title, task_info=task_info)
     else:
-        task_name = request.form.get('task_name')
-        frequency = request.form.get('frequency')
-        api_id = "[" + request.form.get('api_id') + "]"
-        task.task_add(task_name, api_id, frequency)
-        # task_list = task.task_list()
-        return redirect("http://127.0.0.1:5000/monitor/task_list")
-
+        data = request.get_data()
+        data = json.loads(data)
+        task_name = data['task_name']
+        frequency = data['frequency']
+        api_id = data['apis']
+        start_inform = data['start_inform']
+        stop_inform = data['stop_inform']
+        re_inform = data['re_inform']
+        inform = data['inform']
+        if inform == 0:
+            token = data['token']
+            re_email = data['email']
+            task.task_add(task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token,re_email)
+        else:
+            task.task_add(task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform)
+        return "ok"
 
 # 删除任务
 @monitor.route('/task_del', methods=['get', 'post'])
@@ -215,24 +235,23 @@ def editapi3():
 def report():
     if request.method == "GET":
         task_id = request.args.to_dict().get('task_id', "")
-        res = task.get_rest(task_id=task_id,page=1)
-        # count = task.get_count() #查询所有的总数
-        return render_template('report.html', res=res[1],count=res[0])
+        res = task.get_rest(task_id=task_id, page=1)
+        count = task.get_count()  # 查询所有的总数
+        return render_template('report.html', res=res, count=count)
     else:
-        data = request.get_data()#获取页数的编号
-        data = json.loads(data.decode("utf-8"))#json.loads函数的使用
+        data = request.get_data()  # 获取页数的编号
+        data = json.loads(data.decode("utf-8"))  # json.loads函数的使用
         # 传入参数获取到需要的条件
-        time_frame = data['time_frame'] #时间表
-        task_id = data['task_id']#任务
-        api_id = data['api_id']#接口
-        res_id = data['res_id']#编号
-        resq_code = data['resq_code']#结果
-        page = data['page']#从前端获取页数
-        res = task.get_rest(page=page,time_frame=time_frame,task_id=task_id,api_id=api_id,res_id=res_id,resq_code=resq_code)
-        # count = task.get_count ()  # 查询所有的总数
-        return render_template('reportpage.html', res=res[1],count=res[0])# 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
-
-
+        time_frame = data['time_frame']  # 时间表
+        task_id = data['task_id']  # 任务
+        api_id = data['api_id']  # 接口
+        res_id = data['res_id']  # 编号
+        # print(res_id)
+        resq_code = data['resq_code']  # 结果
+        page = data['page']  # 从前端获取页数
+        res = task.get_rest(page=page, time_frame=time_frame, task_id=task_id, api_id=api_id, res_id=res_id,
+                            resq_code=resq_code)
+        return render_template('reportpage.html', res=res)  # 返回数据进行处理将每页多少条进行处理后返回給模板进行填充
 
 
 # 验证token
@@ -308,10 +327,14 @@ def get_apiname():
 @monitor.route('/get_interface_list', methods=['post'])
 def get_interface_list():
     try:
+        # 获取json数据
+        # data = request.get_data()
+        # data = json.loads(data.decode("utf-8"))
+        # type = data['type']
+        # id = data['id']
+        # 获取form数据
         type = request.form.get('type')
-        id = request.form.get('id')
-        print(type)
-        print(id)
+        id = int(request.form.get('id'))
         if type == "group":
             data = mm.get_group()
         elif type == 'project':
@@ -329,3 +352,20 @@ def get_interface_list():
     except:
         ret = {"code": 1003, "data": "参数异常"}
     return json.dumps(ret)
+
+@monitor.route('/switch', methods=['post','get'])
+def swich():
+    if request.method=="GET":
+        return render_template('switch.html')
+    else:
+        type = request.form.get('type')
+        id = int(request.form.get('id'))
+        val=int(request.form.get('val'))
+        if type == "status":
+            data=strategy.get_interface_status(id)
+            ret="监控状态：%s \n通知状态：%s"%(data[0],data[1])
+            ret=ret.replace("1","开启").replace("0","关闭")
+            return ret
+        else:
+            strategy.update_interface_status(type, id, val)
+            return "更新成功！"

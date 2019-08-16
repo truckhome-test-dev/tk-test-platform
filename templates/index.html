@@ -10,20 +10,21 @@
 	{% set name = '成员照片' %}
 	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
 		<legend>{{name}}</legend>
-    <blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">欢迎杜杉杉加入我们的新窝，这里有小奶狗儿、小猫崽儿还有老油条~！</blockquote>
+    <!--<blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">欢迎杨丽加入我们的新窝，这里有小奶狗儿、妹子、美女还有老狗币们~！</blockquote>-->
 	</fieldset>
 	<!-- 页面私有部分 -->
 	        <div class="container"> 
-	        <div class="box img1"><img class="" src="/static/pic/zhoujian.png"/>  </div> 
-            <div class="box img2"><img class="" src="/static/pic/xingmeng.jpg"/>  </div>
-            <div class="box img3"><img class="" src="/static/pic/xiaoyu.jpg"/>   </div> 
-            <div class="box img4"><img class="" src="/static/pic/leilei.jpg"/>   </div> 
-            <div class="box img5"><img class="" src="/static/pic/hedan.png"/>   </div> 
-            <div class="box img6"><img class="" src="/static/pic/jinyue.png"/>   </div> 
-            <div class="box img7"><img class="" src="/static/pic/zhangchen.jpg"/>   </div>
+	        <div class="box img7"><img class="" src="/static/pic/zhoujian.png"/>  </div>
+            <div class="box img1"><img class="" src="/static/pic/xingmeng.jpg"/>  </div>
+            <div class="box img3"><img class="" src="/static/pic/xiaoyu.jpg"/>   </div>
+            <div class="box img9"><img class="" src="/static/pic/leilei.jpg"/>   </div>
+            <div class="box img2"><img class="" src="/static/pic/hedan.png"/>   </div>
+            <div class="box img4"><img class="" src="/static/pic/jinyue.png"/>   </div>
+            <div class="box img5"><img class="" src="/static/pic/zhangchen.jpg"/>   </div>
             <div class="box img8"><img class="" src="/static/pic/dushanshan.jpg"/>   </div>
+{#            <div class="box img7"><img class="" src="/static/pic/yangli.jpg"/>   </div>#}
         </div>  
-    </body>  
+    </body>
     <style>  
         body{  
             background: #eee;}  
@@ -47,64 +48,86 @@
              
             z-index:1;}  
         .box:hover{  
-            transform:rotate(0deg);  
-            -moz-transform:rotate(0deg);  
-            -webkit-transform:rotate(0deg);  
-            transform:scale(1.5);  
-            -moz-transform:scale(1.5);  
-            -webkit-transform:scale(1.5);  
-            box-shadow:4px 4px 10px #ccc;  
-            -moz-box-shadow:4px 4px 10px #ccc;  
-            -webkit-box-shadow:4px 4px 10px #ccc;  
-            z-index:2;}  
-        .img1{  
-            top:50px;  
-            left:-50px;  
+            transform:rotate(0deg) !important;;
+            -moz-transform:rotate(0deg) !important;;
+            -webkit-transform:rotate(0deg) !important;;
+            transform:scale(1.5) !important;;
+            -moz-transform:scale(1.5) !important;;
+            -webkit-transform:scale(1.5) !important;;
+            box-shadow:4px 4px 10px #ccc !important;;
+            -moz-box-shadow:4px 4px 10px #ccc !important;;
+            -webkit-box-shadow:4px 4px 10px #ccc !important;;
+            z-index:2 !important;;}
+        .img1{
+            top:0px;
+            left:200px;
             transform:rotate(-40deg);
             -moz-transform:rotate(-20deg);
             -webkit-transform:rotate(-40deg);}
         .img2{  
-            top:50px;  
-            left:100px;  
+            top:0px;
+            left:500px;
             transform:rotate(-20deg);
             -moz-transform:rotate(-20deg);
             -webkit-transform:rotate(-30deg);}
         .img3{  
-            top:50px;  
-            left:300px;  
+            top:0px;
+            left:800px;
             transform:rotate(10deg);
             -moz-transform:rotate(10deg);
             -webkit-transform:rotate(-20deg);}
         .img4{  
-            top:50px;  
-            left:500px;  
+            top:0px;
+            left:1100px;
             transform:rotate(20deg);
             -moz-transform:rotate(20deg);
             -webkit-transform:rotate(-10deg);}
         .img5{  
-            top:50px;  
-            left:700px;  
+            top:350px;
+            left:200px;
             transform:rotate(30deg);
             -moz-transform:rotate(30deg);
-            -webkit-transform:rotate(0deg);}
+            -webkit-transform:rotate(30deg);}
         .img6{  
-            top:50px;  
-            left:900px;  
+            top:200px;
+            left:600px;
             transform:rotate(40deg);
             -moz-transform:rotate(40deg);
             -webkit-transform:rotate(10deg);}
         .img7{  
-            top:50px;  
-            left:1100px;  
+            top:400px;
+            left:500px;
             transform:rotate(50deg);
             -moz-transform:rotate(50deg);
             -webkit-transform:rotate(20deg);}
         .img8{
-            top:50px;
-            left:1300px;
+            top:350px;
+            left:800px;
             transform:rotate(60deg);
             -moz-transform:rotate(60deg);
             -webkit-transform:rotate(30deg);}
-        </style> 
+        .img9{
+            top:350px;
+            left:1100px;
+            transform:rotate(60deg);
+            -moz-transform:rotate(60deg);
+            -webkit-transform:rotate(30deg);}
+        </style>
+    <script>
+    function ran() {
+        var ro=Math.floor(Math.random()*(80+1)-40);
+        var ro2=ro+"deg";
+        return ro2
+    }
+    $(".img1").css("-webkit-transform","rotate("+ran()+")");
+    $(".img2").css("-webkit-transform","rotate("+ran()+")");
+    $(".img3").css("-webkit-transform","rotate("+ran()+")");
+    $(".img4").css("-webkit-transform","rotate("+ran()+")");
+    $(".img5").css("-webkit-transform","rotate("+ran()+")");
+    $(".img6").css("-webkit-transform","rotate("+ran()+")");
+    $(".img7").css("-webkit-transform","rotate("+ran()+")");
+    $(".img8").css("-webkit-transform","rotate("+ran()+")");
+    $(".img9").css("-webkit-transform","rotate("+ran()+")");
+    </script>
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

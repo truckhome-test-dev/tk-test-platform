@@ -117,6 +117,7 @@ function sure() {
             <option value="" >互动</option>
             <option value="" >其它</option>
             <option value="" >商业配合</option>
+            <option value="" >支持</option>
             <option value="" >独立</option>
             <option value="" >电商系统</option>
             <option value="" >经销商</option>
@@ -135,9 +136,10 @@ function sure() {
       <table id="newtable"  >
       {% for i in a %}
             <tr>
-                <td width="700px" height='48px'><input  type="text" style="border-style:none;font-size:18px;width:600px"  value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
+                <td width="700px" height='50px'><input  type="text" style="border-style:none;font-size:18px;width:600px;height:48px"  value="{{i}}" name="upname" class="layui-icon layui-icon-rate-solid"> </td>
                   <!-- <td width="110px"><a href="" class="layui-btn layui-btn-normal" download="chrome">查看详情</a></td> -->
-                  <td><a href="http://127.0.0.1:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
+                  <td><a href="http://192.168.2.92:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td>
+                  <!-- <td><a href="http://127.0.0.1:5000/export_xls/{{i}}" class="layui-btn" download="chrome">点击下载文件</a></td> -->
             </tr>
       {% endfor %}       
       </table>

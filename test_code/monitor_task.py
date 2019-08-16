@@ -21,7 +21,7 @@ class Monitor_Task(SqlOperate):
         self.database = conf.get('monitor_db', 'database')
 
     # 添加任务
-    def task_add(self, task_name, api_id, frequency):
+    def task_add(self, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token="",re_email=""):
         '''
         :param task_name:
         :param api_id:列表
@@ -32,7 +32,8 @@ class Monitor_Task(SqlOperate):
         self.dbcur()
         sql = self.sqlInsert("task_list",
                              {"task_name": task_name, "api_id": api_id, "frequency": frequency,
-                              "create_time": create_time, "update_time": create_time})
+                              "create_time": create_time, "update_time": create_time,"start_inform":start_inform,
+                              "token":token,"re_email":re_email,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform})
         try:
             self.sqlExe(sql)
             self.sqlCom()
@@ -49,8 +50,8 @@ class Monitor_Task(SqlOperate):
         :return: (('APP', None, '', 0), ('产品库', None, '', 0), ('互动', None, '60s', 0)）
         '''
         self.dbcur()
-        sql = self.sqlSelect("task_list", ["id", "task_name", "api_id", "frequency", "status"],
-                             condition={"is_delete": 0}, repeat="1")
+        sql = self.sqlSelect("task_list", ["id", "task_name", "api_id", "frequency", "status","start_inform","token"
+            ,"re_email","stop_inform","re_inform","inform"],condition={"is_delete": 0}, repeat="1")
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -64,7 +65,7 @@ class Monitor_Task(SqlOperate):
         :return: (1,'论坛', '[1,32,34]', '20',1)/不存在返回None
         '''
         self.dbcur()
-        sql = "select id,task_name,api_id,frequency,status from task_list where id='%s'" % task_id
+        sql = "select id,task_name,api_id,frequency,status,start_inform,token,re_email,stop_inform,re_inform,inform from task_list where id='%s'" % task_id
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -74,7 +75,7 @@ class Monitor_Task(SqlOperate):
         return data
 
     # 编辑任务
-    def task_edit(self, task_id, task_name, api_id, frequency):
+    def task_edit(self, task_id, task_name, api_id, frequency,start_inform,stop_inform,re_inform,inform,token="",re_email=""):
         '''
         :param id:
         :param task_name:
@@ -87,9 +88,12 @@ class Monitor_Task(SqlOperate):
         if data is None:
             return "任务id不存在"
         self.dbcur()
-        sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
-                                           "update_time": update_time},
-                             {"id": task_id})
+        if inform == 0:
+            sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
+                                               "update_time": update_time,"start_inform":start_inform,"token":token,"re_email":re_email,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform},{"id": task_id})
+        else:
+            sql = self.sqlUpdate("task_list", {"task_name": task_name, "api_id": api_id, "frequency": frequency,
+                                               "update_time": update_time,"start_inform":start_inform,"stop_inform":stop_inform,"re_inform":re_inform,"inform":inform},{"id": task_id})
         try:
             self.sqlExe(sql)
             self.sqlCom()
@@ -162,13 +166,13 @@ class Monitor_Task(SqlOperate):
         :param frequency:
         :return:"task_id已存在"/"添加定时任务成功"
         */10 * * * * /usr/sbin/ntpdate ntp3.aliyun.com
-        #* * * * * /root/.pyenv/shims/python /home/jinyue/tk-test-platform/test_code/monitor_run.py 1 >> /home/jinyue/tk-test-platform/test_code/load.log
+        #*/3 * * * * cd /home/tk-test-platform/test_code && /root/.pyenv/shims/python /home/tk-test-platform/test_code/monitor_run.py 9 >> /home/tk-test-platform/test_code/task.log 2>&1
         '''
         frequency = int(self.task_info(task_id)[3])
         if frequency == 1:
-            data = "* * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % task_id
+            data = "* * * * * cd /home/tk-test-platform/test_code && /root/.pyenv/shims/python /home/tk-test-platform/test_code/monitor_run.py %d >> /home/tk-test-platform/test_code/task.log 2>&1\n" % task_id
         else:
-            data = "*/%d * * * * /root/.pyenv/shims/python /home/jinyue/test/test_code/monitor_run.py %d >> /home/jinyue/test/test_code/task.log\n" % (
+            data = "*/%d * * * * cd /home/tk-test-platform/test_code && /root/.pyenv/shims/python /home/tk-test-platform/test_code/monitor_run.py %d >> /home/tk-test-platform/test_code/task.log 2>&1\n" % (
                 frequency, task_id)
         data_task = "monitor_run.py %d" % task_id
         with open("/var/spool/cron/root", "r", encoding="utf-8") as f:
@@ -259,7 +263,9 @@ class Monitor_Mongodb():
     # 获取所有分组
     def get_group(self):
         myset = self.db.group
-        data = myset.find({'type': 'public'}, {'group_name': 1})
+        # data = myset.find({'type': 'public'}, {'group_name': 1})
+        data = myset.aggregate(
+            [{"$match": {"type": "public"}}, {"$project": {"_id": 0, "id": "$_id", "title": "$group_name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -268,7 +274,9 @@ class Monitor_Mongodb():
     # 获取某分组下项目
     def get_project(self, group_id):
         myset = self.db.project
-        data = myset.find({'group_id': int(group_id)}, {'name': 1})
+        # data = myset.find({'group_id': int(group_id)}, {'name': 1})
+        data = myset.aggregate(
+            [{"$match": {"group_id": group_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -277,7 +285,9 @@ class Monitor_Mongodb():
     # 获取某项目下模块
     def get_interface_cat(self, project_id):
         myset = self.db.interface_cat
-        data = myset.find({'project_id': int(project_id)}, {'name': 1})
+        # data = myset.find({'project_id': int(project_id)}, {'name': 1})
+        data = myset.aggregate(
+            [{"$match": {"project_id": project_id}}, {"$project": {"_id": 0, "id": "$_id", "title": "$name"}}])
         L = []
         for i in data:
             L.append(i)
@@ -295,16 +305,38 @@ class Monitor_Mongodb():
     # 获取某模块下接口
     def get_interface(self, catid):
         myset = self.db.interface
-        data = myset.find({'catid': int(catid)}, {'title': 1})
+        # data = myset.find({'catid': int(catid)}, {'title': 1})
+        data = myset.aggregate(
+            [{"$match": {"catid": catid}}, {"$project": {"_id": 0, "id": "$_id", "title": "$title"}}])
         L = []
         for i in data:
             L.append(i)
         return L
 
+    # 获取项目下所有接口id
+    def get_allinterface(self, project_id):
+        myset = self.db.interface
+        data = myset.find({'project_id': int(project_id)}, {'__id': 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            l1 = []
+            for i in L:
+                i_id = i["_id"]
+                l1.append(i_id)
+        else:
+            l1 = []
+        return l1
+
 
 if __name__ == "__main__":
     a = Monitor_Mongodb()
-    print(a.has_case(11335))
-# a={'type':'group','id':1}
-# print(type(a))
-# print(json.loads(a))
+    print(a.get_group())
+#     L=[]
+#     for i in [376,370,364,358,352,346,340,334,328,322,316,310,304,298,292,286,280,274,268,262,256,250,244,232]:
+#         print(i)
+#         q=a.get_allinterface(i)
+#         print(q)
+#         L+=q
+#     print(L)

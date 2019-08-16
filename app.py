@@ -520,6 +520,7 @@ def upload():
         way = up.xmind_way()
         path = way+f.filename
         data = up.to_dict(path)
+        print(data)
         up.fileinsert(f.filename,data)
         os.remove(path) 
         return "1"
@@ -551,6 +552,10 @@ def select_file():
         else:
             a = up.sel_file(project)
         return json.dumps(a)
+
+@app.route('/arachni', methods=['get'])
+def arachni():
+    return redirect('http://127.0.0.1:9292')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

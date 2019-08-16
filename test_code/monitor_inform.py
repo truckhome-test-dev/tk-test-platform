@@ -1,13 +1,12 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-29 17:08:26
 import pymysql
 
 pymysql.install_as_MySQLdb
-from test_code import *
+from test_code.sqlop import *
 from collections import Counter
-import json
-import requests
+import os
 
 
 class Monitor_Inform(SqlOperate):
@@ -15,17 +14,39 @@ class Monitor_Inform(SqlOperate):
 
     def __init__(self):
         conf = configparser.ConfigParser()
-        # conf.read("../static/conf/config.ini")
-        conf.read("../conf/config.ini")
-        self.host = conf.get('monitor_db', 'host')
-        self.user = conf.get('monitor_db', 'user')
-        self.passwd = conf.get('monitor_db', 'passwd')
-        self.database = conf.get('monitor_db', 'database')
+        conf.read("conf/config.ini")
+        self.host = "192.168.20.20"
+        self.user = "test"
+        self.passwd = "jghAeuXL0x7npvSS"
+        self.database = "monitor"
+
+    #查询接口状态
+    def get_interface_status(self, interface_id):
+        self.dbcur()
+        sql = "select monitor,notice from api_inform WHERE apiid=%d " % (interface_id)
+        self.sqlExe(sql)
+        data = self.cur.fetchone()
+        self.sqlCom()
+        self.sqlclo()
+        return data
+
+    #更新接口状态
+    def update_interface_status(self,type,interface_id,status):
+        self.dbcur()
+        if type=="monitor":
+            sql = "UPDATE `api_inform` SET `monitor`=%d where apiid = %d" % (status, interface_id)
+        elif type=="notice":
+            sql = "UPDATE `api_inform` SET `notice`=%d where apiid = %d" % (status, interface_id)
+        else:
+            return "类型错误"
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
 
     # 查询任务对应的策略次数、token、email
     def seltimes(self, taskid):
         self.dbcur()
-        sql = "SELECT start_inform,stop_inform,re_inform,token,re_email FROM `task_list` WHERE id=%d " % (taskid)
+        sql = "SELECT start_inform,stop_inform,re_inform,token,re_email,inform FROM `task_list` WHERE id=%d " % (taskid)
         self.sqlExe(sql)
         data = list(self.cur.fetchall())
         self.sqlCom()
@@ -43,46 +64,51 @@ class Monitor_Inform(SqlOperate):
     # 是否发钉钉
     def start_inform(self, taskid, apiid, code):
         info = self.seltimes(taskid)
-        start_times = info[0]
-        stop_times = info[1]
-        re_times = info[2]
-        token = info[3]
-        receiver = info[4].split(",")
-        self.dbcur()
-        sql1 = "SELECT inform FROM `api_inform` WHERE apiid=%d " % (apiid)
-        self.sqlExe(sql1)
-        data = list(self.cur.fetchall())
-        if data == []:
-            sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
+        interface_status = self.get_interface_status(apiid)
+        if info[5] == 0 and interface_status[1] == 1:
+            start_times = info[0]
+            stop_times = info[1]
+            re_times = info[2]
+            token = info[3]
+            receiver = info[4].split(",")
+
+            self.dbcur()
+            sql1 = "SELECT inform FROM `api_inform` WHERE apiid=%d " % (apiid)
             self.sqlExe(sql1)
-            self.sqlCom()
-            data = [(0,)]
-        if str(code) != "200":
-            num = data[0][0] + 1
+            data = list(self.cur.fetchall())
+            if str(code) != "200" and data == []:
+                num = 1
+                sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 1)" % (apiid)
+                self.sqlExe(sql1)
+                self.sqlCom()
+            elif str(code) != "200" and data != []:
+                num = data[0][0] + 1
+            elif str(code) == "200" and data == []:
+                num = 0
+                sql1 = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
+
+                self.sqlExe(sql1)
+                self.sqlCom()
+            else:
+                num = 0
+
+            stopnum = start_times + stop_times
+            renum = stopnum + re_times
+
+            if num < start_times or renum > num >= stopnum:
+                ding = 0
+                content = ""
+            elif start_times <= num < stopnum:
+                ding = 1
+                content = '''该接口已经报错,请相关人员及时修复 '''
+            else:
+                ding = 1
+                content = '''该接口已经连续报错%d次''' % (num)
+            return (ding, content, token, receiver, num)
         else:
-            num = 0
-        stopnum = start_times + stop_times
-        renum = stopnum + re_times
-        if num < start_times or renum > num >= stopnum:
             ding = 0
-            content = ""
-        elif start_times <= num < stopnum:
-            ding = 1
-            content = '''该接口已经报错,请相关人员及时修复 '''
-        else:
-            ding = 1
-            content = '''该接口已经连续报错%d次''' % (num)
-        return (ding, content, token, receiver, num)
+            return (ding, "", "", "", 0)
 
-    def qq(self, taskid, apiid, code):
-        info = self.start_inform(taskid, apiid, code)
-        if info[0] == 1:
-            content = "接口名称：%s \n 接口地址：%s \n 备注：%s + 详情信息……"
-            self.sending(info[2], content)
-            self.sendemail(info[3], info[1])
-        self.upnum(apiid, info[4])
-
-
-aa = Monitor_Inform()
-aa.qq(8, 33, "200")
-# aa.sendemail("aa")
+if __name__ == "__main__":
+    i=Monitor_Inform()
+    print(i.update_interface_status("notice",11578,0))

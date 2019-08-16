@@ -127,8 +127,8 @@ function task_edit(e) {
 }
 
 function task_res(e) {
-    var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
-    window.location.href = "http://127.0.0.1:5000/monitor/report?task_id=" + task_id
+    // var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML
+    window.location.href = "http://127.0.0.1:5000/monitor/result"
 }
 
 //test
@@ -622,9 +622,81 @@ function logout() {
 //判断localStorage是否存在menu
 function is_menu() {
     let menu = localStorage.getItem('menu');
-    if (!menu){
+    if (!menu) {
         set_menu();
         get_menu();
     }
 
 }
+
+//新增任务
+function addtask(){
+    var apis = apislist()
+    var task_name = document.getElementById("task_name").value;
+    var frequency = document.getElementById("frequency").value;
+    var inform = document.getElementById("inform").value;
+    var start_inform = document.getElementById("start_inform").value;
+    var stop_inform = document.getElementById("stop_inform").value;
+    var re_inform = document.getElementById("re_inform").value;
+     if (inform == 0){
+     var token = document.getElementById("token2").value;
+     var email = document.getElementById("email2").value;
+     var xmlhttp;
+     xmlhttp = new XMLHttpRequest();
+     var params = '{"task_name" :" ' + task_name + ' ", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "token" :" ' + token +  ' ", "email" :" ' + email +  ' ", "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
+     }
+    else{
+    var xmlhttp;
+    xmlhttp = new XMLHttpRequest();
+    var params = '{"task_name" : " ' + task_name + ' ", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
+    }
+    xmlhttp.open("POST","task_add",true);
+    xmlhttp.send(params)
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            if (xmlhttp.responseText == 'ok') {
+               window.location.href = "http://127.0.0.1:5000/monitor/task_list"
+            } else {
+                alert('保存失败，请重试')
+            }
+         }
+    }
+}
+
+//修改任务
+function edittask(){
+    var apis = apislist()
+    var task_id = document.getElementById("task_id").value;
+    var task_name = document.getElementById("task_name").value;
+    var frequency = document.getElementById("frequency").value;
+    var inform = document.getElementById("inform").value;
+    var start_inform = document.getElementById("start_inform").value;
+    var stop_inform = document.getElementById("stop_inform").value;
+    var re_inform = document.getElementById("re_inform").value;
+     if (inform == 0){
+        var token = document.getElementById("token2").value;
+         var email = document.getElementById("email2").value;
+         var xmlhttp;
+         xmlhttp = new XMLHttpRequest();
+         var params = '{ "task_id" : ' + task_id + ', "task_name" : " ' + task_name + '", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "token" : " ' + token +  ' ", "email" : " ' + email +  ' " , "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
+     }
+    else{
+    var xmlhttp;
+    xmlhttp = new XMLHttpRequest();
+    var params = '{ "task_id" : ' + task_id + ', "task_name" :" ' + task_name + '", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform + ', "apis" :[ ' + apis + ']}';
+     }
+     xmlhttp.open("POST","task_edit",true);
+     xmlhttp.send(params)
+     xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            if (xmlhttp.responseText == 'ok') {
+               window.location.href = "http://127.0.0.1:5000/monitor/task_list"
+            } else {
+                alert('修改失败，请重试')
+            }
+         }
+    }
+
+}
+
