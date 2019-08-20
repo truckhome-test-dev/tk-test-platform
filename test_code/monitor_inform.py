@@ -20,8 +20,9 @@ class Monitor_Inform(SqlOperate):
         self.passwd = "jghAeuXL0x7npvSS"
         self.database = "monitor"
 
-    #查询接口状态
+    # 查询接口状态
     def get_interface_status(self, interface_id):
+        interface_id = int(interface_id)
         self.dbcur()
         sql = "select monitor,notice from api_inform WHERE apiid=%d " % (interface_id)
         self.sqlExe(sql)
@@ -30,12 +31,12 @@ class Monitor_Inform(SqlOperate):
         self.sqlclo()
         return data
 
-    #更新接口状态
-    def update_interface_status(self,type,interface_id,status):
+    # 更新接口状态
+    def update_interface_status(self, type, interface_id, status):
         self.dbcur()
-        if type=="monitor":
+        if type == "monitor":
             sql = "UPDATE `api_inform` SET `monitor`=%d where apiid = %d" % (status, interface_id)
-        elif type=="notice":
+        elif type == "notice":
             sql = "UPDATE `api_inform` SET `notice`=%d where apiid = %d" % (status, interface_id)
         else:
             return "类型错误"
@@ -61,11 +62,18 @@ class Monitor_Inform(SqlOperate):
         self.sqlCom()
         self.sqlclo()
 
+    def add_inform(self, apiid):
+        apiid=int(apiid)
+        self.dbcur()
+        sql = "INSERT INTO `api_inform` (`apiid`, `inform`) VALUES (%d, 0)" % (apiid)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+
     # 是否发钉钉
     def start_inform(self, taskid, apiid, code):
         info = self.seltimes(taskid)
-        interface_status = self.get_interface_status(apiid)
-        if info[5] == 0 and interface_status[1] == 1:
+        if info[5] == 0:
             start_times = info[0]
             stop_times = info[1]
             re_times = info[2]
@@ -109,6 +117,7 @@ class Monitor_Inform(SqlOperate):
             ding = 0
             return (ding, "", "", "", 0)
 
+
 if __name__ == "__main__":
-    i=Monitor_Inform()
-    print(i.update_interface_status("notice",11578,0))
+    i = Monitor_Inform()
+    print(i.update_interface_status("notice", 11578, 0))

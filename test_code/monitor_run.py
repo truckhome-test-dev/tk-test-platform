@@ -20,7 +20,7 @@ class get_md():
         if L != []:
             project_id = L[0]["project_id"]
         else:
-            project_id = None
+            return None
         myset = self.db.project
         data = myset.find({"env": {"$elemMatch": {"name": "正式环境"}}, "_id": int(project_id)},
                           {"env": {"$elemMatch": {"name": "正式环境"}}})
@@ -84,7 +84,10 @@ class get_md():
             D = {}
             for i in data:
                 key = i["name"]
-                value = i["value"]
+                if "value" in i.keys():
+                    value = i["value"]
+                else:
+                    value = ""
                 D[key] = value
         else:
             D = None
@@ -93,11 +96,11 @@ class get_md():
     # 获取json类型参数
     def get_req_body_json(self, interface_id):
         myset = self.db.interface_case
-        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1})
+        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1,"_id":0})
         L = []
         for i in data:
             L.append(i)
-        if L != []:
+        if L != [] and L!=[{}]:
             data = json.loads(L[0]["req_body_other"])
         else:
             data = None
@@ -115,7 +118,10 @@ class get_md():
             D = {}
             for i in data:
                 key = i['name']
-                value = i['value']
+                if "value" in i.keys():
+                    value = i["value"]
+                else:
+                    value = ""
                 D[key] = value
             data = D
         else:
@@ -277,12 +283,18 @@ def main(task_id):
     send = Send_All()
     api_list = r.get_taskinfo()[2][1:-1].split(",")
     for i in api_list:
+        interface_status = strategy.get_interface_status(i)
+        if not interface_status:
+            strategy.add_inform(i)
+        else:
+            if interface_status[1] == 0:
+                continue
         print(datetime.datetime.now())
         i = int(i)
         interface_name = m.get_interface_name(i)
         url = m.get_domain(i)
         if url is None:
-            print("接口id：%s 不存在正式环境，跳过" % i)
+            print("接口id：%s 接口不存在或不存在正式环境，跳过" % i)
             continue
         method = m.get_method(i)
         path = m.get_path(i)
@@ -313,7 +325,7 @@ def main(task_id):
             resq_code = str(resq_code)
             if st[0] == 1:
                 content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (
-                i, interface_name, url, resq_code, st[1])
+                    i, interface_name, url, resq_code, st[1])
                 d_token = st[2]
                 receiver = st[3]
                 send.sending(d_token, content)
