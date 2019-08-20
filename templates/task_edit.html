@@ -1,48 +1,50 @@
 {% extends "base.html" %}
 {% block head %}
-<head>
-    <meta charset="UTF-8">
-    <title>测试管理系统</title>
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="../static/layui/css/layui.css">
+    <head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="../static/layui/css/layui.css">
 
-    {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
-    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
-    <script src="../static/layui/layui.js"></script>
+        {#——————————————————引用CDN地址更新layui2.5版本——————————————————#}
+        <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+        <script src="../static/layui/layui.js"></script>
 
-    {#____________________________________layui样式———————————————————————————#}
-    <script src="../static/layui/layui.js"></script>
-    <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
-    <script type="text/javascript" src="../static/js/tool_p.js"></script>
-</head>
+        {#____________________________________layui样式———————————————————————————#}
+        <script src="../static/layui/layui.js"></script>
+        <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+        <script type="text/javascript" src="../static/js/tool_p.js"></script>
+    </head>
 {% endblock head %}
 {% block left %}
-{{ super() }}
+    {{ super() }}
 {% endblock left %}
 {% block right %}
-{{ super() }}
-<!-- 修改name（页面名称） -->
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    <legend>{{ title }}</legend>
-</fieldset>
-<!-- 页面私有部分 -->
-<form class="layui-form" action="{{ api }}" method="POST" style="width: 600px ;margin-top: 50px" lay-filter="exam">
-    <div class="layui-form-item">
-        {% if title == "编辑任务" %}
-        <div class="layui-form-item" style="line-height:30px">
-            <label class="layui-form-label">任务ID</label>
-            <div class="layui-input-block">
-                <input type="text" id="task_id" name="task_id" lay-verify="required" autocomplete="off" class="layui-input"
-                       style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
-            </div>
+    {{ super() }}
+    <!-- 修改name（页面名称） -->
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>{{ title }}</legend>
+    </fieldset>
+    <!-- 页面私有部分 -->
+    <form class="layui-form" action="{{ api }}" method="POST" style="width: 600px ;margin-top: 50px" lay-filter="exam">
+        <div class="layui-form-item">
+            {% if title == "编辑任务" %}
+                <div class="layui-form-item" style="line-height:30px">
+                    <label class="layui-form-label">任务ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="task_id" name="task_id" lay-verify="required" autocomplete="off"
+                               class="layui-input"
+                               style="width: 300px" value={{ task_info[0] }} readonly unselectable="on">
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
         <div class="layui-form-item" style="line-height:30px">
             <label class="layui-form-label">任务名称<font color="#FF0000"> *</font></label>
             <div class="layui-input-block">
-                <input type="text" id="task_name" name="task_name" lay-verify="required" autocomplete="off" placeholder="请输入任务名称"
+                <input type="text" id="task_name" name="task_name" lay-verify="required" autocomplete="off"
+                       placeholder="请输入任务名称"
                        class="layui-input" style="width: 300px" value={{ task_info[1] }}>
             </div>
         </div>
@@ -75,15 +77,16 @@
         <div class="layui-form-item" id="token" style="display:none">
             <label class="layui-form-label">钉钉Token</label>
             <div class="layui-input-inline">
-                <input type="text" id="token2"  name="token" lay-verify="pass" placeholder="请输入接收报警的钉钉群token" autocomplete="off"
+                <input type="text" id="token2" name="token" lay-verify="pass" placeholder="请输入接收报警的钉钉群token"
+                       autocomplete="off"
                        class="layui-input" style="width: 300px" value={{ task_info[6] }}>
             </div>
         </div>
 
-        <div class="layui-form-item" style="display:none" id="email" >
+        <div class="layui-form-item" style="display:none" id="email">
             <label class="layui-form-label">邮件地址</label>
             <div class="layui-input-inline">
-                <input type="text"id="email2" name="email" lay-verify="pass" placeholder="请输入接收报警人员的邮件地址，用','隔开"
+                <input type="text" id="email2" name="email" lay-verify="pass" placeholder="请输入接收报警人员的邮件地址，用','隔开"
                        autocomplete="off" class="layui-input" style="width: 300px" value={{ task_info[7] }}>
             </div>
         </div>
@@ -91,7 +94,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">报警通知<font color="#FF0000"> *</font></label>
             <div class="layui-input-inline" style="width: 150px">
-                <input type="text" id="start_inform" name="start_inform" lay-verify="pass" placeholder="连续报错n次" autocomplete="off"
+                <input type="text" id="start_inform" name="start_inform" lay-verify="pass" placeholder="连续报错n次"
+                       autocomplete="off"
                        class="layui-input" value={{ task_info[5] }}>
             </div>
             <div class="layui-form-mid">发出告警通知</div>
@@ -100,7 +104,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">停止通知<font color="#FF0000"> *</font></label>
             <div class="layui-input-inline" style="width: 150px">
-                <input type="text" id="stop_inform" name="stop_inform" lay-verify="pass" placeholder="连续通知n次" autocomplete="off"
+                <input type="text" id="stop_inform" name="stop_inform" lay-verify="pass" placeholder="连续通知n次"
+                       autocomplete="off"
                        class="layui-input" value={{ task_info[8] }}>
             </div>
             <div class="layui-form-mid ">停止告警通知</div>
@@ -109,43 +114,232 @@
         <div class="layui-form-item">
             <label class="layui-form-label">恢复通知<font color="#FF0000"> *</font></label>
             <div class="layui-input-inline" style="width: 150px">
-                <input type="text" id="re_inform" name="re_inform" lay-verify="pass" placeholder="连续停止n次未修复" autocomplete="off"
+                <input type="text" id="re_inform" name="re_inform" lay-verify="pass" placeholder="连续停止n次未修复"
+                       autocomplete="off"
                        class="layui-input" value={{ task_info[9] }}>
             </div>
             <div class="layui-form-mid">恢复告警通知</div>
         </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">api接口池</label>
-                {#——————————————————加入分级树形——————————————————#}
-
-                <div id="api_tree" class="demo-tree-more" style="margin-left:150px"></div>
+        <div class="layui-form-item layui-form-text">
+            {#                <label class="layui-form-label">api接口池</label>#}
+            <div class="layui-form" lay-filter="group" style="display:inline-block;width: 250px">
+                <label class="layui-form-label">业务线</label>
+                <div class="layui-input-block">
+                    <select id="group" name="group" lay-verify="required" lay-search="" lay-filter="group">
+                        <option value="0"></option>
+                    </select>
+                </div>
             </div>
+
+            <div class="layui-form" lay-filter="project" style="display:inline-block;width: 250px">
+                <label class="layui-form-label">项目</label>
+                <div class="layui-input-block">
+                    <select id="project" name="project" lay-verify="required" lay-search=""
+                            lay-filter="project">
+                        <option value="0"></option>
+                    </select>
+                </div>
+            </div>
+
+            {#——————————————————数据表格——————————————————#}
+            <div class="layui-form" lay-filter="cat" style="display:inline-block;width: 250px">
+                <label class="layui-form-label">模块</label>
+                <div class="layui-input-block">
+                    <select id="cat" name="cat" lay-verify="required" lay-search="" lay-filter="cat">
+                        <option value="0"></option>
+                    </select>
+                </div>
+            </div>
+        <div style="width: 4096px">
+            <div style="display: inline-block">
+                <table id="api_table" lay-filter="table"></table>
+                </div>
+                {#___________________________上面代码为layui数据表格1的新加入的___________________________#}
+
+
+                {#------------------获取监听复选框中的数据渲染給第二个表格--------------------------------------------#}
+            <div style="display: inline-block;vertical-align: top">
+                                <table align="center" class="layui-table" style="width: 30%;margin-left: 30%">
+                                    <colgroup>
+                                        <col width=10%>
+                                        <col width=20%>
+                                        <col width=10%>
+                                    </colgroup>
+                <thead>
+                <tr>
+                    <th>
+                        <div input align="center">ID</div>
+                    </th>
+                    <th>
+                        <div input align="center">接口</div>
+                    </th>
+                    <th>
+                        <div input align="center">编辑</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="tb">
+  <tr>
+{#        <td><div align="center" >1</div></td>#}
+{#        <td><div align="center" >2</div></td>#}
+{#        <td><div align="center" >3</div></td>#}
+
+
+          </tr>
+                </tbody>
+            </table>
+</div>
+</div>
+
+            {#——————————————————上面代码是新加入的——————————————————————#}
 
             <div style="margin-top: 10px;margin-left: 300px">
                 {% if title == "编辑任务" %}
-                <input class="layui-btn layui-btn-danger" type="button" onclick="edittask()" value="保存"
-                       style="margin-left:50px;margin-top:0px">
-                </input>
+                    <input class="layui-btn layui-btn-danger" type="button" onclick="edittask()" value="保存"
+                           style="margin-left:50px;margin-top:0px">
+                    </input>
                 {% else %}
-                <input class="layui-btn layui-btn-danger" type="button" onclick="addtask()" value="保存"
-                       style="margin-left:50px;margin-top:0px">
-                </input>
+                    <input class="layui-btn layui-btn-danger" type="button" onclick="addtask()" value="保存"
+                           style="margin-left:50px;margin-top:0px">
+                    </input>
                 {% endif %}
             </div>
     </form>
 
-<script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
-<script>
-        window.onload = function () {
-            var data = document.getElementById("inform").value;
-            if (data == 1){
-                document.getElementById("token").style.display="none";
-                document.getElementById("email").style.display="none";
+    <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
+    <script>
+
+
+        //获取业务线
+        function get_group() {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "get_interface_list", true);
+            var params = 'type=group&id=0';
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlhttp.send(params);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    console.log(c)
+                    if (c.code == 1000) {
+                        //给图标赋值
+                        if (c.data == "") {
+                            alert("暂无数据")
+                            layui.form.render('select', 'group');//需要渲染一下
+                        } else {
+                            resultData = c.data;
+                            var htmls = '<option value="">请选择</option>'; //全局变量
+                            for (var i in resultData) {
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                            }
+                            $("#group").html(htmls); //通过select id进行赋值
+                            layui.form.render('select', 'group');//需要渲染一下
+                        }
+                    }
+                    if (c.code == 1002) {
+                        alert('该业务线下暂时无数据')
+                    }
+                }
             }
-            else{
-                document.getElementById("token").style.display="";
-                document.getElementById("email").style.display="";
+        }
+
+        //获取项目
+        function get_project(group_id) {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "get_interface_list", true);
+            var params = 'type=project&id=' + group_id;
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlhttp.send(params);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    console.log(c)
+                    if (c.code == 1000) {
+                        //给图标赋值
+                        if (c.data == "") {
+                            alert("暂无数据")
+                            layui.form.render('select', 'project');//需要渲染一下
+                        } else {
+                            resultData = c.data;
+                            var htmls = '<option value="">请选择</option>'; //全局变量
+                            for (var i in resultData) {
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                            }
+                            $("#project").html(htmls); //通过select id进行赋值
+                            layui.form.render('select', 'project');//需要渲染一下
+                        }
+                    }
+                    if (c.code == 1002) {
+                        alert('该项目下暂时无数据')
+                    }
+                }
+            }
+        }
+
+        //获取模块
+        function get_cat(project_id) {
+            var xmlhttp;
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "get_interface_list", true);
+            var params = 'type=cat&id=' + project_id;
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlhttp.send(params);
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var c = JSON.parse(xmlhttp.responseText)
+                    console.log(c)
+                    if (c.code == 1000) {
+                        //给图标赋值
+                        if (c.data == "") {
+                            alert("暂无数据")
+                            layui.form.render('select', 'cat');//需要渲染一下
+                        } else {
+                            resultData = c.data;
+                            var htmls = '<option value="">请选择</option>'; //全局变量
+                            for (var i in resultData) {
+                                htmls += '<option value = "' + resultData[i].id + '">' + resultData[i].title + '</option>'
+                            }
+                            $("#cat").html(htmls); //通过select id进行赋值
+                            layui.form.render('select', 'cat');//需要渲染一下
+                        }
+                    }
+                    if (c.code == 1002) {
+                        alert('该项模块暂时无数据')
+                    }
+
+                }
+            }
+        }
+
+        // 获取接口
+        function get_interface(cat_id) {
+            return cat_id
+        }
+
+        function apis_del(e) {
+            if (window.confirm("确定要删除吗")) {
+                {#var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML#}
+                {#var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML#}
+                console.log(e)
+                e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+
+            }
+        }
+
+        window.onload = function () {
+
+            get_group()
+            var data = document.getElementById("inform").value;
+            if (data == 1) {
+                document.getElementById("token").style.display = "none";
+                document.getElementById("email").style.display = "none";
+            }
+            else {
+                document.getElementById("token").style.display = "";
+                document.getElementById("email").style.display = "";
             }
         };
 
@@ -160,177 +354,137 @@
                 "inform": {{ task_info[10] }}
             });
 
-            form.on('select(inform)', function(data){
+            form.on('select(inform)', function (data) {
                 show_content(data.value)
             })
         });
 
-    function show_content(data){
-        if (data == 1){
-            document.getElementById("token").style.display="none";
-            document.getElementById("email").style.display="none";
+        function show_content(data) {
+            if (data == 1) {
+                document.getElementById("token").style.display = "none";
+                document.getElementById("email").style.display = "none";
+            }
+            else {
+                document.getElementById("token").style.display = "";
+                document.getElementById("email").style.display = "";
+            }
         }
-        else{
-            document.getElementById("token").style.display="";
-            document.getElementById("email").style.display="";
-        }
 
-    }
+        //-------------------------------------下面是我的------------------------------------------
 
-
-        <!--张晨的接口池子-->
-
-        {#——————————————————layui树形属性只能使用2.5以上版本，前面需要引用CDN进行更新——————————————————#}
-
-
-        layui.use(['form', 'layedit', 'laydate', 'tree', 'util'],
-            function () {
-                var form = layui.form
-                    , layer = layui.layer
-                    , layedit = layui.layedit
-                    , laydate = layui.laydate
-                    , tree = layui.tree
-                    , util = layui.util, dataList = [], types = ['group', 'project', 'cat', 'interface'];
-
-                //使用jQurty方法获取后端数据
-                jQuery.ajax({
-                    url: "/monitor/get_interface_list",
-                    type: "POST",
-                    data: {
-                        type: "group",
-                        id: "0"
-                    },
-                    dataType: 'json',
-                    //success请求并成功返回信息
+        //_______________________________________万恶的分割线__________________________________________________________
+        layui.use(['form', 'layedit', 'laydate', 'table'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate
+                , table = layui.table;
 
 
-                    success: function (res) {
-                        if (res.code === 1000) {
-                            //声明一个变量
-                            let list = []
-                            //循环获取group中的数据
-                            for (var i = 0; i < res.data.length; i++) {
-                                list.push({
-                                    //使用push方法进数组length的返回，返回的是length不是数组
-                                    title: res.data[i].title,
-                                    id: 'group' + res.data[i].id,
-                                    value: res.data[i].id,
-                                    type: "group",
-                                    children: []
-                                })
-                            }
-                            dataList = list
-                            newTree = tree//定义一个全局的变量
-
-                            //tree方法使用
-                            tree.render({
-                                elem: '#api_tree'
-                                , data: dataList
-                                , id: 'demo'
-                                , onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
-                                , showCheckbox: true  //是否显示复选框
-                                , isJump: false //是否允许点击节点时弹出新窗口跳转
-                                , click: function (obj) {
-                                    var data = obj.data;  //获取当前点击的节点数据
-                                    let index = types.findIndex(item => { //使用let 声明一个块级的变量，可以在循环语句中使用
-                                        //findIndex方法为数组中的每个元素都调用一次函数执行
-                                        return item === data.type
-                                    })
-                                    index++;
-                                    if (index > types.length - 1) return;
-                                    getSecondList(types[index], data.value, arr => {
-                                        if (!arr.length) return;
-                                        data.children = arr
-                                        data.spread = true
-                                        //checked方法，参数对节点进行初始勾选需要在重载之后进行获取勾选
-                                        let checkedData = newTree.getChecked('demo');
-                                        let idList = []
-                                        for (let i = 0; i < checkedData.length; i++) {
-                                            getId(idList, checkedData[i])
-                                        }
-                                        console.log(checkedData, idList)
-                                        //重载实例重载
-                                        tree.reload('demo', {
-                                            [obj.state]: 'open'//重载一个新的参数
-                                        });
-                                        newTree.setChecked('demo', idList);
-
-                                    })
-
-                                }
-                            })
-
-                        }
-                         }
-                })
-
-                //获取第二分级
-                function getSecondList(type, id, callback) {
-                    jQuery.ajax({
-                        url: "/monitor/get_interface_list",
-                        type: "POST",
-                        data: {
-                            type: type,
-                            id: id
-                        },
-                        dataType: 'json',
-                        //success请求并成功返回信息，循环type中的数据
-                        success: function (res) {
-                            let list = [];
-                            for (var j = 0; j < res.data.length; j++) {
-                                list.push({
-                                    //使用push方法进数组length的返回，返回的是length不是数组
-                                    title: res.data[j].title,
-                                    id: type + res.data[j].id,
-                                    value: res.data[j].id,
-                                    type: type
-                                })
-                            }
-                            callback(list)//回调list参数
-                        }
-                    })
-                }
+            form.on('select(group)', function (data) {
+                get_project(data.value)
             });
-        {#-------------------------------这块走了4次循环获取每个id----每次循环储存id----------------------------------#}
-        let nowIndex = 0
-        let submitIdList = []
+            form.on('select(project)', function (data) {
+                get_cat(data.value)
+            });
+            form.on('select(cat)', function (data) {
 
-        function getId(idList, obj) {
-            if (!obj.children) return
-            nowIndex++;
-            let {children, id} = obj
-            idList.push(id)
-            console.log(idList)
-            for (let i = 0; i < children.length; i++) {
-                getId(idList, children[i])
-            }
-            if (nowIndex == 3) {
-                let list = children.map(item => {
-                    return item.value
+                //第一个框
+                table.render({
+                    elem: '#api_table'
+                    , height: 500
+                    , id: "table"
+                    , url: "/monitor/new_get_interface_list?type=interface&id=" + data.value
+                    , page: true
+                    , cols: [[
+                        {checkbox: true}
+                        , {field: 'id', title: 'ID', width: 80, sort: true}
+                        , {field: 'title', title: "接口", width: '50px', minWidth: 60}
+
+                    ]]
                 })
-                submitIdList = [...submitIdList, ...list]
-                nowIndex = 0
-            }
-        }
 
-        {# --------------------------------------------------------------------------------------------------------#}
+            });
+            //监听复选框
 
+            var html = ""//定义一个全局的变量html为空
+            table.on('checkbox(table)', function (obj) {
+                var checkStatus = table.checkStatus('table');//idTest 即为基础参数 id 对应的值
+                let idList = checkStatus.data.filter(item => {
+                    return item.id
+                })
+                console.log(idList)//选的全部相关数据
+                console.log(obj.data) //获取行的数据
+                if (!obj.checked) {
+
+                    alert("请在下框表单取消")
+                } else {
+                    //对勾选进行一个+=循环，获取idList+1的值
+                    //for (var i = 0; i < idList.length; i++) {
+                    i = idList.length - 1;
+                    html += '<tr>';
+                    html += '<td><div align="center" class="apiv">' + obj.data.id + '</div></td> ';
+                    html += '<td><div align="center" >' + obj.data.title + '</div></td> ';
+                    html += '<td><span class="layui-btn layui-btn-danger" name="status1" onclick="apis_del(this)">删除</span></td>';
+                    html += '<tr>'
+                    console.log(html)
+                    //}
+                    //获取整个结构拼接后的结构进行渲染
+                    document.getElementById("tb").innerHTML = html
+                    $("#td").children().append(html)
+                }
+
+
+            });
+
+            //_______________________________________万恶的分割线__________________________________________________________
+
+            //使用jQurty方法获取后端数据
+            jQuery.ajax({
+                url: "/monitor/new_get_interface_list",
+                type: "GET",
+                data: {
+                    type: "group",
+                    id: "0"
+                },
+                dataType: 'json',
+
+                //success请求并成功返回信息
+                success: function (res) {
+                    if (res.code === 1000) {
+                        //声明一个变量
+                        let list = []
+                        //循环获取group中的数据
+                        for (var i = 0; i < res.data.length; i++) {
+                            list.push({
+                                //使用push方法进数组length的返回，返回的是length不是数组
+                                title: res.data[i].title,
+                                id: 'group' + res.data[i].id,
+                                value: res.data[i].id,
+                                type: "group"
+
+                            })
+                        }
+
+                    }
+
+                }
+            })
+        });
+        //-------------------------------获取点击事件传递給蕾蕾进行保存👇--------------------------------------------------
         //onclick事件的传值 然后去执行ajax请求
         function apislist() {
-            let checkedData = newTree.getChecked('demo');
-            console.log(checkedData)
-            let idList = []
-            for (let i = 0; i < checkedData.length; i++) {
-                getId(idList, checkedData[i])
-            }
-            return submitIdList
-            <!--console.log(submitIdList)-->
+            let list = ''
+            $('.apiv').text(function (n, text) {
+                return list += text + ','
+            })
+            list = list.split(',').filter(item => {
+                return item != ''
+            })
+            return list
         }
 
-
-
-
-</script>
+    </script>
 
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
