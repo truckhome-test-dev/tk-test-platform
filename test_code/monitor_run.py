@@ -313,7 +313,6 @@ def main(task_id):
         print(task_id, i, resq_code, res_time)
         st = strategy.start_inform(task_id, i, resq_code)
         num = st[4]
-        print(st)
         if str(resq_code)[:1] == "9":
             # resq_code=str(resq_code)+"(接口响应超过10s)"
             print(resq_code, response)
@@ -331,11 +330,33 @@ def main(task_id):
                 send.sending(d_token, content)
                 send.sendemail(receiver, content)
         strategy.upnum(i, num)
+        print(i,interface_name,url)
     else:
         print("执行完成")
 
 
 if __name__ == "__main__":
-    # task_id = sys.argv[1]
-    task_id = 9
+    task_id = sys.argv[1]
+    # task_id = 46
     main(task_id)
+    # def s(task_id):
+    #     task_id = int(task_id)
+    #     r = run(task_id)
+    #     m = get_md()
+    #     strategy = Monitor_Inform()
+    #     send = Send_All()
+    #     api_list = r.get_taskinfo()[2][1:-1].split(",")
+    #     for i in api_list:
+    #         task_id=int(task_id)
+    #         m = get_md()
+    #         name=m.get_interface_name(i)
+    #         url = m.get_domain(i)
+    #         if url is None:
+    #             print("接口id：%s 接口不存在或不存在正式环境，跳过" % i)
+    #             continue
+    #         i = int(i)
+    #         path = m.get_path(i)
+    #
+    #         url = url + path
+    #         print(i,name,url)
+    # s("50")
