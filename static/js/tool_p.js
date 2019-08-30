@@ -105,6 +105,13 @@ function task_del(e) {
         }
     }
 }
+function task_editt(e) {
+
+    console.log(e.parentNode.parentNode)
+    var task_id = e.parentNode.parentNode.firstElementChild.innerHTML
+    window.location.href = "http://127.0.0.1:5000/project_information_edit?id=" + task_id
+    // alert('11')
+}
 
 function task_edit(e) {
     var task_id = e.parentNode.parentNode.firstElementChild.querySelector('div').innerHTML

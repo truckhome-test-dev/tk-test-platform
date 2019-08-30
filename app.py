@@ -380,6 +380,33 @@ def Project_information():
     data = pp.cha(pp_rturn)
     return render_template('project_information.html', u=data)
 
+@app.route('/project_information_edit', methods=['POST', 'GET'])
+# @check_permissions("/project_information")
+def Project_information_edit():
+    if request.method == 'GET':
+        id = request.args.get('id')
+        data = pp.cha_only(id)
+        print(data)
+        return render_template('project_information_edit.html', u=data)
+
+    else:
+        id = request.form.get('id')
+        Business = request.form.get('Business')
+        Product = request.form.get('Product')
+        PM = request.form.get('PM')
+        Business_type = request.form.get('Business_type')
+        DMP = request.form.get('DMP')
+        QD_Dev = request.form.get('QD_Dev')
+        HD_Dev = request.form.get('HD_Dev')
+        DEV_Leader = request.form.get('DEV_Leader')
+        qa = request.form.get('qa')
+        Platform = request.form.get('Platform')
+
+        pp.edit(id,Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
+        data = pp.cha_only(id)
+
+        return redirect('http://127.0.0.1:5000/project_information')
+
 
 # 抓虫节排行榜
 @app.route('/grab_bug', methods=['post', 'get'])
