@@ -379,7 +379,7 @@ def Project_information():
     pp_rturn = request.args.get('firstname')
     data = pp.cha(pp_rturn)
     return render_template('project_information.html', u=data)
-
+#卡车之家业务信息表-编辑
 @app.route('/project_information_edit', methods=['POST', 'GET'])
 # @check_permissions("/project_information")
 def Project_information_edit():
@@ -406,6 +406,33 @@ def Project_information_edit():
         data = pp.cha_only(id)
 
         return redirect('http://127.0.0.1:5000/project_information')
+
+#卡车之家业务信息表-新增
+@app.route('/project_information_added', methods=['POST', 'GET'])
+def Project_information_added():
+    if request.method == 'GET':
+        return render_template('project_information_added.html')
+
+    else:
+        id = request.form.get('id')
+        Business = request.form.get('Business')
+        Product = request.form.get('Product')
+        PM = request.form.get('PM')
+        Business_type = request.form.get('Business_type')
+        DMP = request.form.get('DMP')
+        QD_Dev = request.form.get('QD_Dev')
+        HD_Dev = request.form.get('HD_Dev')
+        DEV_Leader = request.form.get('DEV_Leader')
+        qa = request.form.get('qa')
+        Platform = request.form.get('Platform')
+
+        pp.added(Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
+        return redirect('http://127.0.0.1:5000/project_information')
+
+
+# 接口监控-任务管理
+
+
 
 
 # 抓虫节排行榜

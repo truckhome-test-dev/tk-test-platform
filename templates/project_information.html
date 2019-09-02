@@ -34,6 +34,7 @@
 {#            <input type="submit" value="搜一下">#}
                 <div style="display:inline-block;">
         <input class="layui-btn layui-btn-danger" type="submit" value="搜一下" style="margin-left:-80px;margin-top:0px"></input>
+        <span class="layui-btn" id="added" name="status1"onclick="location.href='/project_information_added'"">新增</span>
     </div>
         </div>
 </div>
@@ -70,8 +71,7 @@
                 <td>{{ i[9] }}</td>
                 <td>{{ i[10] }}</td>
                 <td>
-                <span class="layui-btn" id="edittask" name="status1"
-                      onclick="task_editt(this)">编辑</span>
+                <span class="layui-btn" id="edittask" name="status1"onclick="task_editt(this)">编辑</span>
                 </td>
             </tr>
     {% endfor %}
