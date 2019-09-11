@@ -330,13 +330,12 @@ class Monitor_Mongodb():
         return l1
 
 
-if __name__ == "__main__":
-    a = Monitor_Mongodb()
-    print(a.get_group())
+# if __name__ == "__main__":
+#     a = Monitor_Mongodb()
+#     data=a.get_project(275)
 #     L=[]
-#     for i in [376,370,364,358,352,346,340,334,328,322,316,310,304,298,292,286,280,274,268,262,256,250,244,232]:
-#         print(i)
-#         q=a.get_allinterface(i)
-#         print(q)
+#     # for i in [376,370,364,358,352,346,340,334,328,322,316,310,304,298,292,286,280,274,268,262,256,250,244,232]:
+#     for i in data:
+#         q=a.get_allinterface(i['id'])
 #         L+=q
 #     print(L)

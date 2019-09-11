@@ -12,7 +12,7 @@ task = Monitor_Task()
 api = Api_Monitor()
 res = Monitor_Res()
 mm = Monitor_Mongodb()
-
+strategy = Monitor_Inform()
 
 # 判断登录装饰器方法
 def check_token2(func):
@@ -42,7 +42,7 @@ def task_list():
 
 # 编辑任务
 @monitor.route('/task_edit', methods=['get', 'post'])
-@check_permissions("/monitor/task_edit")
+#@check_permissions("/monitor/task_edit")
 def task_edit():
     if request.method == "GET":
         title = "编辑任务"
@@ -347,8 +347,61 @@ def get_interface_list():
             data = '参数异常'
         if data == '参数异常':
             ret = {"code": 1003, "data": data}
+            # ret={"status": 0,"message": "","total": 180,"data": {"item": data }}
         else:
             ret = {"code": 1000, "data": data}
+            # ret = {"code": 0, "message": "", "total": 180, "data": data}
+    except:
+        ret = {"code": 1003, "data": "参数异常"}
+    return json.dumps(ret)
+
+
+#开启通知
+@monitor.route('/switch', methods=['post','get'])
+def swich():
+    if request.method=="GET":
+        return render_template('switch.html')
+    else:
+        type = request.form.get('type')
+        id = int(request.form.get('id'))
+        val=int(request.form.get('val'))
+        if type == "status":
+            data=strategy.get_interface_status(id)
+            ret="监控状态：%s \n通知状态：%s"%(data[0],data[1])
+            ret=ret.replace("1","开启").replace("0","关闭")
+            return ret
+        else:
+            strategy.update_interface_status(type, id, val)
+            return "更新成功！"
+
+#数据表用
+@monitor.route('/new_get_interface_list', methods=['get'])
+def new_get_interface_list():
+    try:
+        # 获取json数据
+        # data = request.get_data()
+        # data = json.loads(data.decode("utf-8"))
+        # type = data['type']
+        # id = data['id']
+        # 获取form数据
+        type = request.args.get('type')
+        id = int(request.args.get('id'))
+        if type == "group":
+            data = mm.get_group()
+        elif type == 'project':
+            data = mm.get_project(id)
+        elif type == 'cat':
+            data = mm.get_interface_cat(id)
+        elif type == 'interface':
+            data = mm.get_interface(id)
+        else:
+            data = '参数异常'
+        if data == '参数异常':
+            # ret = {"code": 1003, "data": data}
+            ret={"status": 0,"message": "","total": 180,"data": {"item": data }}
+        else:
+            # ret = {"code": 1000, "data": data}
+            ret = {"code": 0, "message": "", "total": 180, "data": data}
     except:
         ret = {"code": 1003, "data": "参数异常"}
     return json.dumps(ret)

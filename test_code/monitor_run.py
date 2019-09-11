@@ -1,4 +1,5 @@
-import sys
+import os, sys
+
 sys.path.append('../')
 from test_code import *
 
@@ -19,7 +20,7 @@ class get_md():
         if L != []:
             project_id = L[0]["project_id"]
         else:
-            project_id = None
+            return None
         myset = self.db.project
         data = myset.find({"env": {"$elemMatch": {"name": "正式环境"}}, "_id": int(project_id)},
                           {"env": {"$elemMatch": {"name": "正式环境"}}})
@@ -83,7 +84,10 @@ class get_md():
             D = {}
             for i in data:
                 key = i["name"]
-                value = i["value"]
+                if "value" in i.keys():
+                    value = i["value"]
+                else:
+                    value = ""
                 D[key] = value
         else:
             D = None
@@ -92,11 +96,11 @@ class get_md():
     # 获取json类型参数
     def get_req_body_json(self, interface_id):
         myset = self.db.interface_case
-        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1})
+        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1,"_id":0})
         L = []
         for i in data:
             L.append(i)
-        if L != []:
+        if L != [] and L!=[{}]:
             data = json.loads(L[0]["req_body_other"])
         else:
             data = None
@@ -114,7 +118,10 @@ class get_md():
             D = {}
             for i in data:
                 key = i['name']
-                value = i['value']
+                if "value" in i.keys():
+                    value = i["value"]
+                else:
+                    value = ""
                 D[key] = value
             data = D
         else:
@@ -176,9 +183,9 @@ class run(SqlOperate):
     def run_api(self, url, method, params, data, json):
         try:
             if method == "GET":
-                r = requests.get(url, params=params, timeout=(10, 10))
+                r = requests.get(url, params=params)
             elif method == "POST":
-                r = requests.post(url, params=params, data=data, json=json, timeout=(10, 10))
+                r = requests.post(url, params=params, data=data, json=json)
             else:
                 print("请求类型错误，目前只支持POST/GET")
             return r.status_code, r.elapsed.total_seconds() * 1000, r.text
@@ -188,6 +195,8 @@ class run(SqlOperate):
             return 9002, 0, ("连接、读取超时----%s" % e)
         except requests.exceptions.ConnectionError as e:
             return 9003, 0, ("未知的服务器----%s" % e)
+        except Exception as e:
+            return 9004, 0, ("其他----%s" % e)
 
     # 结果入库
     def write_result(self, api_id, task_id, resq_code, res_time, response):
@@ -267,19 +276,25 @@ class run(SqlOperate):
 
 # 主方法
 def main(task_id):
-    task_id=int(task_id)
+    task_id = int(task_id)
     r = run(task_id)
     m = get_md()
     strategy = Monitor_Inform()
     send = Send_All()
     api_list = r.get_taskinfo()[2][1:-1].split(",")
     for i in api_list:
+        interface_status = strategy.get_interface_status(i)
+        if not interface_status:
+            strategy.add_inform(i)
+        else:
+            if interface_status[1] == 0:
+                continue
         print(datetime.datetime.now())
         i = int(i)
         interface_name = m.get_interface_name(i)
         url = m.get_domain(i)
         if url is None:
-            print("接口id：%s 不存在正式环境，跳过" % i)
+            print("接口id：%s 接口不存在或不存在正式环境，跳过" % i)
             continue
         method = m.get_method(i)
         path = m.get_path(i)
@@ -295,22 +310,53 @@ def main(task_id):
         if resq_code == 200:
             response = "ok"
         r.write_result(i, task_id, resq_code, res_time, response)
-        print(task_id, i, resq_code,res_time)
+        print(task_id, i, resq_code, res_time)
         st = strategy.start_inform(task_id, i, resq_code)
         num = st[4]
-        print(st)
-        if st[0] == 1:
-            content = "接口名称：%s \n 接口地址：%s \n 备注：%s " % (interface_name, url, st[1])
-            d_token = st[2]
-            receiver = st[3]
-            send.sending(d_token, content)
-            send.sendemail(receiver, content)
+        if str(resq_code)[:1] == "9":
+            # resq_code=str(resq_code)+"(接口响应超过10s)"
+            print(resq_code, response)
+            msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
+            send.sending(
+                "https://oapi.dingtalk.com/robot/send?access_token=c3c8e28d27833fa9b308d716fcebe9b0b93c3db8c0c392e75ef3df25b68a1e9f",
+                msg)
+        else:
+            resq_code = str(resq_code)
+            if st[0] == 1:
+                content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (
+                    i, interface_name, url, resq_code, st[1])
+                d_token = st[2]
+                receiver = st[3]
+                send.sending(d_token, content)
+                send.sendemail(receiver, content)
         strategy.upnum(i, num)
+        print(i,interface_name,url)
     else:
         print("执行完成")
 
 
 if __name__ == "__main__":
     task_id = sys.argv[1]
-    # task_id = 9
+    # task_id = 46
     main(task_id)
+    # def s(task_id):
+    #     task_id = int(task_id)
+    #     r = run(task_id)
+    #     m = get_md()
+    #     strategy = Monitor_Inform()
+    #     send = Send_All()
+    #     api_list = r.get_taskinfo()[2][1:-1].split(",")
+    #     for i in api_list:
+    #         task_id=int(task_id)
+    #         m = get_md()
+    #         name=m.get_interface_name(i)
+    #         url = m.get_domain(i)
+    #         if url is None:
+    #             print("接口id：%s 接口不存在或不存在正式环境，跳过" % i)
+    #             continue
+    #         i = int(i)
+    #         path = m.get_path(i)
+    #
+    #         url = url + path
+    #         print(i,name,url)
+    # s("50")

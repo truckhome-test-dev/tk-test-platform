@@ -12,6 +12,7 @@
 	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
 		<legend>{{name}}</legend>
 	</fieldset>
+
 	<!-- 页面私有部分 -->
 
 	
@@ -33,6 +34,7 @@
 {#            <input type="submit" value="搜一下">#}
                 <div style="display:inline-block;">
         <input class="layui-btn layui-btn-danger" type="submit" value="搜一下" style="margin-left:-80px;margin-top:0px"></input>
+        <span class="layui-btn" id="added" name="status1"onclick="location.href='/project_information_added'"">新增</span>
     </div>
         </div>
 </div>
@@ -53,6 +55,7 @@
         <th>开发经理</th>
         <th>测试人员</th>
         <th>涉及业务端</th>
+        <th>操作</th>
     </tr>
         {% for i in u %}
             <tr>
@@ -67,6 +70,9 @@
                 <td>{{ i[8] }}</td>
                 <td>{{ i[9] }}</td>
                 <td>{{ i[10] }}</td>
+                <td>
+                <span class="layui-btn" id="edittask" name="status1"onclick="task_editt(this)">编辑</span>
+                </td>
             </tr>
     {% endfor %}
     </table>
