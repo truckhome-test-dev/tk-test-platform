@@ -343,16 +343,18 @@ def admin():
     return render_template('admin.html')
 
 
-# app自动化测试报告
+# 自动化测试最新报告
 @app.route('/appreport', methods=['post', 'get'])
 # @check_permissions("/appreport")
-def appreport():
-    newreport = pt.new_report()
-    reportlist = pt.title_url()
-    return render_template('appreport.html', newreport=newreport, reportlist=reportlist)
+def appwebreport():
+    appnewreport = pt.new_report(1)
+    appreportlist = pt.title_url(1)
+    webnewreport = pt.new_report(2)
+    webreportlist = pt.title_url(2)    
+    return render_template('appreport.html', appnewreport=appnewreport, appreportlist=appreportlist,webnewreport=webnewreport,webreportlist=webreportlist)
 
 
-# 更多报告列表
+# APP更多报告列表
 @app.route('/TestReport/<rpttime>/<dev>/TestReport', methods=['post', 'get'])
 def morerpt(rpttime, dev):
     url = "TestReport/%s/%s/TestReport.html" % (rpttime, dev)
@@ -552,6 +554,14 @@ def select_file():
         else:
             a = up.sel_file(project)
         return json.dumps(a)
+
+
+# web更多报告列表
+@app.route('/WebReport/<rpttime>', methods=['post', 'get'])
+def webmorerpt(rpttime):
+    url = "TestReport/%s" % (rpttime)
+    return render_template(url)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

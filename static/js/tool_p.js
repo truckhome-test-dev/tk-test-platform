@@ -643,12 +643,12 @@ function addtask(){
      var email = document.getElementById("email2").value;
      var xmlhttp;
      xmlhttp = new XMLHttpRequest();
-     var params = '{"task_name" :" ' + task_name + ' ", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "token" :" ' + token +  ' ", "email" :" ' + email +  ' ", "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
+     var params = '{"task_name" :"' + task_name + '", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "token" :" ' + token +  ' ", "email" :" ' + email +  ' ", "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
      }
     else{
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
-    var params = '{"task_name" : " ' + task_name + ' ", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
+    var params = '{"task_name" : "' + task_name + '", "frequency" : ' + frequency +  ', "inform" : ' + inform +  ', "start_inform" : ' + start_inform +  ', "stop_inform" : ' + stop_inform + ', "re_inform" : ' + re_inform +  ', "apis" :[ ' + apis + ']}';
     }
     xmlhttp.open("POST","task_add",true);
     xmlhttp.send(params)
