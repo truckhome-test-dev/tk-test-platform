@@ -405,3 +405,13 @@ def new_get_interface_list():
     except:
         ret = {"code": 1003, "data": "参数异常"}
     return json.dumps(ret)
+
+
+@monitor.route('/statis_show', methods=['get'])
+def statis_show():
+    task_id=request.args.get('task_id')
+    time=request.args.get('time')
+    s=StatisShow()
+    err_data=s.statis_err(task_id,time)
+    timeout_data=s.statis_timeout(task_id,time)
+    return render_template('statis_show.html',err_data=err_data,timeout_data=timeout_data)

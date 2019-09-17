@@ -14,3 +14,5 @@ from .appreport import *
 from .monitor_res import *
 from .login import *
 from .monitor_inform import *
+from .monitor_statispush import *
+from .monitor_statisshow import *

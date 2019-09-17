@@ -35,6 +35,15 @@ class Cha_Project(SqlOperate):
         # print(data)
         # return data
 
+    def added(self,Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform):
+        self.dbcur()
+        sql = "INSERT INTO `project_pp` (`Business`, `Product`, `PM`, `Business_type`,`DMP`, `QD_Dev`, `HD_Dev`, `DEV_Leader`, `QA`, `Platform`) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
+        print (sql)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+
+
     def cha(self, all=None):
         if all == None or all == '':
             self.dbcur()
