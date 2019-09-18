@@ -62,6 +62,17 @@ class Monitor_Inform(SqlOperate):
         self.sqlCom()
         self.sqlclo()
 
+
+    #单个接口的监控状态、通知状态
+    def get_interface_status(self, interface_id):
+        self.dbcur()
+        sql = "select monitor,notice from api_inform WHERE apiid=%d " % (interface_id)
+        self.sqlExe(sql)
+        data = self.cur.fetchone()
+        self.sqlCom()
+        self.sqlclo()
+        return data
+
     def add_inform(self, apiid):
         apiid=int(apiid)
         self.dbcur()
@@ -70,10 +81,12 @@ class Monitor_Inform(SqlOperate):
         self.sqlCom()
         self.sqlclo()
 
+
     # 是否发钉钉
     def start_inform(self, taskid, apiid, code):
         info = self.seltimes(taskid)
-        if info[5] == 0:
+        interface_status = self.get_interface_status(apiid)
+        if info[5] == 0 and interface_status[1] == 1:
             start_times = info[0]
             stop_times = info[1]
             re_times = info[2]

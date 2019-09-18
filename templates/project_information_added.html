@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+{% block left %}
+    {{ super() }}
+{% endblock left %}
+{% block right %}
+    {{ super() }}
+    <!-- 修改name（页面名称） -->
+    {% set name = '卡车之家业务信息表' %}
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>{{name}}</legend>
+    </fieldset>
+    <!-- 页面私有部分 -->
+<form class="layui-form" action="/project_information_added" method="POST" style="width: 600px ;margin-top: 50px" lay-filter="exam">
+
+
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">业务<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="Business" name="Business" lay-verify="required" autocomplete="off" placeholder="请输入业务名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">产品线<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="Product" name="Product" lay-verify="required" autocomplete="off" placeholder="请输入产品线名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">产品经理<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="PM" name="PM" lay-verify="required" autocomplete="off" placeholder="请输入产品经理名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">业务端<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="Business_type" name="Business_type" lay-verify="required" autocomplete="off" placeholder="请输入业务端名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">设计师<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="DMP" name="DMP" lay-verify="required" autocomplete="off" placeholder="请输入设计师名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">前端开发<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="QD_Dev" name="QD_Dev" lay-verify="required" autocomplete="off" placeholder="请输入前端开发名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">后端开发<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="HD_Dev" name="HD_Dev" lay-verify="required" autocomplete="off" placeholder="请输入后端开发名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">开发经理<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="DEV_Leader" name="DEV_Leader" lay-verify="required" autocomplete="off" placeholder="请输入开发经理名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">测试人员<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="qa" name="qa" lay-verify="required" autocomplete="off" placeholder="请输入测试人员名称"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+        <div class="layui-form-item" style="line-height:30px">
+            <label class="layui-form-label">涉及业务端<font color="#FF0000"> *</font></label>
+            <div class="layui-input-block">
+                <input type="text" id="Platform" name="Platform" lay-verify="required" autocomplete="off" placeholder="请输入设计业务端"
+                       class="layui-input" style="width: 300px">
+            </div>
+        </div>
+          <div class="layui-form-item">
+    <div class="layui-input-block">
+      <input type="submit">
+    </div>
+  </div>
+    </form>
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
