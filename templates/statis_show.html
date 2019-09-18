@@ -24,11 +24,12 @@
 	<!-- 页面私有部分 -->
 	<table id='123' class="layui-table" style="margin-top:10px;margin-left:0px;width:100%";word-wrap: normal|break-word;>
     <!-- <table class="table table-bordered"> -->
-        <blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">接口id为yapi中录入的id，请登录yapi查看接口具体信息</blockquote>
+        <blockquote class="layui-elem-quote" style="font-size: 18px;color: forestgreen;font-weight: bold">通过接口名称在yapi中搜索查看详细接口信息</blockquote>
 
     <tr>
         <th>时间戳</th>
         <th>接口id</th>
+        <th>接口名</th>
         <th>状态码</th>
         <th>响应时间</th>
         <th>response</th>
@@ -38,6 +39,7 @@
             <tr>
                 <td>{{ i[0] }}</td>
                 <td>{{ i[1] }}</td>
+                <td>{{ i[5] }}</td>
                 <td>{{ i[2] }}</td>
                 <td>{{ i[3] }}</td>
                 <td>{{ i[4] }}</td>
@@ -48,6 +50,7 @@
             <tr>
                 <td>{{ i[0] }}</td>
                 <td>{{ i[1] }}</td>
+                <td>{{ i[5] }}</td>
                 <td>{{ i[2] }}</td>
                 <td>{{ i[3] }}</td>
                 <td>{{ i[4] }}</td>

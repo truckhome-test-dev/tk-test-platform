@@ -26,7 +26,14 @@ class StatisShow(StatisPush):
         self.sqlCom()
         self.sqlclo()
         data = self.cur.fetchall()
-        return data
+        mm=Monitor_Mongodb()
+        l=[]
+        for i in data:
+            l1=list(i)
+            title=mm.get_interface_name(i[1])
+            l1.append(title)
+            l.append(l1)
+        return l
 
     # 超时数据
     def statis_timeout(self, task_id, time):
@@ -37,7 +44,14 @@ class StatisShow(StatisPush):
         self.sqlCom()
         self.sqlclo()
         data = self.cur.fetchall()
-        return data
+        mm=Monitor_Mongodb()
+        l=[]
+        for i in data:
+            l1=list(i)
+            title=mm.get_interface_name(i[1])
+            l1.append(title)
+            l.append(l1)
+        return l
 
 #
 # if __name__ == '__main__':

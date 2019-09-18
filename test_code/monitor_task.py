@@ -329,6 +329,19 @@ class Monitor_Mongodb():
             l1 = []
         return l1
 
+    # 获取接口名称
+    def get_interface_name(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": int(interface_id)}, {"title": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            title = L[0]["title"]
+        else:
+            title = None
+        return title
+
 
 # if __name__ == "__main__":
 #     a = Monitor_Mongodb()

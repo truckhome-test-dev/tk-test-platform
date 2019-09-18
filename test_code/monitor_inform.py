@@ -66,7 +66,7 @@ class Monitor_Inform(SqlOperate):
     #单个接口的监控状态、通知状态
     def get_interface_status(self, interface_id):
         self.dbcur()
-        sql = "select monitor,notice from api_inform WHERE apiid=%d " % (interface_id)
+        sql = "select monitor,notice from api_inform WHERE apiid=%s" % (interface_id)
         self.sqlExe(sql)
         data = self.cur.fetchone()
         self.sqlCom()

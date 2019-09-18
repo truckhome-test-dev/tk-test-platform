@@ -4,10 +4,14 @@
 # @Author  : Mr. Cui
 # @File    : monitor_statispush.py
 # @Software: PyCharm
+import os, sys
 
+sys.path.append('../')
 from test_code import *
 import configparser
 import time
+import json
+import requests
 
 
 class StatisPush(SqlOperate):
