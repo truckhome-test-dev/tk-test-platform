@@ -15,12 +15,13 @@ class StatisShow(StatisPush):
         self.user = conf.get('monitor_db', 'user')
         self.passwd = conf.get('monitor_db', 'passwd')
         self.database = conf.get('monitor_db', 'database')
-        self.time=self.get_time()
+        self.time = self.get_time()
+
     # 非200数据
-    def statis_err(self, task_id,time):
+    def statis_err(self, task_id, time):
         self.dbcur()
-        sql = "select create_time,api_id,resq_code,res_time,response from apirun_result where task_id=%s and resq_code not in(200,9001,9002,9003,9004) and create_time >%s order by resq_code" % (
-            task_id,time)
+        sql = "select create_time,api_id,resq_code,res_time,response from apirun_result where task_id=%s and resq_code not in(200,9001,9002,9003,9004) and (create_time between %s and %s) order by resq_code" % (
+            task_id, time, str(int(time) + 96400))
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -28,10 +29,10 @@ class StatisShow(StatisPush):
         return data
 
     # 超时数据
-    def statis_timeout(self, task_id,time):
+    def statis_timeout(self, task_id, time):
         self.dbcur()
-        sql = "select create_time,api_id,resq_code,res_time,response from apirun_result where task_id=%s and res_time>10000 and create_time >%s order by resq_code" % (
-        task_id, time)
+        sql = "select create_time,api_id,resq_code,res_time,response from apirun_result where task_id=%s and res_time>10000 and (create_time between %s and %s) order by resq_code" % (
+            task_id, time, str(int(time) + 96400))
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()

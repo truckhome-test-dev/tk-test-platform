@@ -96,11 +96,11 @@ class get_md():
     # 获取json类型参数
     def get_req_body_json(self, interface_id):
         myset = self.db.interface_case
-        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1,"_id":0})
+        data = myset.find({"interface_id": interface_id}, {"req_body_other": 1, "_id": 0})
         L = []
         for i in data:
             L.append(i)
-        if L != [] and L!=[{}]:
+        if L != [] and L != [{}]:
             data = json.loads(L[0]["req_body_other"])
         else:
             data = None
@@ -318,7 +318,7 @@ def main(task_id):
             print(resq_code, response)
             msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
             send.sending(
-                "https://oapi.dingtalk.com/robot/send?access_token=c3c8e28d27833fa9b308d716fcebe9b0b93c3db8c0c392e75ef3df25b68a1e9f",
+                "https://oapi.dingtalk.com/robot/send?access_token=69a1e9703970c8b43a3dd07b33504963a341807f7fbd71e79336ce5b6d74c499",
                 msg)
         else:
             resq_code = str(resq_code)
@@ -330,7 +330,7 @@ def main(task_id):
                 send.sending(d_token, content)
                 send.sendemail(receiver, content)
         strategy.upnum(i, num)
-        print(i,interface_name,url)
+        print(i, interface_name, url)
     else:
         print("执行完成")
 

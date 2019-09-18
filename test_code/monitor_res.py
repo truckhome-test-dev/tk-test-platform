@@ -22,7 +22,7 @@ class Monitor_Res(SqlOperate):
         time1 = time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00', t), '%Y-%m-%d %H:%M:%S'))
 
         end_time = int(time1) + 86399
-        start_time = end_time - 86400 * 30 + 1
+        start_time = end_time - 86400 * 7 + 1
         timeArray = time.localtime(end_time)
         end_time = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
 

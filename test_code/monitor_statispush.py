@@ -45,8 +45,9 @@ class StatisPush(SqlOperate):
     # 非200次数
     def statis_err_count(self, task_id):
         self.dbcur()
-        sql = "select resq_code,count(resq_code) from apirun_result where task_id=%s and resq_code not in(200,9001,9002,9003,9004) and create_time >%s group by resq_code" % (
-        task_id, self.time)
+        sql = "select resq_code,count(resq_code) from apirun_result where task_id=%s and resq_code not in(200,9001,9002,9003,9004) and (create_time between %s and %s) group by resq_code" % (
+            task_id, self.time, self.time + 86400)
+        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -62,8 +63,8 @@ class StatisPush(SqlOperate):
     # 超时次数
     def statis_timeout_count(self, task_id):
         self.dbcur()
-        sql = "select count(*) from apirun_result where task_id=%s and res_time>10000 and create_time >%s" % (
-        task_id, self.time)
+        sql = "select count(*) from apirun_result where task_id=%s and res_time>10000 and (create_time between %s and %s)" % (
+            task_id, self.time, self.time + 86400)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -83,8 +84,9 @@ def main():
         err_count = a.statis_err_count(i)
         time_out_count = a.statis_timeout_count(i)
         content = "今日接口统计：\n%s超时次数(10s)：%d\n查看详情：http://192.168.2.92:5000/monitor/statis_show?task_id=%s&time=%s" % (
-        err_count, time_out_count, i, a.time)
+            err_count, time_out_count, i, a.time)
         print(j, content)
+        # a.sending(j,content)
 
 
 if __name__ == '__main__':
