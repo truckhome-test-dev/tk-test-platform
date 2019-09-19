@@ -329,7 +329,7 @@ class Monitor_Mongodb():
             l1 = []
         return l1
 
-    # 获取接口名称
+    # 通过接口id获取接口名称
     def get_interface_name(self, interface_id):
         myset = self.db.interface
         data = myset.find({"_id": int(interface_id)}, {"title": 1})
@@ -341,6 +341,19 @@ class Monitor_Mongodb():
         else:
             title = None
         return title
+
+    # 通过接口id获取project_id
+    def get_project_id(self, interface_id):
+        myset = self.db.interface
+        data = myset.find({"_id": int(interface_id)}, {"project_id": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            project_id = L[0]["project_id"]
+        else:
+            project_id = None
+        return project_id
 
 
 # if __name__ == "__main__":

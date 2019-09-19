@@ -49,7 +49,9 @@ class StatisShow(StatisPush):
         for i in data:
             l1=list(i)
             title=mm.get_interface_name(i[1])
+            project_id=mm.get_project_id(i[1])
             l1.append(title)
+            l1.append(project_id)
             l.append(l1)
         return l
 
