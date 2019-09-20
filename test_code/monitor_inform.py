@@ -15,9 +15,9 @@ class Monitor_Inform(SqlOperate):
     def __init__(self):
         conf = configparser.ConfigParser()
         conf.read("conf/config.ini")
-        self.host = "192.168.20.20"
-        self.user = "test"
-        self.passwd = "jghAeuXL0x7npvSS"
+        self.host = "192.168.2.92"
+        self.user = "root"
+        self.passwd = "HmElIsBkPKQNmfN2"
         self.database = "monitor"
 
     # 查询接口状态

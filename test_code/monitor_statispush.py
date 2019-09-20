@@ -39,7 +39,7 @@ class StatisPush(SqlOperate):
     # 获取任务信息
     def get_taskinfo(self):
         self.dbcur()
-        sql = "select id,token from task_list where is_delete=0 and status=1"
+        sql = "select id,token,task_name from task_list where is_delete=0 and status=1"
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -84,11 +84,11 @@ class StatisPush(SqlOperate):
 
 def main():
     a = StatisPush()
-    for i, j in a.get_taskinfo():
+    for i, j ,k in a.get_taskinfo():
         err_count = a.statis_err_count(i)
         time_out_count = a.statis_timeout_count(i)
-        content = "今日接口统计：\n%s超时次数(10s)：%d\n查看详情：http://192.168.2.92:5000/monitor/statis_show?task_id=%s&time=%s" % (
-            err_count, time_out_count, i, a.time)
+        content = "今日接口统计：\n任务名称：%s\n%s超时次数(10s)：%d\n查看详情：http://192.168.2.92:5000/monitor/statis_show?task_id=%s&time=%s" % (
+            k,err_count, time_out_count, i, a.time)
         print(j, content)
         # a.sending(j,content)
 
