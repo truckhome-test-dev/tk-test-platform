@@ -51,7 +51,6 @@ class StatisPush(SqlOperate):
         self.dbcur()
         sql = "select resq_code,count(resq_code) from apirun_result where task_id=%s and resq_code not in(200,9001,9002,9003,9004) and (create_time between %s and %s) group by resq_code" % (
             task_id, self.time, self.time + 86400)
-        print(sql)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
@@ -90,7 +89,7 @@ def main():
         content = "今日接口统计：\n任务名称：%s\n%s超时次数(10s)：%d\n查看详情：http://192.168.2.92:5000/monitor/statis_show?task_id=%s&time=%s" % (
             k,err_count, time_out_count, i, a.time)
         print(j, content)
-        # a.sending(j,content)
+        a.sending(j,content) #调试时注释掉此行，不然会发送正式钉钉群消息
 
 
 if __name__ == '__main__':
