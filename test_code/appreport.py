@@ -37,7 +37,7 @@ class APP_Report():
         if type1 == 1:
             titlelist = sorted(titlelist, reverse=True)
         else:
-            titlelist = sorted(titlelist, reverse=True)[-24:]
+            titlelist = sorted(titlelist, reverse=True)[:24]
         return titlelist
 
     # @pysnooper.snoop()
@@ -69,8 +69,7 @@ class APP_Report():
 
 
     def title_url(self,type1):
-
-        # 获取标题与链接的字典
+        # 获取标题与链接的字典        
         titlelist = self.get_title(type1)
         urllist = self.get_url(type1)
         title_url = {}
@@ -83,7 +82,6 @@ class APP_Report():
 
     def new_report(self,type1):
         # 获取最新报告链接
-
         urls = self.get_url(type1)
         if type1 == 1:
             newurl = urls[0]
