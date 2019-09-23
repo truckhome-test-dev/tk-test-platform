@@ -15,9 +15,9 @@ class Monitor_Inform(SqlOperate):
     def __init__(self):
         conf = configparser.ConfigParser()
         conf.read("conf/config.ini")
-        self.host = "192.168.20.20"
-        self.user = "test"
-        self.passwd = "jghAeuXL0x7npvSS"
+        self.host = "192.168.2.92"
+        self.user = "root"
+        self.passwd = "HmElIsBkPKQNmfN2"
         self.database = "monitor"
 
     # 查询接口状态
@@ -66,7 +66,7 @@ class Monitor_Inform(SqlOperate):
     #单个接口的监控状态、通知状态
     def get_interface_status(self, interface_id):
         self.dbcur()
-        sql = "select monitor,notice from api_inform WHERE apiid=%d " % (interface_id)
+        sql = "select monitor,notice from api_inform WHERE apiid=%s" % (interface_id)
         self.sqlExe(sql)
         data = self.cur.fetchone()
         self.sqlCom()
