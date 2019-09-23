@@ -9,6 +9,7 @@
         <script src="../static/layui/layui.js"></script>
         <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
         <script type="text/javascript" src="../static/js/tool_p.js"></script>
+        <script src="../static/js/jquery-1.11.3.min.js"></script>
     </head>
 {% endblock head %}
 {% block left %}
@@ -33,7 +34,8 @@
             <col width=5%>
             <col width=10%>
             <col width=5%>
-            <col width=65%>
+            <col width=10%>
+            <col width=55%>
             <col>
         </colgroup>
         <tr>
@@ -42,6 +44,7 @@
             <th><b>状态码</b></th>
             <th><b>响应时间(单位:ms)</b></th>
             <th><b>时间戳</b></th>
+            <th><b>时间</b></th>
             <th><b>response</b></th>
         </tr>
         {% for i in err_data %}
@@ -50,12 +53,12 @@
                     <a href="http://192.168.2.92:3000/project/{{ i[6] }}/interface/api/{{ i[1] }}"
                        style="color: rgb(58, 141, 255)">{{ i[1] }}</a>
                 </td>
-                <td>{{ i[5] }}</td>
+                <td>{{ i[6] }}</td>
                 <td>{{ i[2] }}</td>
                 <td>{{ i[3] }}</td>
                 <td>{{ i[0] }}</td>
+                <td>{{ i[5] }}</td>
                 <td>{{ i[4] }}</td>
-
 
             </tr>
         {% endfor %}
@@ -65,15 +68,18 @@
                     <a href="http://192.168.2.92:3000/project/{{ i[6] }}/interface/api/{{ i[1] }}"
                        style="color: rgb(58, 141, 255)">{{ i[1] }}</a>
                 </td>
-                <td>{{ i[5] }}</td>
+                <td>{{ i[6] }}</td>
                 <td>{{ i[2] }}</td>
                 <td>{{ i[3] }}</td>
                 <td>{{ i[0] }}</td>
+                <td>{{ i[5] }}</td>
                 <td>{{ i[4] }}</td>
-
 
             </tr>
         {% endfor %}
     </table>
+
 {% endblock right %}
+
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
+
