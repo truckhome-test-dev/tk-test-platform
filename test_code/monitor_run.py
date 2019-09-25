@@ -318,7 +318,7 @@ def main(task_id):
             print(resq_code, response)
             msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
             send.sending(
-                "https://oapi.dingtalk.com/robot/send?access_token=69a1e9703970c8b43a3dd07b33504963a341807f7fbd71e79336ce5b6d74c499",
+                "https://oapi.dingtalk.com/robot/send?access_token=7eb86685e144cb9a048f2a266c46b36dd458bec91ca9f2c1bbecf6b53a6e05ab",
                 msg)
         else:
             resq_code = str(resq_code)
