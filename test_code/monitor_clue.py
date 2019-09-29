@@ -47,10 +47,9 @@ def sending(token, content):
     res = requests.post(token, data=data, headers=HEADERS)
 
 
-def func():
+def main():
     token = "https://oapi.dingtalk.com/robot/send?access_token=7eb86685e144cb9a048f2a266c46b36dd458bec91ca9f2c1bbecf6b53a6e05ab"
     data = DasMgt()['html']
-    print(data)
     if len(data) > 0:
         sp = int(time.time())
         for i in data:
@@ -70,4 +69,4 @@ def func():
 
 
 if __name__ == '__main__':
-    func()
+    main()
