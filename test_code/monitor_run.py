@@ -306,29 +306,38 @@ def main(task_id):
         else:
             form = None
             json = None
-        resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
-        if resq_code == 200:
-            response = "ok"
+        while True:
+            resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
+            st = strategy.start_inform(task_id, i, resq_code)
+            num = st[4]
+            if resq_code == 200:
+                response = "ok"
+                break
+
+            elif str(resq_code)[:1] == "9":
+                # resq_code=str(resq_code)+"(接口响应超过10s)"
+                print(resq_code, response)
+                msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
+                send.sending(
+                    "https://oapi.dingtalk.com/robot/send?access_token=7eb86685e144cb9a048f2a266c46b36dd458bec91ca9f2c1bbecf6b53a6e05ab",
+                    msg)
+                break
+            else:
+                strategy.upnum(i, num)
+                print("接口异常，重试第%d次"%num)
+                time.sleep(1)
+                resq_code = str(resq_code)
+                if st[0] == 1:
+                    content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (
+                        i, interface_name, url, resq_code, st[1])
+                    d_token = st[2]
+                    receiver = st[3]
+                    # d_token="https://oapi.dingtalk.com/robot/send?access_token=7eb86685e144cb9a048f2a266c46b36dd458bec91ca9f2c1bbecf6b53a6e05ab"
+                    send.sending(d_token, content)
+                    send.sendemail(receiver, content)
+                    break
         r.write_result(i, task_id, resq_code, res_time, response)
         print(task_id, i, resq_code, res_time)
-        st = strategy.start_inform(task_id, i, resq_code)
-        num = st[4]
-        if str(resq_code)[:1] == "9":
-            # resq_code=str(resq_code)+"(接口响应超过10s)"
-            print(resq_code, response)
-            msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
-            send.sending(
-                "https://oapi.dingtalk.com/robot/send?access_token=7eb86685e144cb9a048f2a266c46b36dd458bec91ca9f2c1bbecf6b53a6e05ab",
-                msg)
-        else:
-            resq_code = str(resq_code)
-            if st[0] == 1:
-                content = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (
-                    i, interface_name, url, resq_code, st[1])
-                d_token = st[2]
-                receiver = st[3]
-                send.sending(d_token, content)
-                send.sendemail(receiver, content)
         strategy.upnum(i, num)
         print(i, interface_name, url)
     else:
@@ -337,7 +346,7 @@ def main(task_id):
 
 if __name__ == "__main__":
     task_id = sys.argv[1]
-    # task_id = 46
+    # task_id = 9
     main(task_id)
     # def s(task_id):
     #     task_id = int(task_id)
