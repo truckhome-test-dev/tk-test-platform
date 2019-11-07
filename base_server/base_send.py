@@ -36,3 +36,7 @@ class Send_All():
         data = json.dumps(data)
         res = requests.post(token, data=data, headers=HEADERS)
 
+if __name__ == '__main__':
+    S=Send_All()
+    S.sending("https://oapi.dingtalk.com/robot/send?access_token=65480cb93c4aa8019f1d2c6434baef52743cc050cd04e7ff1d10aa11e5835e1c","ceshi")
+

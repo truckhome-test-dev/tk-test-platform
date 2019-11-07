@@ -16,6 +16,7 @@ from xmindparser import xmind_to_xml
 import platform
 import json
 from datetime import timedelta
+from route_demo.views import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)  # 设置为24位的字符,每次运行服务器都是不同的，所以服务器启动一次上次的session就清除。
@@ -35,6 +36,7 @@ app.config.from_object('settings.DevConfig')
 即当request.url是以/monitor的情况下才会通过注册的蓝图的视图方法处理请求并返回
 '''
 app.register_blueprint(monitor, url_prefix='/monitor')
+app.register_blueprint(route_demo, url_prefix='/route_demo')
 
 
 # 判断登录装饰器方法
