@@ -304,7 +304,7 @@ def apistatis():
         time_frame = json.loads(time_frame.decode("utf-8"))
         time_frame = time_frame['time_frame']
         rt = res.api_rt(api_id, time_frame=time_frame)
-        data = {"code": 1000, "t": rt[0], "r": rt[1]}
+        data = {"code": 1000, "t": rt[0], "r": rt[1],"avg_r":int(sum(rt[1])/len(rt[1]))}
         return json.dumps(data)
 
 
