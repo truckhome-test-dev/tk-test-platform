@@ -35,7 +35,7 @@ class Bug_Calculate(SqlOperate):
             #                               'checknum': checknum, 'fristnum': fristnum, 'leaknum': leaknum, 'newnum': newnum,
             #                               'bugcount': bugcount, 'bugdensity': bugdensity, 'fristleak': fristleak,
             #                               'bringerror': bringerror, 'addtime': addtime})
-            sql ="INSERT INTO bugcalculate (vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)VALUES( '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',addtime)"%(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror)
+            sql ="INSERT INTO bugcalculate (vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)VALUES( '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
