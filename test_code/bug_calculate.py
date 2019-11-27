@@ -24,18 +24,38 @@ class Bug_Calculate(SqlOperate):
     # 插入质量数据
     def bugInsert(self, vname, proname, versionname, name, checknum, fristnum, leaknum, newnum, bugcount, bugdensity,
                   fristleak, bringerror, addtime):
+        data1 = self.selbugcalculate(vname,proname,versionname)
+        self.dbcur()
+        sql = ""
+        if data1:
+            sql = "update bugcalculate SET name ='%s',checknum='%s',fristnum='%s',leaknum='%s',newnum='%s',bugcount='%s',bugdensity='%s',fristleak='%s',bringerror='%s',addtime='%s' where vname ='%s'and proname='%s' and versionname='%s'" %(name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime,vname,proname,versionname)
+        else:
 
-        self.insData('bugcalculate', {'vname': vname, 'proname': proname, 'versionname': versionname, 'name': name,
-                                      'checknum': checknum, 'fristnum': fristnum, 'leaknum': leaknum, 'newnum': newnum,
-                                      'bugcount': bugcount, 'bugdensity': bugdensity, 'fristleak': fristleak,
-                                      'bringerror': bringerror, 'addtime': addtime})
+            # self.insData('bugcalculate', {'vname': vname, 'proname': proname, 'versionname': versionname, 'name': name,
+            #                               'checknum': checknum, 'fristnum': fristnum, 'leaknum': leaknum, 'newnum': newnum,
+            #                               'bugcount': bugcount, 'bugdensity': bugdensity, 'fristleak': fristleak,
+            #                               'bringerror': bringerror, 'addtime': addtime})
+            sql ="INSERT INTO bugcalculate (vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)VALUES( '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',addtime)"%(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
         data = self.bugnewsel()
-        # self.bugdel()
         if data:
             self.bugdel()
         else:
             self.bugnewinser()
         return "pass"
+
+    #查询新增bug率数据是否存在
+    def selbugcalculate(self,vname,proname,versionname):
+        self.dbcur()
+        sql = "select vname,proname,versionname from bugcalculate where vname ='%s' and proname ='%s' and versionname ='%s' "%(vname,proname,versionname)
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        return data
+
     #查询bug密度、首轮漏测率、引入错误率
     def getInfor(self):
         self.dbcur()

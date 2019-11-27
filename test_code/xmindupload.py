@@ -98,9 +98,8 @@ class Xmind_Upload(SqlOperate):
 	def to_dict(self,path):
 		data = xmind_to_dict(path)
 		a_str = str(data)
-		data_dict = eval(a_str.replace('"','“'))
+		data_dict = eval(a_str.replace('<','(').replace('>',')').replace('"','“').replace('/','//'))
 		return data_dict
-
     #查询文件内容
 	def filedata(self,filename):
 		self.dbcur()
