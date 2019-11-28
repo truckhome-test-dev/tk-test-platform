@@ -66,7 +66,7 @@ class StatisPush(SqlOperate):
     # 超时次数
     def statis_timeout_count(self, task_id):
         self.dbcur()
-        sql = "select count(*) from apirun_result where task_id=%s and res_time>10000 and (create_time between %s and %s)" % (
+        sql = "select count(*) from apirun_result where task_id=%s and res_time>20000 and (create_time between %s and %s)" % (
             task_id, self.time, self.time + 86400)
         self.sqlExe(sql)
         self.sqlCom()
@@ -86,7 +86,7 @@ def main():
     for i, j ,k in a.get_taskinfo():
         err_count = a.statis_err_count(i)
         time_out_count = a.statis_timeout_count(i)
-        content = "今日接口统计：\n任务名称：%s\n%s超时次数(10s)：%d\n查看详情：http://qa.kcimg.cn/monitor/statis_show?task_id=%s&time=%s" % (
+        content = "今日接口统计：\n任务名称：%s\n%s超时次数(20s)：%d\n查看详情：http://qa.kcimg.cn/monitor/statis_show?task_id=%s&time=%s" % (
             k,err_count, time_out_count, i, a.time)
         print(j, content)
         a.sending(j,content) #调试时注释掉此行，不然会发送正式钉钉群消息
