@@ -16,3 +16,6 @@ from .login import *
 from .monitor_inform import *
 from .monitor_statispush import *
 from .monitor_statisshow import *
+from .ppt import *
+from .config import *
+from .sqlop import *

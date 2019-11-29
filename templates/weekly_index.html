@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock head %}
+{% block left %}
+	{{ super() }}
+{% endblock left %}
+{% block right %}
+	{{ super() }}
+	<!-- 修改name（页面名称） -->
+	{% set name = '周报工具' %}
+	<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>{{name}}</legend>
+	</fieldset>
+	<!-- 页面私有部分 -->
+	<body>
+
+			<div style="float:left;">
+	  			<iframe name="myiframe" id="myrame" src="/static/html/weekly.html" style="zoom:100%;margin-right:10px"  frameborder="0" align="left"  scrolling="" width="1024" height="3800" ></iframe>
+	 		</div>
+	</body>
+
+{% endblock right %}
+<!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->

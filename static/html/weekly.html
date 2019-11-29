@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <link rel="shortcut icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <script src="static/layui/layui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://s.kcimg.cn/www/index/js/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <title>周报工具</title>
+    <style>
+        * {
+            margin: 0 auto;
+            padding: 0 auto;
+        }
+
+        #app {
+            width: 500px;
+            margin: 20px auto;
+        }
+
+        .select-group {
+            width: 50%;
+            height: 30px;
+            margin: 20px 0;
+        }
+
+        .title-wrap {
+            margin: 10px 0;
+        }
+
+        .title-wrap h4 {
+            display: inline;
+        }
+
+        input {
+            padding: 5px 6px;
+            outline: none;
+            min-width: 120px;
+        }
+
+        textarea {
+            margin: 15px 0 0;
+            outline: none;
+            padding: 10px;
+            width: 100%;
+            min-height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+
+<form id="app">
+    <!-- 周报汇总 -->
+    <h1>markdown周报汇总</h1>
+    <select class="select-group" name="public-choice" v-model="formData.group">
+        <option :value="coupon.id" v-for="coupon in couponList">{{ coupon.name }}</option>
+    </select>
+    <input type="" v-model="formData.sub_name" placeholder="请输入姓名"></input>
+
+    <!-- 工作总结 -->
+    <h2>工作总结</h2>
+    <div class="title-wrap">
+        <h4>上周工作/自定义标题：</h4><input type="" v-model="workWeek.old.weekiy_name"></input>
+        <textarea v-model="workWeek.old.content" placeholder="上周工作，请复制md格式的表格数据(支持6/7/8列三种表格数据)，如：
+|项目名称|产品经理|开发人员|QA|当前进展|计划上线时间|实际上线时间|
+|:-|:-:|:-:|:-:|:-:|-:|
+|1App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|2App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|3App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|4App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|5App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|6App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|7App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|8App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|9App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|10App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|11App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|
+|12App极速版-iOS-v1.0.0|宋子斌、董京典、欧阳小军、胡亚楠|韩潮、曹鹏飞、杨毓平、张春阳、张亚飞、杜帧帧等|QA全员|测试中|2019-11-30|-|"></textarea>
+    </div>
+    <div class="title-wrap">
+        <h4>本周工作</h4>/自定义标题：<input type="" v-model="workWeek.new.weekiy_name"></input>
+        <textarea v-model="workWeek.new.content" placeholder="同上"></textarea>
+    </div>
+
+    <!-- 团队建设 -->
+    <div class="title-wrap">
+        <h4>团队建设</h4>/自定义标题：<input type="" v-model="workGroup.weekiy_name"></input>
+        <textarea v-model="workGroup.content" placeholder="团队建设，请复制md格式输入，如：
+##技能学习
+1.技能学习第1条
+2.技能学习第2条
+3.技能学习第3条
+4.技能学习第4条
+##团队建设
+无
+##周会纪要
+http://wk.360che.com/pages/viewpage.action?pageId=166429091
+二手车付费体系调整，产品需要给到需求文档及原型之后，开发给估期"></textarea>
+    </div>
+
+    <!-- 问题&建议 -->
+    <div class="title-wrap">
+        <h4>问题&建议</h4></input>
+        <textarea v-model="workQuestion.problem" placeholder="问题"></textarea>
+        <textarea v-model="workQuestion.advice" placeholder="建议"></textarea>
+    </div>
+
+    <!-- 图片 -->
+    <div class="title-wrap">
+        <h4>图片<span style="color:#FF0000;font-size:15px;">*选填</span></h4>/自定义标题：<input type=""
+                                                                                       v-model="workImg.weekiy_name"></input>
+        <textarea v-model="workImg.describe" placeholder="图片描述"></textarea>
+        <input type="file" name="FileUpload" id="FileUpload" @change="updataImg('workImg')"
+               accept="image/gif, image/jpeg,image/png">
+        <a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传文件</a>
+    </div>
+
+    <!-- 自定义PPT -->
+    <div class="title-wrap">
+        <h4>自定义PPT<span style="color:#FF0000;font-size:15px;">*选填</span></h4>
+        <div>自定义表格标题：<input type="" v-model="otherTable.weekiy_name"></input></div>
+        <textarea placeholder="自定义表格内容" v-model="otherTable.content"></textarea>
+    </div>
+
+    <!-- 文字页 -->
+    <div class="title-wrap">
+        <h4>自定义文本标题：</h4> <input type="" v-model="otherText.weekiy_name"></input>
+        <textarea placeholder="自定义文本" v-model="otherText.content"></textarea>
+    </div>
+
+    <!-- 图片页 -->
+    <div class="title-wrap">
+        <h4>自定义图片标题</h4> <input type="" v-model="otherImg.weekiy_name"></input>
+        <textarea placeholder="自定义图片描述" v-model="otherImg.describe"></textarea>
+        <input style="margin-left:20px;" type="file" @change="updataImg('other')">
+    </div>
+    <!-- 提交 -->
+    <button style="margin-left:200px;" @click.prevent="submit" type="primary">提交</button>
+
+</form>
+
+<script type="text/javascript">
+
+    /**************begin****************/
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            a: 123,
+            couponList: [
+                {
+                    id: '0',
+                    name: '请选择部门'
+                },
+                {
+                    id: '1',
+                    name: '组织部'
+                },
+                {
+                    id: '2',
+                    name: 'C端产品组'
+                },
+                {
+                    id: '3',
+                    name: '项目协调组'
+                },
+                {
+                    id: '4',
+                    name: '项目一组'
+                },
+                {
+                    id: '5',
+                    name: '项目二组'
+                },
+                {
+                    id: '6',
+                    name: '项目三组'
+                },
+                {
+                    id: '7',
+                    name: '项目四组'
+                },
+                {
+                    id: '8',
+                    name: '终端支持组'
+                },
+                {
+                    id: '9',
+                    name: 'App研发组'
+                },
+                {
+                    id: '10',
+                    name: '前端组'
+                },
+                {
+                    id: '11',
+                    name: '质量保障组'
+                },
+                {
+                    id: '12',
+                    name: '运维组'
+                },
+                {
+                    id: '13',
+                    name: '数据挖掘组'
+                }
+            ],
+            couponSelected: '',
+            workWeek: {
+                "content_type": "1",
+                "old": {
+                    weekiy_name: '',
+                    content: ''
+                },
+                "new": {
+                    weekiy_name: '',
+                    content: ''
+                }
+            },
+            workGroup: {
+                "content_type": "2",
+                "weekiy_name": "",
+                "content": ""
+            },
+            workQuestion: {
+                "content_type": "4",
+                "problem": "",
+                "advice": ""
+            },
+            workImg: {
+                "content_type": "3",
+                "weekiy_name": "",
+                "describe": "",
+                "img_name": ""
+            },
+            otherText: {
+                "content_type": "6",
+                'weekiy_name': '',
+                "content": ""
+            },
+            otherTable: {
+                "content_type": "5",
+                'weekiy_name': '',
+                "content": ""
+            },
+            otherImg: {
+                "content_type": "7",
+                'weekiy_name': '',
+                "describe": "",
+                "img_name": ""
+            },
+            formData: {
+                group: '0',
+                sub_name: '',
+                weekly: [],
+                other: []
+            }
+        },
+        created() {
+        },
+        methods: {
+            /**
+             * @Author: yushanghui
+             * @description: 公共的图片上传
+             * @param {type} type用来区分是哪个字段的img
+             * @Date: 2019-10-30 11:33:46
+             */
+            updataImg(type) {
+                let target = event.target
+                let file = target.files[0]
+                if (file.size <= 0) {
+                    alert("请上传图片");
+                }
+                let formFile = new FormData();
+                formFile.append("action", "img");
+                formFile.append("file", file); //加入文件对象
+
+                this.backImg(formFile, type)
+            },
+            /**
+             * @Author: yushanghui
+             * @description: 图片上传到服务器
+             * @param {formFile}  formFile图片文件流通过formData格式传递过去
+             * @param {type}  type区分字段赋值给那个参数
+             * @Date: 2019-10-30 11:34:30
+             */
+            backImg(formFile, type) {
+                let that = this
+                $.ajax({
+                    url: "/upimg",
+                    data: formFile,
+                    type: "post",
+                    dataType: "JSON",
+                    cache: false,//上传文件无需缓存
+                    processData: false,//用于对data参数进行序列化处理 这里必须false
+                    contentType: false, //必须
+                    success: function (res) {
+                        if (res.state == '1') {
+                            switch (type) {
+                                case 'workImg':
+                                    that.workImg.img_name = res.imgname
+                                    break;
+                                case 'other':
+                                    that.otherImg.img_name = res.imgname
+                                    break;
+                            }
+                        } else {
+                            alert(res.ms);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        /*弹出jqXHR对象的信息*/
+                        alert("上传失败！");
+                    }
+                })
+            },
+            rapleceSpace(str) {
+                if (typeof str !== 'undefined') {
+                    return str.replace(/\s/g, '')
+                } else {
+                    return ''
+                }
+            },
+            /**
+             * @Author: yushanghui
+             * @description: 数据提交之前先进行默认title的校验，包含各个字段的默认title校验，还有other字段数组的一些校验
+             * @param {type}
+             * @Date: 2019-10-30 11:36:45
+             */
+            checkWeekiyName() {
+                if (this.formData.group == 0) {
+                    alert("请选择部门")
+                    return false
+                }
+                if (this.rapleceSpace(this.formData.sub_name) == '') {
+                    alert("姓名不能为空")
+                    return false
+                }
+                if (this.rapleceSpace(this.workWeek.old.weekiy_name) == '') {
+                    this.workWeek.old.weekiy_name = '上周工作'
+                }
+                if (this.rapleceSpace(this.workWeek.old.content) == '') {
+                    alert("上周工作不能为空")
+                    return false
+                }
+                if (this.rapleceSpace(this.workWeek.new.weekiy_name) == '') {
+                    this.workWeek.new.weekiy_name = '本周工作'
+                }
+                if (this.rapleceSpace(this.workWeek.new.content) == '') {
+                    alert("本周工作不能为空")
+                    return false
+                }
+                if (this.rapleceSpace(this.workGroup.weekiy_name) == '') {
+                    this.workGroup.weekiy_name = '团队建设'
+                }
+                if (this.rapleceSpace(this.workGroup.content) == '') {
+                    alert("团队建设不能为空")
+                    return false
+                }
+                if (this.rapleceSpace(this.workQuestion.problem) == '') {
+                    alert("问题不能为空")
+                    return false
+                }
+                if (this.rapleceSpace(this.workQuestion.advice) == '') {
+                    alert("建设不能为空")
+                    return false
+                }
+                if (this.rapleceSpace(this.workImg.weekiy_name) == '') {
+                    this.workImg.weekiy_name = '图片'
+                }
+                if (this.rapleceSpace(this.otherText.weekiy_name) == '') {
+                    this.otherText.weekiy_name = '自定义文本'
+                }
+                if (this.rapleceSpace(this.otherTable.weekiy_name) == '') {
+                    this.otherTable.weekiy_name = '自定义表格'
+                }
+                if (this.rapleceSpace(this.otherImg.weekiy_name) == '') {
+                    this.otherImg.weekiy_name = '自定义图片'
+                }
+
+                return true
+            },
+            /**
+             * @Author: yushanghui
+             * @description: 表单提交
+             * @param {type}
+             * @Date: 2019-10-30 11:42:17
+             */
+            submit() {
+                if (!this.checkWeekiyName()) {
+                    return
+                }
+                this.formData.weekly.push(this.workWeek, this.workGroup, this.workImg, this.workQuestion);
+                this.formData.other.push(this.otherText, this.otherTable, this.otherImg);
+                $.ajax({
+                    url: "/subWeekly",
+                    data: JSON.stringify(this.formData),
+                    type: "post",
+                    headers: {
+                        "Content-Type": "application/json"  //multipart/form-data;boundary=--xxxxxxx   application/json
+                    },
+                    cache: false,//上传文件无需缓存
+                    processData: false,//用于对data参数进行序列化处理 这里必须false
+                    contentType: false, //必须
+                    success: (res)=> {
+                        if (res.state == '1') {
+
+                            alert('提交成功,正在生成周报文件，请稍等')
+                            var timestamp = Date.parse(new Date());
+                            window.open('/download_pptx/' + res.filename + '?t='+timestamp);
+                            this.formData.weekly = [];
+                            this.formData.other = [];
+
+                        } else {
+                            alert(res.ms);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        /*弹出jqXHR对象的信息*/
+                        alert("提交失败")
+                    }
+                })
+
+            }
+
+        }
+    })
+
+</script>
+</body>
+
+</html>

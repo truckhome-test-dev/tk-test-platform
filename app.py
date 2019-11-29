@@ -30,6 +30,9 @@ bug_calculate = Bug_Calculate()
 up = Xmind_Upload()
 app.config.from_object('settings.DevConfig')
 
+play = playMethods()
+sp=serverPPTX()
+
 '''
 这里是注册蓝图
 参数url_prefix='/xxx'的意思是设置request.url中的url前缀，
@@ -622,6 +625,73 @@ def webmorerpt(rpttime):
 @app.route('/arachni', methods=['get'])
 def arachni():
     return redirect('http://127.0.0.1:9292')
+
+
+
+# 以下为周报路由
+@app.route('/weekly', methods=['post', 'get'])
+def weekly():
+    return app.send_static_file('html/weekly.html')
+
+
+@app.route('/weekly_index', methods=['post', 'get'])
+# @check_permissions("/time_test")
+def weekly_index():
+
+    return render_template('weekly_index.html')
+
+
+@app.route('/subWeekly', methods=['post', 'get'])
+def subWeekly():
+    if request.method == 'POST':
+        weekly = request.get_data()
+        weekly = json.loads(weekly.decode("utf-8"))
+        group_id = weekly['group']
+        weekly=str(weekly).replace("\'","\\'")
+        # weekly = request.get_data().decode("utf-8")
+        # group_id=request.form.get('group')
+        # print(group_id,weekly,type(weekly))
+        data= sp.write_content(group_id,weekly)
+        if data =="add succ":
+            try:
+                gen = generatePPTX(group_id)
+                filename=gen.generate_one()
+            except Exception as e:
+                ret = {"state": "0", "ms": str(e)}
+            else:
+                ret = {"state": "1", "filename": filename}
+        else:
+            ret ={"state": "0", "ms": data}
+        print(ret)
+        return jsonify(ret)
+    else:
+        weekly = {"state":"0", "ms":"请使用post提交"}
+        # weekly = {"state":"0", "ms":"小辉辉好"}
+        return jsonify(weekly)
+
+@app.route('/download_pptx/<filename>',methods=['get'])
+def download_pptx(filename):
+    print(filename)
+    if request.method == "GET":
+        way = "ppt/pptx/"
+        file_dir = os.path.join(way, filename)
+        print(way,filename)
+        if os.path.isfile(file_dir):
+            return send_from_directory(way, filename, as_attachment=True)
+        else:
+            abort(404)
+
+
+
+@app.route('/upimg',methods=['post'])
+def upimg():
+    r = {"state":"0", "ms":"失败"}
+    if request.method == 'POST':
+        f = play.imgUp(request.files['file'])
+        r = {"state":"1", "ms":"成功","imgname":f}
+
+    return jsonify(r)
+
 
 
 if __name__ == '__main__':
