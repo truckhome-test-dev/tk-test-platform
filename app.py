@@ -196,7 +196,7 @@ def internal_server_error(e):
 # 设备管理展示与新增
 @app.route('/adddevice', methods=['get', 'post'])
 # @check_token
-@check_permissions("addevice")
+@check_permissions("/adddevice")
 def addevice():
     if request.method == "POST":
         data = request.get_data()
