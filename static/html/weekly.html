@@ -417,11 +417,15 @@ http://wk.360che.com/pages/viewpage.action?pageId=166429091
 
                         } else {
                             alert(res.ms);
+                            this.formData.weekly = [];
+                            this.formData.other = [];
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         /*弹出jqXHR对象的信息*/
                         alert("提交失败")
+                        this.formData.weekly = [];
+                        this.formData.other = [];
                     }
                 })
 

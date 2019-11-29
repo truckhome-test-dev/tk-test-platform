@@ -385,7 +385,7 @@ class generatePPTX(conPPTX):
         super(generatePPTX, self).__init__()  # 使用ppt周报配置类
         self.play = playPPTX('ppt/t.pptx')
         self.play.homePage()
-        self.play.addIndex()
+        # self.play.addIndex()
         self.S = serverPPTX()
         self.dataAll = self.S.get_week(group_id)
 
