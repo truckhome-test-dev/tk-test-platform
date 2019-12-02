@@ -535,7 +535,8 @@ class generatePPTX(conPPTX):
                 elif int(i['content_type']) == 5:
                     try:
                         table_data = i
-                        self.generate_table(table_data)
+                        if table_data['content'] != "":
+                            self.generate_table(table_data)
                     except Exception as e:
                         print(e)
                         raise Exception("生成失败，自定义表格内容有误")
@@ -543,7 +544,8 @@ class generatePPTX(conPPTX):
                 elif int(i['content_type']) == 6:
                     try:
                         steam_data = i
-                        self.generate_diy_text(steam_data)
+                        if steam_data['content']!="":
+                            self.generate_diy_text(steam_data)
                     except Exception as e:
                         print(e)
                         raise Exception("生成失败，自定义文本内容有误")
