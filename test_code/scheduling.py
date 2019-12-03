@@ -40,6 +40,11 @@ class Scheduling(object):
                 datestr = ''
                 datestr = i + '-' + str(x)
                 dateList.append(datestr)
+        for i, o in date['2020'].items():
+            for x in o:
+                datestr = ''
+                datestr = i + '-' + str(x)
+                dateList.append(datestr)
         for i in self.week[:12]:
             dateList[i['x']] = 'weekend'
         return dateList[:12]
