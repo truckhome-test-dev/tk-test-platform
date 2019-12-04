@@ -108,7 +108,6 @@ http://wk.360che.com/pages/viewpage.action?pageId=166429091
         <textarea v-model="workImg.describe" placeholder="图片描述"></textarea>
         <input type="file" name="FileUpload" id="FileUpload" @change="updataImg('workImg')"
                accept="image/gif, image/jpeg,image/png">
-        <a class="layui-btn layui-btn-mini" id="btn_uploadimg">上传文件</a>
     </div>
 
     <!-- 自定义PPT -->
@@ -130,8 +129,11 @@ http://wk.360che.com/pages/viewpage.action?pageId=166429091
         <textarea placeholder="自定义图片描述" v-model="otherImg.describe"></textarea>
         <input style="margin-left:20px;" type="file" @change="updataImg('other')">
     </div>
-    <!-- 提交 -->
-    <button style="margin-left:200px;" @click.prevent="submit" type="primary">提交</button>
+    <!-- 提交 --><p>
+        <button style="margin-left:200px;" @click.prevent="submit" type="primary">提交</button>
+        <button style="margin-left:200px;" @click.prevent="generate_all" type="primary">生成技术中心周报</button>
+</p>
+
 
 </form>
 
@@ -418,6 +420,43 @@ http://wk.360che.com/pages/viewpage.action?pageId=166429091
                         alert("提交失败")
                         this.formData.weekly = [];
                         this.formData.other = [];
+                    }
+                })
+
+            },
+            generate_all() {
+
+                $.ajax({
+                    url: "/generate_all",
+                    //data: JSON.stringify(this.formData),
+                    type: "post",
+                    headers: {
+                        "Content-Type": "application/json"  //multipart/form-data;boundary=--xxxxxxx   application/json
+                    },
+                    cache: false,//上传文件无需缓存
+                    processData: false,//用于对data参数进行序列化处理 这里必须false
+                    contentType: false, //必须
+                    success: (res)=> {
+                        if (res.state == '1') {
+
+                            alert('正在生成周报文件，请稍等');
+                            var timestamp = Date.parse(new Date());
+                            window.open('/download_pptx/' + res.filename + '?t='+timestamp);
+
+                        }else if(res.state == '2') {
+                            var defect = res.defect;
+                            alert('还有下列组未提交周报，请注意查看\n'+defect);
+                            var timestamp = Date.parse(new Date());
+                            window.open('/download_pptx/' + res.filename + '?t='+timestamp);
+                        }else {
+                            alert(res.ms);
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        /*弹出jqXHR对象的信息*/
+                        alert("操作失败")
+
                     }
                 })
 

@@ -640,7 +640,7 @@ def weekly_index():
 
     return render_template('weekly_index.html')
 
-
+#提交后就生成单独组的周报
 @app.route('/subWeekly', methods=['post', 'get'])
 def subWeekly():
     if request.method == 'POST':
@@ -655,9 +655,10 @@ def subWeekly():
         if data =="add succ":
             try:
                 gen = generatePPTX(group_id)
-                filename=gen.generate_one()
+                filename, defect = gen.generate_one()
             except Exception as e:
                 ret = {"state": "0", "ms": str(e)}
+                sp.update_status(group_id)
             else:
                 ret = {"state": "1", "filename": filename}
         else:
@@ -668,6 +669,23 @@ def subWeekly():
         weekly = {"state":"0", "ms":"请使用post提交"}
         # weekly = {"state":"0", "ms":"小辉辉好"}
         return jsonify(weekly)
+
+#生成技术中心周报
+@app.route('/generate_all', methods=['post'])
+def generate_all():
+    if request.method == 'POST':
+        try:
+            gen = generatePPTX(0)
+            filename,defect = gen.generate_one()
+        except Exception as e:
+            ret = {"state": "0", "ms": str(e)}
+        else:
+            if defect==[]:
+                ret = {"state": "1", "filename": filename,"defect":defect}
+            else:
+                ret = {"state": "2", "filename": filename,"defect":defect}
+        return jsonify(ret)
+
 
 @app.route('/download_pptx/<filename>',methods=['get'])
 def download_pptx(filename):

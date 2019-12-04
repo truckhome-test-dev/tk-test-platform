@@ -19,12 +19,47 @@ import ast
 from textwrap3 import wrap
 
 
-def line_feed(text,num):
-    new_text=""
-    for i in wrap(text, num):
-        new_text+=i
-        new_text+='\n'
+def line_feed2(text, num):
+    new_text = ""
+    for j in text.split('\n'):
+        for i in wrap(j, num):
+            if i[0] == " ":
+                i = i[1:]
+            new_text += i
+            new_text += '\n'
+        if new_text[-1:] != '\n':
+            new_text += '\n'
+
     return new_text
+
+
+def is_Chinese(word):
+    for ch in str(word):
+        if '\u4e00' <= ch <= '\u9fff':
+            return True
+    return False
+
+
+def line_feed(text, num):
+    # print(text)
+    new_text = ""
+    n = 0
+    for i in text:
+        if i == '\n':
+            new_text += i
+            n = 0
+            continue
+        if is_Chinese(i):
+            n += 1
+        else:
+            n += 0.5
+        if n > num:
+            new_text += i + '\n'
+            n = 0
+        else:
+            new_text += i
+    return new_text
+
 
 class serverPPTX(conPPTX, SqlOperate):
 
@@ -51,7 +86,7 @@ class serverPPTX(conPPTX, SqlOperate):
     # 更新
     def update_content(self, group_id, content):
         self.dbcur()
-        sql = "UPDATE `week_cont` SET `content`=%s WHERE `group_id`=%s order by `id` desc LIMIT 1" % (content, group_id)
+        sql = "UPDATE `week_cont` SET `content`=%s WHERE `group_id`=%d order by `id` desc LIMIT 1" % (content, int(group_id))
         try:
             self.sqlExe(sql)
             self.sqlCom()
@@ -71,7 +106,7 @@ class serverPPTX(conPPTX, SqlOperate):
         otherStyleTime = threeDayAgo.strftime("%Y-%m-%d %H:%M:%S")
         self.dbcur()
         if group_id == 0:
-            sql = "select group_id,content from week_cont where create_time in (select max(create_time) from week_cont where create_time>'%s' group by group_id)" % otherStyleTime
+            sql = "select group_id,content from week_cont where create_time in (select max(create_time) from week_cont where create_time>'%s' and `status`=1 group by group_id) order by group_id" % otherStyleTime
         else:
             sql = "select group_id,content from week_cont where group_id=%d order by create_time desc limit 1" % int(
                 group_id)
@@ -94,6 +129,19 @@ class serverPPTX(conPPTX, SqlOperate):
                 d[str(n - 1)] = i[1:-1].split("|")
             n += 1
         return d
+
+    # 逻辑删除
+    def update_status(self, group_id):
+        self.dbcur()
+        sql = "UPDATE `week_cont` SET `status`=0 WHERE `group_id`=%d order by `id` desc LIMIT 1" % (int(group_id))
+        try:
+            self.sqlExe(sql)
+            self.sqlCom()
+            self.sqlclo()
+            ret = "update succ"
+        except pymysql.err.IntegrityError as e:
+            ret = e
+        return ret
 
     # def team_building(self):
 
@@ -232,6 +280,7 @@ class playPPTX(conPPTX):
             # print(dir(table.cell(0, y)))
             # 此处为处理表格内数据样式
             tf = table.cell(0, y).text_frame
+            a = table.cell(0, y).fill
             content = tf.paragraphs[0]
             content.text = r
             content.font.bold = True
@@ -385,7 +434,8 @@ class generatePPTX(conPPTX):
         super(generatePPTX, self).__init__()  # 使用ppt周报配置类
         self.play = playPPTX('ppt/t.pptx')
         self.play.homePage()
-        # self.play.addIndex()
+        if group_id == 0:
+            self.play.addIndex()
         self.S = serverPPTX()
         self.dataAll = self.S.get_week(group_id)
 
@@ -400,26 +450,32 @@ class generatePPTX(conPPTX):
         title = self.group_name + data['weekiy_name']
         self.play.addTitle(title, 3)
         team_data = str(data['content'])[2:].split('\n##')
-        if len(team_data) == 3:
+        if len(team_data) == 4:
+            a = 0.4
+            c = 0.2
+        elif len(team_data) == 3:
             a = 0.5
-            b = 1
-        elif len(team_data) == 4:
-            a = 0.3
-            b = 0.7
+            c = 0.3
+        elif len(team_data) == 2:
+            a = 0.5
+            c = 0.4
         else:
-            raise Exception("团队建设至少两种类型")
+            raise Exception("团队建设三少两种类型")
         top = 1.7
         for i in team_data:
             self.play.addText((4.5, top, 7, 2), i.split('\n')[0], bold=True, size=18)
             top += a
-            self.play.addText((4.5, top, 7, 2), "\n".join(i.split('\n')[1:]), bold=False, size=14)
+            text = line_feed("\n".join(i.split('\n')[1:]), 38)
+            line = len(text.split("\n"))
+            b = line * 0.2 + c
+            self.play.addText((4.5, top, 7, 2), text, bold=False, size=12)
             top += b
 
     # 自定义文本
     def generate_diy_text(self, data):
         title = self.group_name + data['weekiy_name']
         self.play.addTitle(title, 3)
-        self.play.addText((4.5, 1.7, 7, 2), line_feed(data['content'],36), bold=False, size=14)
+        self.play.addText((4.5, 1.7, 7, 2), line_feed(data['content'], 36), bold=False, size=14)
 
     # 图片
     def generate_img(self, data):
@@ -432,45 +488,78 @@ class generatePPTX(conPPTX):
     # 问题&建议
     def generate_problem(self, data):
         self.play.addTitle(self.group_name + "问题&建议", 5)
-        self.play.addText((1, 1.8, 3, 4), line_feed(data['problem'],16))
-        self.play.addText((9, 1.8, 3, 4), line_feed(data['advice'],16))
+        self.play.addText((1, 1.8, 3, 4), line_feed(data['problem'], 15))
+        self.play.addText((9, 1.8, 3, 4), line_feed(data['advice'], 15))
 
-    def generate(self):
-        # group_id = 1
-        for i in self.dataAll:
-            # if i[0] != group_id:
-            #     raise Exception("group_id:%d not found" % group_id)
-            self.group_name = self.base_order[i[0] - 1] + "--"
-            dataOne = i[1].replace('\n', '\\n')
-            # 字符串转字典
-            weekly = ast.literal_eval(dataOne)['weekly']
+    def generate(self, weekdata):
+        for i in weekdata:
+            if int(i['content_type']) == 1:
+                try:
+                    old_table = i['old']
+                    self.generate_table(old_table)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，上周工作内容有误")
 
-            try:
-                old_table = weekly[0]['old']
-                self.generate_table(old_table)
-            except Exception as e:
-                print(e)
-                raise Exception("生成失败，上周工作内容有误")
-            try:
-                new_table = weekly[0]['new']
-                self.generate_table(new_table)
-            except Exception as e:
-                print(e)
-                raise Exception("生成失败，本周工作内容有误")
-            try:
-                steam_data = weekly[1]
-                self.generate_team(steam_data)
-            except Exception as e:
-                print(e)
-                raise Exception("生成失败，团队建设内容有误")
-            try:
-                problem_data = weekly[3]
-                self.generate_problem(problem_data)
-            except Exception as e:
-                print(e)
-                raise Exception("生成失败，问题&建议内容有误")
+                try:
+                    new_table = i['new']
+                    self.generate_table(new_table)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，本周工作内容有误")
 
-            self.play.pptxSave('t1.pptx')
+            elif int(i['content_type']) == 2:
+                try:
+                    steam_data = i
+                    self.generate_team(steam_data)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，团队建设内容有误")
+
+
+            elif int(i['content_type']) == 3:
+                try:
+                    img_data = i
+                    if img_data['img_name'] != "":
+                        self.generate_img(img_data)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，上传的图片异常")
+
+            elif int(i['content_type']) == 4:
+                try:
+                    problem_data = i
+                    self.generate_problem(problem_data)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，问题&建议内容有误")
+
+            elif int(i['content_type']) == 5:
+                try:
+                    table_data = i
+                    if table_data['content'] != "":
+                        self.generate_table(table_data)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，自定义表格内容有误")
+
+            elif int(i['content_type']) == 6:
+                try:
+                    steam_data = i
+                    if steam_data['content'] != "":
+                        self.generate_diy_text(steam_data)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，自定义文本内容有误")
+
+            elif int(i['content_type']) == 7:
+                try:
+                    img_data = i
+                    if img_data['img_name'] != "":
+                        self.generate_img(img_data)
+                except Exception as e:
+                    print(e)
+                    raise Exception("生成失败，上传的图片异常")
 
     def my_sort(self, data, group_id):
         layout = self.team_layouts[self.base_order[group_id - 1]]
@@ -483,6 +572,7 @@ class generatePPTX(conPPTX):
         return L
 
     def generate_one(self):
+        L=[]
         for i in self.dataAll:
             self.group_name = self.base_order[i[0] - 1] + "--"
             dataOne = i[1].replace('\n', '\\n')
@@ -491,82 +581,21 @@ class generatePPTX(conPPTX):
             other = ast.literal_eval(dataOne)['other']
             weekdata = weekly + other
             weekdata = self.my_sort(weekdata, i[0])
-            for i in weekdata:
-                if int(i['content_type']) == 1:
-                    try:
-                        old_table = i['old']
-                        self.generate_table(old_table)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，上周工作内容有误")
+            self.generate(weekdata)
+            L.append(self.group_name[:-2])
+        today = datetime.date.today()
+        today = datetime.datetime.strftime(today, "%Y-%m-%d")
+        if len(self.dataAll) == 1:
+            pptname = self.group_name[:-2] + '周报-' + today + '.pptx'
+            defect = []
+        else:
+            pptname = '技术中心周报-' + today + '.pptx'
+            defect=list(set(self.base_order)-set(L))
+        self.play.pptxSave('ppt/pptx/' + pptname)
 
-                    try:
-                        new_table = i['new']
-                        self.generate_table(new_table)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，本周工作内容有误")
-
-                elif int(i['content_type']) == 2:
-                    try:
-                        steam_data = i
-                        self.generate_team(steam_data)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，团队建设内容有误")
-
-                elif int(i['content_type']) == 3:
-                    try:
-                        img_data = i
-                        if img_data['img_name'] != "":
-                            self.generate_img(img_data)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，上传的图片异常")
-
-                elif int(i['content_type']) == 4:
-                    try:
-                        problem_data = i
-                        self.generate_problem(problem_data)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，问题&建议内容有误")
-
-                elif int(i['content_type']) == 5:
-                    try:
-                        table_data = i
-                        if table_data['content'] != "":
-                            self.generate_table(table_data)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，自定义表格内容有误")
-
-                elif int(i['content_type']) == 6:
-                    try:
-                        steam_data = i
-                        if steam_data['content']!="":
-                            self.generate_diy_text(steam_data)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，自定义文本内容有误")
-
-                elif int(i['content_type']) == 7:
-                    try:
-                        img_data = i
-                        if img_data['img_name'] != "":
-                            self.generate_img(img_data)
-                    except Exception as e:
-                        print(e)
-                        raise Exception("生成失败，上传的图片异常")
-
-            today = datetime.date.today()
-            today = datetime.datetime.strftime(today, "%Y-%m-%d")
-            pptname = self.group_name + '周报-' + today + '.pptx'
-
-            self.play.pptxSave('ppt/pptx/' + pptname)
-            return pptname
+        return pptname,defect
 
 
 if __name__ == '__main__':
-    run = generatePPTX(11)
+    run = generatePPTX(0)
     run.generate_one()
