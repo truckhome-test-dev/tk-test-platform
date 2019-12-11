@@ -230,7 +230,7 @@ def savedev():
         notes = request.form.get('notes')
         version = request.form.get('version')
         re.appeditp(devname, devst, name, notes, version, devid)
-        return redirect("http://127.0.0.1:5000/device")
+        return redirect("device")
 
 
 # 修改使用状态
@@ -412,7 +412,7 @@ def Project_information_edit():
         pp.edit(id,Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
         data = pp.cha_only(id)
 
-        return redirect('http://127.0.0.1:5000/project_information')
+        return redirect('project_information')
 
 #卡车之家业务信息表-新增
 @app.route('/project_information_added', methods=['POST', 'GET'])
@@ -434,7 +434,7 @@ def Project_information_added():
         Platform = request.form.get('Platform')
 
         pp.added(Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
-        return redirect('http://127.0.0.1:5000/project_information')
+        return redirect("project_information")
 
 
 # 接口监控-任务管理
