@@ -6,6 +6,7 @@
 
 from pptx import Presentation
 # from pptx.enum.shapes import MSO_SHAPE
+from pptx.dml.color import RGBColor
 from pptx.enum.text import MSO_AUTO_SIZE
 from test_code.config import *
 from test_code.sqlop import *
@@ -17,6 +18,7 @@ import os
 import datetime
 import ast
 from textwrap3 import wrap
+import pysnooper
 
 
 def line_feed2(text, num):
@@ -247,6 +249,7 @@ class playPPTX(conPPTX):
         height = Cm(0.8)
         shapes = self.prs.slides.add_slide(self.prs.slide_layouts[2]).shapes
         table = shapes.add_table(rows, cols, left, top, width, height).table
+        table.horz_banding=False
         if cols == 6:
             table.columns[0].width = Cm(1.2)
             table.columns[1].width = Cm(8.0)
@@ -280,7 +283,7 @@ class playPPTX(conPPTX):
             # print(dir(table.cell(0, y)))
             # 此处为处理表格内数据样式
             tf = table.cell(0, y).text_frame
-            a = table.cell(0, y).fill
+
             content = tf.paragraphs[0]
             content.text = r
             content.font.bold = True
@@ -308,18 +311,19 @@ class playPPTX(conPPTX):
                 break
             y = 0
             # table.cell(x, y).text = r
+            #此处为设置表格颜色
+            tb_row=table.cell(x,y)
+            tb_row.fill.solid()
+            tb_row.fill.fore_color.rgb = RGBColor(120,255,94)
+
             tf = table.cell(x, y).text_frame
             content = tf.paragraphs[0]
             content.text = self.ellipsis_str(r)
             content.font.bold = False
             content.font.name = self.font_name
             content.font.size = Pt(12)
-            n = 0
             for c in cs:
-                if n == 0:
-                    data_text = self.ellipsis_str(c, 30)
-                else:
-                    data_text = self.ellipsis_str(c)
+                data_text = self.ellipsis_str(c)
                 y += 1
                 # table.cell(x, y).text = c
                 tf = table.cell(x, y).text_frame
@@ -328,7 +332,6 @@ class playPPTX(conPPTX):
                 content.font.bold = False
                 content.font.name = self.font_name
                 content.font.size = Pt(12)
-                n += 1
             x += 1
             a.append(r)
         for i in a:
@@ -366,7 +369,7 @@ class playPPTX(conPPTX):
 
         return Image.open(img_path).size
 
-    def addText(self, position, text, bold=False, i=None, size=14):
+    def addText(self, position, text, bold=False, i=None, size=12):
         """
         :param i: 模板的第几页,默认不添加新页
         :param position: 位置
@@ -432,7 +435,7 @@ class playMethods():
 class generatePPTX(conPPTX):
     def __init__(self, group_id=0):
         super(generatePPTX, self).__init__()  # 使用ppt周报配置类
-        self.play = playPPTX('ppt/t.pptx')
+        self.play = playPPTX('../ppt/t.pptx')
         self.play.homePage()
         if group_id == 0:
             self.play.addIndex()
@@ -451,21 +454,21 @@ class generatePPTX(conPPTX):
         self.play.addTitle(title, 3)
         team_data = str(data['content'])[2:].split('\n##')
         if len(team_data) == 4:
-            a = 0.4
-            c = 0.2
+            a = 0.3
+            c = 0.1
         elif len(team_data) == 3:
-            a = 0.5
-            c = 0.3
+            a = 0.3
+            c = 0.1
         elif len(team_data) == 2:
-            a = 0.5
-            c = 0.4
+            a = 0.4
+            c = 0.3
         else:
             raise Exception("团队建设三少两种类型")
         top = 1.7
         for i in team_data:
-            self.play.addText((4.5, top, 7, 2), i.split('\n')[0], bold=True, size=18)
+            self.play.addText((4.5, top, 7, 2), i.split('\n')[0], bold=True, size=14)
             top += a
-            text = line_feed("\n".join(i.split('\n')[1:]), 38)
+            text = line_feed("\n".join(i.split('\n')[1:]), 42)
             line = len(text.split("\n"))
             b = line * 0.2 + c
             self.play.addText((4.5, top, 7, 2), text, bold=False, size=12)
@@ -475,7 +478,7 @@ class generatePPTX(conPPTX):
     def generate_diy_text(self, data):
         title = self.group_name + data['weekiy_name']
         self.play.addTitle(title, 3)
-        self.play.addText((4.5, 1.7, 7, 2), line_feed(data['content'], 36), bold=False, size=14)
+        self.play.addText((4.5, 1.7, 7, 2), line_feed(data['content'], 42), bold=False, size=12)
 
     # 图片
     def generate_img(self, data):
@@ -488,8 +491,8 @@ class generatePPTX(conPPTX):
     # 问题&建议
     def generate_problem(self, data):
         self.play.addTitle(self.group_name + "问题&建议", 5)
-        self.play.addText((1, 1.8, 3, 4), line_feed(data['problem'], 15))
-        self.play.addText((9, 1.8, 3, 4), line_feed(data['advice'], 15))
+        self.play.addText((1, 1.8, 3, 4), line_feed(data['problem'], 18))
+        self.play.addText((9, 1.8, 3, 4), line_feed(data['advice'], 18))
 
     def generate(self, weekdata):
         for i in weekdata:
@@ -591,7 +594,7 @@ class generatePPTX(conPPTX):
         else:
             pptname = '技术中心周报-' + today + '.pptx'
             defect=list(set(self.base_order)-set(L))
-        self.play.pptxSave('ppt/pptx/' + pptname)
+        self.play.pptxSave('../ppt/pptx/' + pptname)
 
         return pptname,defect
 
