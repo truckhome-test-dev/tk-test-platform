@@ -35,7 +35,7 @@ class Scheduling(object):
         date = self.get_data()['data']['dateArr']
         self.week = self.get_data()['data']['weekArr']
         dateList = []
-        for i, o in date['2019'].items():
+        for i, o in date['2020'].items():
             for x in o:
                 datestr = ''
                 datestr = i + '-' + str(x)
