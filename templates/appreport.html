@@ -18,7 +18,8 @@
 <div class="layui-tab">
     <ul class="layui-tab-title">
         <li class="layui-btn layui-btn-normal">APP自动化最新报告</li>
-        <li class="layui-btn layui-btn-warm">更多报告</li>
+        <li class="layui-btn layui-btn-warm" data-id=1 onclick="appreportlist()">更多报告</li>
+<!--         <span class="layui-btn layui-btn-warm" data-id=1 onclick="appreportlist(this)">更多报告</span> -->
         <li class="layui-btn layui-btn-normal">Web自动化最新报告</li>
         <li class="layui-btn layui-btn-warm">更多报告</li>
     </ul>
@@ -52,7 +53,6 @@
             </div>		    
 		</div>
 
-
         <div class="layui-tab-item">
             {% for i,j in webreportlist.items() %}
 				<ul class="layui-timeline" style="margin-left:40px;margin-top:20px">
@@ -73,6 +73,35 @@
 
 	</div>
 </div>
+
+
+
+<script>
+
+
+function appreportlist(e) {
+    var reportid = e.dataset.id;
+    var xmlhttp;
+    xmlhttp = new XMLHttpRequest();
+    var data = '{ "reportid" : ' + reportid + '}';
+    xmlhttp.open("POST", "appreport2", true);
+    xmlhttp.send(data);
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            if (xmlhttp.responseText == 'ok') {
+                location.reload()
+            } 
+        }
+    }
+}
+
+
+
+</script>
+
+
+
+
 
 {% endblock right %}
 <!-- 此模板现有部分，除页面名称外，其他均不可编辑 -->
