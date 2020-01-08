@@ -23,7 +23,7 @@ app.config['SECRET_KEY'] = os.urandom(24)  # 设置为24位的字符,每次运�
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # 设置session的保存时间。
 app.config['SESSION_COOKIE_NAME'] = 'login_auth'
 re = Device_Manag()
-pt = APP_Report()
+
 bug = Mantis_Bug()
 pp = Cha_Project()
 bug_calculate = Bug_Calculate()
@@ -40,7 +40,7 @@ sp=serverPPTX()
 '''
 app.register_blueprint(monitor, url_prefix='/monitor')
 app.register_blueprint(route_demo, url_prefix='/route_demo')
-
+app.register_blueprint(route_demo, url_prefix='/route_zll')
 
 # 判断登录装饰器方法
 def check_token(func):
@@ -350,14 +350,16 @@ def admin():
 
 # 自动化测试最新报告
 @app.route('/appreport', methods=['post', 'get'])
-# @check_permissions("/appreport")
 def appwebreport():
-    appnewreport = pt.new_report(1)
-    appreportlist = pt.title_url(1)
-    webnewreport = pt.new_report(2)
-    webreportlist = pt.title_url(2)    
+    pt1 = APP_Report(1)
+    pt2 = APP_Report(2)
+    appdata = pt1.title_url(1,1)
+    appreportlist = appdata[0]
+    appnewreport = appdata[1]
+    webdata = pt2.title_url(2,2)
+    webreportlist = webdata[0]
+    webnewreport = webdata[1]
     return render_template('appreport.html', appnewreport=appnewreport, appreportlist=appreportlist,webnewreport=webnewreport,webreportlist=webreportlist)
-
 
 # APP更多报告列表
 @app.route('/TestReport/<rpttime>/<dev>/TestReport', methods=['post', 'get'])

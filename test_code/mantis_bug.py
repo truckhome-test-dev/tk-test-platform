@@ -307,7 +307,8 @@ class Mantis_Bug(SqlOperate):
         sql = "select v.version " \
               "from mantis_project_table as p,mantis_project_version_table as v " \
               "where p.id = v.project_id and p.name='%s' " \
-              "group by v.version" % pro_chi
+              "group by v.version " \
+              "order by v.id desc" % pro_chi
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()
