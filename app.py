@@ -475,6 +475,7 @@ def bug_selecttwo():
     if request.method == 'POST':
         project = request.form.get('project')
         pr = bug.get_pro_chi(project)
+        print(pr)
         return jsonify(pr)
     else:
         return null
@@ -486,6 +487,7 @@ def bug_selectthree():
     if request.method == 'POST':
         proname = request.form.get('proname')
         vr = bug.get_version(proname)
+        print(vr)
         return jsonify(vr)
     else:
         return null
@@ -709,6 +711,12 @@ def upimg():
         r = {"state":"1", "ms":"成功","imgname":f}
 
     return jsonify(r)
+
+
+@app.route('/procount',methods=['post','get'])
+def test123():
+    data=bug_calculate.weekcount()
+    return render_template('procount.html',data=data)
 
 
 

@@ -142,5 +142,12 @@ class Bug_Calculate(SqlOperate):
             l.append(i[2])
         return l
 
-# a = Bug_Calculate()
-# print(a.bugnewsel())
+    # 查询出周数据
+    def weekcount(self):
+        self.dbcur()
+        sql = "SELECT id,vname,proname,versionname,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime FROM bugcalculate  WHERE YEARWEEK(date_format(addtime,'%Y-%m-%d')) = YEARWEEK(now())"
+        self.sqlExe(sql)
+        self.sqlCom()
+        self.sqlclo()
+        data = self.cur.fetchall()
+        return data
