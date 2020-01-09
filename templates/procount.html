@@ -1,0 +1,113 @@
+{% block head %}
+    <!DOCTYPE HTML>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>测试管理系统</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="static/layui/css/layui.css">
+        <script src="static/layui/layui.js"></script>
+        <!--     <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script> -->
+        <script type="text/javascript" src="static/js/tool_p.js"></script>
+        <script src="../static/js/jquery-1.11.3.min.js"></script>
+    </head>
+{% endblock head %}
+
+
+{% block left %}
+
+    <div class="layui-layout-admin">
+    <!-- 顶部 -->
+    <div class="layui-header">
+        <div style="display: inline-block">
+            <a href="/"
+               style="margin-left: 40px;top:0;width:200px;height:100%;line-height:60px;text-align:center;font-size:16px;font-weight:bold;color:#FFFFFF;">卡家测试管理平台</a>
+        </div>
+        <div style="display: inline-block;float: right">
+            <ul class="layui-nav">
+                <li id="nolog" class="layui-nav-item" lay-unselect="">
+                    <a href="javascript:;" id="username">
+                    </a>
+                    <dl id="layui-nav-child" class="layui-nav-child" style="text-align: left">
+                        <dd><a href="/logout" onclick="logout()">退出</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 左侧 -->
+    <div class="layui-side layui-bg-black" id="menu1">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test" id="menu">
+            </ul>
+        </div>
+    </div>
+    <script>
+        layui.use('element', function () {
+            var element = layui.element;
+            is_menu();
+            get_menu();
+            set_username();
+            element.render();
+        });
+    </script>
+{% endblock left %}
+
+
+{% block right %}
+    <!-- 页面右侧部分 -->
+    <div style="padding: 20px;" class="layui-body"/>
+
+        <table class="layui-table" style="margin-top:40px;margin-left:30px;width:95%">
+<!--         <colgroup>
+            <col width=20%>
+            <col width=15%>
+            <col width=15%>
+            <col width=15%>
+            <col width=15%>
+            <col width=25%>
+            <col>
+        </colgroup> -->
+        <thead>
+            <tr>
+           <!--  <th style="text-align: center; font-weight: bold ;font-size:16px;width:20px">ID</th> -->
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:500px">项目名称</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:110px">检查点数量</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:110px">首测bug数量</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:110px">漏测bug数量</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:130px">新出现bug数量</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:70px">bug总数</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:70px">bug密度</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:95px">首轮漏测率</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:95px">引入错误率</th>
+            <th style="text-align: center; font-weight: bold ;font-size:16px;width:95px">时间</th>
+            </tr> 
+        </thead>
+        <tbody >
+            {% for i in data %}
+                    <tr style="text-align: center">
+                        <!-- <td>{{i[0]}}</td> -->
+                        <td>{{i[1]}}-{{i[2]}}-{{i[3]}}</td>
+                        <td>{{i[4]}}</td>
+                        <td>{{i[5]}}</td>
+                        <td>{{i[6]}}</td>
+                        <td>{{i[7]}}</td>
+                        <td>{{i[8]}}</td>
+                        <td>{{i[9]}}</td>
+                        <td>{{i[10]}}</td>
+                        <td>{{i[11]}}</td>
+                        <td>{{i[12]}}</td>
+                    </tr>                  
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock right %}
+
+</body>
+
+</div>
+<div id="test1"></div>
+
+</html>
