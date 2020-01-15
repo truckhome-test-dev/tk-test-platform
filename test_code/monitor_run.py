@@ -93,6 +93,27 @@ class get_md():
             D = None
         return D
 
+    # 获取query
+    def get_headers(self, interface_id):
+        myset = self.db.interface_case
+        data = myset.find({"interface_id": interface_id}, {"req_headers": 1})
+        L = []
+        for i in data:
+            L.append(i)
+        if L != []:
+            data = L[0]["req_headers"]
+            D = {}
+            for i in data:
+                key = i["name"]
+                if "value" in i.keys():
+                    value = i["value"]
+                else:
+                    value = ""
+                D[key] = value
+        else:
+            D = None
+        return D
+
     # 获取json类型参数
     def get_req_body_json(self, interface_id):
         myset = self.db.interface_case
@@ -180,12 +201,12 @@ class run(SqlOperate):
         return data
 
     # 请求接口
-    def run_api(self, url, method, params, data, json):
+    def run_api(self, url, method, params, data, json, headers):
         try:
             if method == "GET":
-                r = requests.get(url, params=params)
+                r = requests.get(url, params=params,headers=headers)
             elif method == "POST":
-                r = requests.post(url, params=params, data=data, json=json)
+                r = requests.post(url, params=params, data=data, json=json, headers=headers)
             else:
                 print("请求类型错误，目前只支持POST/GET")
             return r.status_code, r.elapsed.total_seconds() * 1000, r.text
@@ -289,7 +310,7 @@ def main(task_id):
         else:
             if interface_status[1] == 0:
                 continue
-        print(datetime.datetime.now())
+        print(str(datetime.datetime.now())+"----------------------")
         i = int(i)
         interface_name = m.get_interface_name(i)
         url = m.get_domain(i)
@@ -300,6 +321,9 @@ def main(task_id):
         path = m.get_path(i)
         url = url + path
         query = m.get_query(i)
+        headers = m.get_headers(i)
+        print(headers)
+        print(query)
         if method == "POST":
             form = m.get_req_body_form(i)
             json = m.get_req_body_json(i)
@@ -307,8 +331,9 @@ def main(task_id):
             form = None
             json = None
         while True:
-            resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json)
+            resq_code, res_time, response = r.run_api(url, method, query, data=form, json=json, headers=headers)
             st = strategy.start_inform(task_id, i, resq_code)
+            print(response)
             num = st[4]
             if resq_code == 200:
                 response = "ok"
@@ -317,14 +342,15 @@ def main(task_id):
             elif str(resq_code)[:1] == "9":
                 # resq_code=str(resq_code)+"(接口响应超过10s)"
                 print(resq_code, response)
-                msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (i, interface_name, url, resq_code, response)
+                msg = " 接口id：%d \n 接口名称：%s \n 接口地址：%s \n 状态码：%s\n 备注：%s " % (
+                i, interface_name, url, resq_code, response)
                 send.sending(
                     "https://oapi.dingtalk.com/robot/send?access_token=7eb86685e144cb9a048f2a266c46b36dd458bec91ca9f2c1bbecf6b53a6e05ab",
                     msg)
                 break
             else:
                 strategy.upnum(i, num)
-                print("接口异常，重试第%d次"%num)
+                print("接口异常，重试第%d次" % num)
                 time.sleep(1)
                 resq_code = str(resq_code)
                 if st[0] == 1:
@@ -346,26 +372,8 @@ def main(task_id):
 
 if __name__ == "__main__":
     task_id = sys.argv[1]
-    # task_id = 9
+    # task_id = 53
     main(task_id)
-    # def s(task_id):
-    #     task_id = int(task_id)
-    #     r = run(task_id)
-    #     m = get_md()
-    #     strategy = Monitor_Inform()
-    #     send = Send_All()
-    #     api_list = r.get_taskinfo()[2][1:-1].split(",")
-    #     for i in api_list:
-    #         task_id=int(task_id)
-    #         m = get_md()
-    #         name=m.get_interface_name(i)
-    #         url = m.get_domain(i)
-    #         if url is None:
-    #             print("接口id：%s 接口不存在或不存在正式环境，跳过" % i)
-    #             continue
-    #         i = int(i)
-    #         path = m.get_path(i)
-    #
-    #         url = url + path
-    #         print(i,name,url)
-    # s("50")
+
+
+

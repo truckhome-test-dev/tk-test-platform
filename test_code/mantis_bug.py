@@ -283,7 +283,7 @@ class Mantis_Bug(SqlOperate):
         :return: ['Android', 'iOS']
         """
         d = {'产品库': 9, 'App': 23, 'IT系统': 21, '互动': 3, '其他': 38, '商业配合': 13, '支持': 1, '独立': 17, '经销商': 11, '资讯': 8,
-             '遗留/线上bug': 45,'电商系统':62,'App极速版':66}
+             '遗留/线上bug': 45,'电商':60,'App极速版':66}
         self.dbcur()
         sql = "select p.name " \
               "from mantis_project_table as p,mantis_project_hierarchy_table as h " \
