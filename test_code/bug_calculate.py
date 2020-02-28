@@ -28,9 +28,10 @@ class Bug_Calculate(SqlOperate):
         self.dbcur()
         sql = ""
         if data1:
+            #self.delbugcalculate(vname,proname,versionname)
+            #sql ="INSERT INTO bugcalculate (vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)VALUES( '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(vname,proname,versionname,name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime)
             sql = "update bugcalculate SET name ='%s',checknum='%s',fristnum='%s',leaknum='%s',newnum='%s',bugcount='%s',bugdensity='%s',fristleak='%s',bringerror='%s',addtime='%s' where vname ='%s'and proname='%s' and versionname='%s'" %(name,checknum,fristnum,leaknum,newnum,bugcount,bugdensity,fristleak,bringerror,addtime,vname,proname,versionname)
         else:
-
             # self.insData('bugcalculate', {'vname': vname, 'proname': proname, 'versionname': versionname, 'name': name,
             #                               'checknum': checknum, 'fristnum': fristnum, 'leaknum': leaknum, 'newnum': newnum,
             #                               'bugcount': bugcount, 'bugdensity': bugdensity, 'fristleak': fristleak,
@@ -56,10 +57,20 @@ class Bug_Calculate(SqlOperate):
         data = self.cur.fetchall()
         return data
 
+    #删除某条bug数据
+    # def delbugcalculate(self,vname,proname,versionname):
+    #     self.dbcur()
+    #     sql = "delete from buproname,gcalculate where vname ='%s'AND proname='%s' AND versionname='%s'" %(vname,proname,versionname)
+    #     self.sqlExe(sql)
+    #     self.sqlCom()
+    #     self.sqlclo()
+    #     return "pass"
+
     #查询bug密度、首轮漏测率、引入错误率
-    def getInfor(self):
+    def getInfor(self,vname,proname,versionname):
         self.dbcur()
-        sql = "select bugdensity,fristleak,bringerror from bugcalculate order by id desc limit 1"
+        #sql = "select bugdensity,fristleak,bringerror from bugcalculate order by id desc limit 1"
+        sql = "select bugdensity,fristleak,bringerror from bugcalculate where vname ='%s'AND proname='%s' AND versionname='%s'" %(vname,proname,versionname)
         self.sqlExe(sql)
         self.sqlCom()
         self.sqlclo()

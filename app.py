@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2019-01-28 16:19:44
 
-from flask import Flask, request, render_template, redirect, send_from_directory, abort, jsonify, session, url_for, Response, make_response
+from flask import Flask, request, render_template, redirect, send_from_directory, abort, jsonify, session, url_for, \
+    Response, make_response
 # from sqlalchemy import null
 from test_code import *
 from base_server import *
@@ -31,7 +32,7 @@ up = Xmind_Upload()
 app.config.from_object('settings.DevConfig')
 
 play = playMethods()
-sp=serverPPTX()
+sp = serverPPTX()
 
 '''
 这里是注册蓝图
@@ -41,6 +42,7 @@ sp=serverPPTX()
 app.register_blueprint(monitor, url_prefix='/monitor')
 app.register_blueprint(route_demo, url_prefix='/route_demo')
 app.register_blueprint(route_demo, url_prefix='/route_zll')
+
 
 # 判断登录装饰器方法
 def check_token(func):
@@ -55,7 +57,6 @@ def check_token(func):
         else:
             data = json.dumps({"code": 1001})
             return data
-
 
     return inner
 
@@ -353,13 +354,15 @@ def admin():
 def appwebreport():
     pt1 = APP_Report(1)
     pt2 = APP_Report(2)
-    appdata = pt1.title_url(1,1)
+    appdata = pt1.title_url(1, 1)
     appreportlist = appdata[0]
     appnewreport = appdata[1]
-    webdata = pt2.title_url(2,2)
+    webdata = pt2.title_url(2, 2)
     webreportlist = webdata[0]
     webnewreport = webdata[1]
-    return render_template('appreport.html', appnewreport=appnewreport, appreportlist=appreportlist,webnewreport=webnewreport,webreportlist=webreportlist)
+    return render_template('appreport.html', appnewreport=appnewreport, appreportlist=appreportlist,
+                           webnewreport=webnewreport, webreportlist=webreportlist)
+
 
 # APP更多报告列表
 @app.route('/TestReport/<rpttime>/<dev>/TestReport', methods=['post', 'get'])
@@ -388,7 +391,9 @@ def Project_information():
     pp_rturn = request.args.get('firstname')
     data = pp.cha(pp_rturn)
     return render_template('project_information.html', u=data)
-#卡车之家业务信息表-编辑
+
+
+# 卡车之家业务信息表-编辑
 @app.route('/project_information_edit', methods=['POST', 'GET'])
 # @check_permissions("/project_information")
 def Project_information_edit():
@@ -411,12 +416,13 @@ def Project_information_edit():
         qa = request.form.get('qa')
         Platform = request.form.get('Platform')
 
-        pp.edit(id,Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
+        pp.edit(id, Business, Product, PM, Business_type, DMP, QD_Dev, HD_Dev, DEV_Leader, qa, Platform)
         data = pp.cha_only(id)
 
         return redirect('project_information')
 
-#卡车之家业务信息表-新增
+
+# 卡车之家业务信息表-新增
 @app.route('/project_information_added', methods=['POST', 'GET'])
 def Project_information_added():
     if request.method == 'GET':
@@ -435,13 +441,11 @@ def Project_information_added():
         qa = request.form.get('qa')
         Platform = request.form.get('Platform')
 
-        pp.added(Business,Product,PM,Business_type,DMP,QD_Dev,HD_Dev,DEV_Leader,qa,Platform)
+        pp.added(Business, Product, PM, Business_type, DMP, QD_Dev, HD_Dev, DEV_Leader, qa, Platform)
         return redirect("project_information")
 
 
 # 接口监控-任务管理
-
-
 
 
 # 抓虫节排行榜
@@ -506,6 +510,7 @@ def bug_calculate1():
         vname = request.form.get('project')
         proname = request.form.get('proname')
         versionname = request.form.get('versionname')
+        print(versionname, 1111111111111111111)
         name = request.form.get('name')
         checknum = request.form.get('checknum')
         fristnum = request.form.get('fristnum')
@@ -529,7 +534,8 @@ def bug_calculate1():
             bringerror = '%.2f' % (float(newnum) / (float(fristnum) + float(leaknum)))
         bug_calculate.bugInsert(vname, proname, versionname, name, checknum, fristnum, leaknum, newnum, bugcount,
                                 bugdensity, fristleak, bringerror, addtime)
-        data = bug_calculate.getInfor()
+        # data = bug_calculate.getInfor()
+        data = bug_calculate.getInfor(vname, proname, versionname)
         return json.dumps(data)
 
     else:
@@ -574,8 +580,8 @@ def calcu():
         return render_template('calculate.html', data=("", "", ""))
 
 
-#xmind上传下载
-@app.route('/testcase',methods=['post','get'])
+# xmind上传下载
+@app.route('/testcase', methods=['post', 'get'])
 # @check_permissions('/testcase')
 def upload():
     a = up.fileselect()
@@ -583,36 +589,39 @@ def upload():
         f = request.files['file']
         up.fileupload(f)
         way = up.xmind_way()
-        path = way+f.filename
+        path = way + f.filename
         data = up.to_dict(path)
         print(data)
-        up.fileinsert(f.filename,data)
-        os.remove(path) 
+        up.fileinsert(f.filename, data)
+        os.remove(path)
         return "1"
     else:
-        return render_template('upload.html',a = a)
- 
-#下载  
+        return render_template('upload.html', a=a)
+
+
+# 下载
 @app.route('/export_xls/<filename>', methods=['get'])
 def return_file(filename):
     import os
     if request.method == "GET":
         search = up.xls_true(filename)
         if search:
-            file_dir = os.path.join(up.xls_way(),filename)
+            file_dir = os.path.join(up.xls_way(), filename)
         else:
             up.downexcel(filename)
-            file_dir = os.path.join(up.xls_way(),filename)
+            file_dir = os.path.join(up.xls_way(), filename)
         if os.path.isfile(file_dir):
             return send_from_directory(up.xls_way(), filename, as_attachment=True)
         abort(404)
-#查询
-@app.route('/selectfile', methods=['post','get'])
+
+
+# 查询
+@app.route('/selectfile', methods=['post', 'get'])
 def select_file():
     if request.method == "POST":
         project = request.form.get('project')
         a = ""
-        if(project == "全部"):
+        if (project == "全部"):
             a = up.fileselect()
         else:
             a = up.sel_file(project)
@@ -631,7 +640,6 @@ def arachni():
     return redirect('http://127.0.0.1:9292')
 
 
-
 # 以下为周报路由
 @app.route('/weekly', methods=['post', 'get'])
 def weekly():
@@ -641,22 +649,22 @@ def weekly():
 @app.route('/weekly_index', methods=['post', 'get'])
 # @check_permissions("/time_test")
 def weekly_index():
-
     return render_template('weekly_index.html')
 
-#提交后就生成单独组的周报
+
+# 提交后就生成单独组的周报
 @app.route('/subWeekly', methods=['post', 'get'])
 def subWeekly():
     if request.method == 'POST':
         weekly = request.get_data()
         weekly = json.loads(weekly.decode("utf-8"))
         group_id = weekly['group']
-        weekly=str(weekly).replace("\'","\\'")
+        weekly = str(weekly).replace("\'", "\\'")
         # weekly = request.get_data().decode("utf-8")
         # group_id=request.form.get('group')
         # print(group_id,weekly,type(weekly))
-        data= sp.write_content(group_id,weekly)
-        if data =="add succ":
+        data = sp.write_content(group_id, weekly)
+        if data == "add succ":
             try:
                 gen = generatePPTX(group_id)
                 filename, defect = gen.generate_one()
@@ -666,60 +674,59 @@ def subWeekly():
             else:
                 ret = {"state": "1", "filename": filename}
         else:
-            ret ={"state": "0", "ms": data}
+            ret = {"state": "0", "ms": data}
         print(ret)
         return jsonify(ret)
     else:
-        weekly = {"state":"0", "ms":"请使用post提交"}
+        weekly = {"state": "0", "ms": "请使用post提交"}
         # weekly = {"state":"0", "ms":"小辉辉好"}
         return jsonify(weekly)
 
-#生成技术中心周报
+
+# 生成技术中心周报
 @app.route('/generate_all', methods=['post'])
 def generate_all():
     if request.method == 'POST':
         try:
             gen = generatePPTX(0)
-            filename,defect = gen.generate_one()
+            filename, defect = gen.generate_one()
         except Exception as e:
             ret = {"state": "0", "ms": str(e)}
         else:
-            if defect==[]:
-                ret = {"state": "1", "filename": filename,"defect":defect}
+            if defect == []:
+                ret = {"state": "1", "filename": filename, "defect": defect}
             else:
-                ret = {"state": "2", "filename": filename,"defect":defect}
+                ret = {"state": "2", "filename": filename, "defect": defect}
         return jsonify(ret)
 
 
-@app.route('/download_pptx/<filename>',methods=['get'])
+@app.route('/download_pptx/<filename>', methods=['get'])
 def download_pptx(filename):
     print(filename)
     if request.method == "GET":
         way = "ppt/pptx/"
         file_dir = os.path.join(way, filename)
-        print(way,filename)
+        print(way, filename)
         if os.path.isfile(file_dir):
             return send_from_directory(way, filename, as_attachment=True)
         else:
             abort(404)
 
 
-
-@app.route('/upimg',methods=['post'])
+@app.route('/upimg', methods=['post'])
 def upimg():
-    r = {"state":"0", "ms":"失败"}
+    r = {"state": "0", "ms": "失败"}
     if request.method == 'POST':
         f = play.imgUp(request.files['file'])
-        r = {"state":"1", "ms":"成功","imgname":f}
+        r = {"state": "1", "ms": "成功", "imgname": f}
 
     return jsonify(r)
 
 
-@app.route('/procount',methods=['post','get'])
+@app.route('/procount', methods=['post', 'get'])
 def test123():
-    data=bug_calculate.weekcount()
-    return render_template('procount.html',data=data)
-
+    data = bug_calculate.weekcount()
+    return render_template('procount.html', data=data)
 
 
 if __name__ == '__main__':
